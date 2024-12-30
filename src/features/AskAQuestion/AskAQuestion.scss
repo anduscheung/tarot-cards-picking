@@ -12,8 +12,16 @@
 
 .title {
   font-size: 24px;
-  margin-bottom: 20px;
+  margin: 0;
   color: #ffffff;
+}
+
+.subTitle {
+  max-width: 280px;
+  text-align: center;
+  margin-top: 16px;
+  line-height: 1.5;
+  margin-bottom: 32px;
 }
 
 .questionForm {

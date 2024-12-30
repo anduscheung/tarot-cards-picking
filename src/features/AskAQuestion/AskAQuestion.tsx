@@ -44,6 +44,10 @@ function AskAQuestion() {
       {!submitted && (
         <>
           <h1 className="title">Discover Your Tarot Insights</h1>
+          <h5 className="subTitle">
+            Ask a question, generate three cards that represent the past,
+            current, and future
+          </h5>
           <form onSubmit={handleSubmit} className="questionForm">
             <div className="textAreaContainer">
               <textarea
