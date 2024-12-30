@@ -1,0 +1,169 @@
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 40px;
+  overflow-y: scroll;
+}
+
+.card {
+  width: 168px;
+  height: 288px;
+  perspective: 1000px;
+  position: relative;
+  cursor: pointer;
+}
+
+.card-front,
+.card-back {
+  width: 168px;
+  height: 288px;
+  position: absolute;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease-in-out;
+}
+
+.card-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  transform: rotateY(0deg);
+}
+
+.card-front {
+  transform: rotateY(180deg);
+}
+
+.card.flipped .card-back {
+  transform: rotateY(-180deg);
+}
+
+.card.flipped .card-front {
+  transform: rotateY(0deg);
+}
+
+.resultTitle {
+  font-size: 20px;
+  color: #ffffff;
+  width: max-content;
+  max-width: max-content;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  border-right: 2px solid #ffffff;
+  animation: typing 2s steps(12, end) forwards, hide-caret 0.1s 2s forwards;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes hide-caret {
+  to {
+    border-color: transparent;
+    overflow: unset;
+  }
+}
+
+.resultImages {
+  display: flex;
+  gap: 10px;
+}
+
+.resultImages .card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInY 1.8s ease-in-out forwards;
+}
+
+.resultImages .card:nth-child(1) {
+  animation-delay: 1.4s;
+}
+
+.resultImages .card:nth-child(2) {
+  animation-delay: 1.8s;
+}
+
+.resultImages .card:nth-child(3) {
+  animation-delay: 2.2s;
+}
+
+@keyframes fadeInY {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.askAgainButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 400;
+  height: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: #ffffff;
+  color: #121212;
+  border: none;
+  transition: background-color 0.3s;
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: fadeInX 1.2s ease-in-out 0.6s forwards;
+
+  &:hover {
+    background-color: #dedede;
+  }
+}
+
+@keyframes fadeInX {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cardDescription {
+  margin: 0 auto;
+  border-radius: 5px;
+  text-align: left;
+  max-width: 500px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInY 1s ease-in-out forwards;
+
+  h5 {
+    font-size: 25px;
+    color: #fff;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 12px;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+
+  strong {
+    color: #ddd;
+  }
+}

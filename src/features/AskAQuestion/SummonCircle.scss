@@ -1,0 +1,169 @@
+.container {
+  position: relative;
+  width: 384px;
+  height: 384px;
+  margin: 0 auto;
+}
+
+.container svg {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.star {
+  animation: fade-in 4s ease-out forwards, glowEffect 4s ease-in-out forwards;
+  animation-delay: 3s, 2.8s;
+  transform-origin: center;
+}
+
+.circle1 {
+  animation: fade-in 0.2s ease-out forwards;
+  animation-delay: 1.5s;
+}
+
+.circle2 {
+  animation: fade-in 0.2s ease-out forwards;
+  animation-delay: 1.8s;
+}
+
+.circle3 {
+  animation: fade-in 0.6s ease-out forwards;
+  animation-delay: 1.8s;
+}
+
+.circle4 {
+  animation: fade-in 0.6s ease-out forwards;
+  animation-delay: 1.8s;
+}
+
+.words {
+  animation: fade-in 0.6s ease-out forwards;
+  animation-delay: 0s;
+}
+
+.words path {
+  fill: none;
+  stroke: #ffd700;
+  stroke-width: 0.5;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw 1.8s ease forwards, glow 2s ease-in-out forwards;
+  animation-delay: 0s, 1s;
+}
+
+.symbols path {
+  stroke: #ffd700;
+  fill: none;
+  stroke-width: 1;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 10s ease forwards;
+  animation-delay: 0s, 1.8s;
+}
+
+.symbols rect {
+  stroke-width: 1;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 2s ease forwards, glowEffect 4s ease-in-out forwards;
+  animation-delay: 0s, 2.2s;
+}
+
+.symbols {
+  animation: fade-in 0.2s ease-out forwards;
+  animation-delay: 0s;
+}
+
+.ringInner {
+  animation: fade-in 0.6s ease-out forwards, spin 3s cubic-bezier(0.71, 0.23, 0.84, 0.53) forwards,
+    spin2 2s linear forwards;
+  animation-delay: 0s, 1.8s, 4.8s;
+  transform-origin: center;
+
+  path:first-of-type {
+    stroke-width: 10;
+    stroke-dasharray: 915;
+    stroke-dashoffset: 915;
+    animation: draw 0.6s linear forwards;
+    animation-delay: 0s;
+  }
+
+  path:not(:first-of-type) {
+    stroke-width: 1;
+    stroke-dasharray: 10;
+    stroke-dashoffset: 10;
+    animation: draw 0.0061s linear forwards;
+  }
+
+  @for $i from 97 through 2 {
+    path:nth-of-type(#{$i}) {
+      animation-delay: #{(97 - $i) * 0.006s};
+    }
+  }
+}
+
+.ringOuter {
+  animation: fade-in 0.4s ease-out forwards, spin-anticlockwise 4s cubic-bezier(0.62, 0.21, 0.74, 0.44) 1 forwards;
+  animation-delay: 2.2s, 2.5s;
+}
+
+@keyframes glowEffect {
+  0% {
+    filter: drop-shadow(0 0 0px #f9d77e);
+  }
+  25% {
+    filter: drop-shadow(0 0 25px #f9d77e);
+  }
+  50% {
+    filter: drop-shadow(0 0 15px #f9d77e);
+  }
+  75% {
+    filter: drop-shadow(0 0 25px #f9d77e);
+  }
+  100% {
+    filter: drop-shadow(0 0 0px #f9d77e);
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin2 {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
+}
+
+@keyframes spin-anticlockwise {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-450deg);
+  }
+}
