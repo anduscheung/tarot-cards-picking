@@ -4,6 +4,9 @@ import styles from "./Results.module.scss";
 import { cardData, titleMeanings } from "../../constants/card.constants";
 import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
 import GotoIcon from "../../assets/gotoIcon.svg?react";
+import cardBackCopper from "/src/assets/cardBackCopper.png";
+import cardBackSilver from "/src/assets/cardBackSilver.png";
+import cardBackGold from "/src/assets/cardBackGold.png";
 
 const images = import.meta.glob("/src/assets/cards/*.png", { eager: true });
 
@@ -66,13 +69,7 @@ const Results: React.FC<ResultsProps> = ({
               />
               <img
                 className={styles.cardBack}
-                src={
-                  [
-                    "/src/assets/cardBackCopper.png",
-                    "/src/assets/cardBackSilver.png",
-                    "/src/assets/cardBackGold.png",
-                  ][index]
-                }
+                src={[cardBackCopper, cardBackSilver, cardBackGold][index]}
                 alt={`Card back`}
               />
             </div>
