@@ -4,9 +4,11 @@ This project is a React-based Tarot card picker created with **Vite**. It allows
 
 ## Website
 
+![Tarot Card Picker Demo](https://github.com/anduscheung/my-icon-host/blob/main/tarot-picking-demo.gif)
+
 You can access the live version of this app here:
 
-🔗 [https://tarot-cards-picking.netlify.app](https://tarot-cards-picking.netlify.app)
+[https://tarot-cards-picking.netlify.app](https://tarot-cards-picking.netlify.app)
 
 ---
 
