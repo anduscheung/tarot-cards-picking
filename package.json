@@ -1,5 +1,7 @@
 {
   "name": "tarot-cards-picking",
+  "author": "Andus Cheung",
+  "description": "A tarot picking website built with React & Vite",
   "private": true,
   "version": "0.0.0",
   "type": "module",
