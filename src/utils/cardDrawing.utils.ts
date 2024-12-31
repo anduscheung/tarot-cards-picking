@@ -10,3 +10,20 @@ export const generateUniqueRandomNumbers = (
   }
   return range.slice(0, count); // Take the first 'count' numbers
 };
+
+export const generatePromptForChatgpt = (
+  question: string,
+  cards: string[]
+): string => {
+  if (cards.length !== 3) {
+    throw new Error("You must provide exactly three cards.");
+  }
+
+  return `Tarot Card Analysis
+I asked the question: "${question}" and drew the following cards:
+- Past: ${cards[0]}
+- Present: ${cards[1]}
+- Future: ${cards[2]}
+
+Can you help me interpret what this means for my question?`;
+};

@@ -1,0 +1,246 @@
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 40px;
+  overflow-y: scroll;
+}
+
+.card {
+  width: clamp(200px, 20vw, 260px);
+  height: clamp(333px, 35vw, 433px);
+  perspective: 1000px;
+  position: relative;
+  cursor: pointer;
+}
+
+.cardFront,
+.cardBack {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease-in-out;
+}
+
+.cardBack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  transform: rotateY(0deg);
+}
+
+.cardFront {
+  transform: rotateY(180deg);
+}
+
+.card.flipped .cardBack {
+  transform: rotateY(-180deg);
+}
+
+.card.flipped .cardFront {
+  transform: rotateY(0deg);
+}
+
+.resultTitle {
+  font-size: 20px;
+  color: #ffffff;
+  width: max-content;
+  max-width: max-content;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  border-right: 2px solid #ffffff;
+  animation: typing 2s steps(12, end) forwards, hide-caret 0.5s 2s forwards;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes hide-caret {
+  to {
+    border-color: transparent;
+    overflow: unset;
+  }
+}
+
+.cardsContainer {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 0;
+  }
+}
+
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInY 1.8s ease-in-out forwards;
+
+  // child 1, 3, 5 because of existence of the hidden description
+  &:nth-child(1) {
+    animation-delay: 1.4s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 1.8s;
+  }
+
+  &:nth-child(5) {
+    animation-delay: 2.2s;
+  }
+}
+
+@keyframes fadeInY {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInX {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cardDescription {
+  margin: 0 auto;
+  border-radius: 5px;
+  text-align: left;
+  width: 100%;
+  max-width: clamp(300px, 60%, 800px);
+  padding: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInY 1s ease-in-out 0.6s forwards;
+
+  &.smallScreen {
+    display: none;
+  }
+
+  h5 {
+    font-size: clamp(18px, 4vw, 25px);
+    color: #fff;
+    margin: 0;
+  }
+
+  p {
+    font-size: clamp(12px, 2.5vw, 16px);
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+
+  strong {
+    color: #ddd;
+  }
+
+  @media (max-width: 768px) {
+    &.largeScreen {
+      display: none;
+    }
+    &.smallScreen {
+      display: block;
+    }
+    h5 {
+      margin: 0;
+    }
+    max-width: clamp(300px, 80%, 800px);
+  }
+
+  @media (max-width: 576px) {
+    max-width: clamp(300px, 90%, 800px);
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  align-items: center;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+
+  .askAgainButton {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    height: 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #121212;
+    border: none;
+    transition: background-color 0.3s;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeInX 1.2s ease-in-out 0.6s forwards;
+
+    &:hover {
+      background-color: #dedede;
+    }
+  }
+
+  .chatGptLink {
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .gotoIconWrapper {
+      width: 12px;
+      height: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 1px;
+      background-color: #ffffff;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    &:hover:after {
+      transform: scaleX(1);
+    }
+  }
+}

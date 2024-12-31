@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import "./SummonCircle.scss";
+import styles from "./SummonCircle.module.scss";
 import RingOuter from "../../assets/summoning/ringOuter.svg?react";
 import Star from "../../assets/summoning/star.svg?react";
 import Symbols from "../../assets/summoning/symbols.svg?react";
@@ -23,16 +23,16 @@ function SummonCircle() {
   }
 
   return (
-    <div className="container">
-      <RingOuter className="ringOuter" />
-      <Symbols className="symbols" />
-      <Words className="words" />
-      <RingInner className="ringInner" />
-      <Circle4 className="circle4" />
-      <Circle3 className="circle3" />
-      <Circle2 className="circle2" />
-      <Circle1 className="circle1" />
-      <Star className="star" />
+    <div className={styles.container}>
+      <RingOuter className={styles.ringOuter} />
+      <Symbols className={styles.symbols} />
+      <Words className={styles.words} />
+      <RingInner className={styles.ringInner} />
+      <Circle4 className={styles.circle4} />
+      <Circle3 className={styles.circle3} />
+      <Circle2 className={styles.circle2} />
+      <Circle1 className={styles.circle1} />
+      <Star className={styles.star} />
     </div>
   );
 }

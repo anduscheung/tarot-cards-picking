@@ -1,12 +1,12 @@
 /// <reference types="vite-plugin-svgr/client" />
 import React, { useState, useEffect } from "react";
 import SummonCircle from "./SummonCircle";
-import "./AskAQuestion.scss";
+import styles from "./AskAQuestion.module.scss";
 import StarButton from "../../assets/starButton.svg?react";
 import { generateUniqueRandomNumbers } from "../../utils/cardDrawing.utils";
 import Results from "./Results";
 
-const TOTAL_ANIMATION_DURATION = 10000;
+const TOTAL_ANIMATION_DURATION = 12000;
 
 function AskAQuestion() {
   const [question, setQuestion] = useState("");
@@ -40,24 +40,24 @@ function AskAQuestion() {
   };
 
   return (
-    <div className="QuestionPageContainer">
+    <div className={styles.QuestionPageContainer}>
       {!submitted && (
         <>
-          <h1 className="title">Discover Your Tarot Insights</h1>
-          <h5 className="subTitle">
+          <h1 className={styles.title}>Discover Your Tarot Insights</h1>
+          <h5 className={styles.subTitle}>
             Ask a question, generate three cards that represent the past,
             current, and future
           </h5>
-          <form onSubmit={handleSubmit} className="questionForm">
-            <div className="textAreaContainer">
+          <form onSubmit={handleSubmit} className={styles.questionForm}>
+            <div className={styles.textAreaContainer}>
               <textarea
-                className="questionTextArea"
+                className={styles.questionTextArea}
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="What do you need insight on today?"
               />
 
-              <button type="submit" className="submitIcon">
+              <button type="submit" className={styles.submitIcon}>
                 <StarButton />
               </button>
             </div>
@@ -68,7 +68,11 @@ function AskAQuestion() {
       {submitted && !numbers && <SummonCircle />}
 
       {numbers && (
-        <Results numbers={numbers} onClickNextQuestion={onClickNextQuestion} />
+        <Results
+          numbers={numbers}
+          onClickNextQuestion={onClickNextQuestion}
+          question={question}
+        />
       )}
     </div>
   );

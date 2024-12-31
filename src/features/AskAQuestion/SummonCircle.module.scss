@@ -1,45 +1,67 @@
 .container {
   position: relative;
-  width: 384px;
-  height: 384px;
+  width: 700px;
+  height: 700px;
   margin: 0 auto;
+
+  @media (max-width: 1200px) {
+    width: 600px;
+    height: 500px;
+  }
+
+  @media (max-width: 992px) {
+    width: 500px;
+    height: 400px;
+  }
+
+  @media (max-width: 768px) {
+    width: 400px;
+    height: 300px;
+  }
+
+  @media (max-width: 576px) {
+    width: 300px;
+    height: 300px;
+  }
 }
 
 .container svg {
   position: absolute;
+  width: 100%;
+  height: 100%;
   opacity: 0;
   transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
 
 .star {
-  animation: fade-in 4s ease-out forwards, glowEffect 4s ease-in-out forwards;
-  animation-delay: 3s, 2.8s;
-  transform-origin: center;
+  animation: fade-in 4s ease-out forwards, glowEffect 4s ease-in-out forwards,
+    scaleAndExit 2s forwards;
+  animation-delay: 3s, 2.8s, 7.5s;
 }
 
 .circle1 {
-  animation: fade-in 0.2s ease-out forwards;
-  animation-delay: 1.5s;
+  animation: fade-in 0.2s ease-out forwards, scaleAndExit 2s forwards;
+  animation-delay: 1.5s, 7.5s;
 }
 
 .circle2 {
-  animation: fade-in 0.2s ease-out forwards;
-  animation-delay: 1.8s;
+  animation: fade-in 0.2s ease-out forwards, scaleAndExit 2s forwards;
+  animation-delay: 1.8s, 7.5s;
 }
 
 .circle3 {
-  animation: fade-in 0.6s ease-out forwards;
-  animation-delay: 1.8s;
+  animation: fade-in 0.6s ease-out forwards, scaleAndExit 2s forwards;
+  animation-delay: 1.8s, 7.5s;
 }
 
 .circle4 {
-  animation: fade-in 0.6s ease-out forwards;
-  animation-delay: 1.8s;
+  animation: fade-in 0.6s ease-out forwards, scaleAndExit 2s forwards;
+  animation-delay: 1.8s, 7.5s;
 }
 
 .words {
-  animation: fade-in 0.6s ease-out forwards;
-  animation-delay: 0s;
+  animation: fade-in 0.6s ease-out forwards, scaleAndExit 2s forwards;
+  animation-delay: 0s, 6.8s;
 }
 
 .words path {
@@ -59,7 +81,7 @@
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
   animation: draw 10s ease forwards;
-  animation-delay: 0s, 1.8s;
+  animation-delay: 0s;
 }
 
 .symbols rect {
@@ -71,14 +93,15 @@
 }
 
 .symbols {
-  animation: fade-in 0.2s ease-out forwards;
-  animation-delay: 0s;
+  animation: fade-in 0.2s ease-out forwards, scaleAndExit 2s forwards;
+  animation-delay: 0s, 7.5s;
 }
 
 .ringInner {
-  animation: fade-in 0.6s ease-out forwards, spin 3s cubic-bezier(0.71, 0.23, 0.84, 0.53) forwards,
-    spin2 2s linear forwards;
-  animation-delay: 0s, 1.8s, 4.8s;
+  animation: fade-in 0.6s ease-out forwards,
+    spin 3s cubic-bezier(0.71, 0.23, 0.84, 0.53) forwards,
+    spin2 2s linear forwards, scaleAndExit 2s forwards;
+  animation-delay: 0s, 1.8s, 4.8s, 7.5s;
   transform-origin: center;
 
   path:first-of-type {
@@ -104,8 +127,10 @@
 }
 
 .ringOuter {
-  animation: fade-in 0.4s ease-out forwards, spin-anticlockwise 4s cubic-bezier(0.62, 0.21, 0.74, 0.44) 1 forwards;
-  animation-delay: 2.2s, 2.5s;
+  animation: fade-in 0.4s ease-out forwards,
+    spin-anticlockwise 4s cubic-bezier(0.62, 0.21, 0.74, 0.44) 1 forwards,
+    scaleAndExit 2s forwards;
+  animation-delay: 2.2s, 2.5s, 6.5s;
 }
 
 @keyframes glowEffect {
@@ -165,5 +190,18 @@
   }
   100% {
     transform: rotate(-450deg);
+  }
+}
+
+@keyframes scaleAndExit {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
   }
 }

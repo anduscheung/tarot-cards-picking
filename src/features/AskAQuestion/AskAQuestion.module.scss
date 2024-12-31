@@ -5,19 +5,22 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
   background-color: #121212;
   color: #ffffff;
   font-family: "Arial", sans-serif;
 }
 
 .title {
-  font-size: 24px;
+  font-size: clamp(28px, 4vw, 48px);
   margin: 0;
   color: #ffffff;
+  text-align: center;
 }
 
 .subTitle {
-  max-width: 280px;
+  max-width: clamp(260px, 80%, 460px);
+  font-size: clamp(14px, 2vw, 18px);
   text-align: center;
   margin-top: 16px;
   line-height: 1.5;
@@ -39,14 +42,15 @@
   border-radius: 25px;
   padding: 10px 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  width: 500px;
+  width: clamp(280px, 80%, 600px);
+  margin: 0 auto;
 }
 
 .questionTextArea {
   border: none;
   background: none;
   outline: none;
-  font-size: 16px;
+  font-size: clamp(14px, 2.5vw, 18px);
   flex: 1;
   color: #ffffff;
   resize: none;
@@ -58,10 +62,11 @@
 
 .questionTextArea::placeholder {
   color: #aaaaaa;
+  font-size: clamp(12px, 2vw, 16px);
 }
 
 .icon {
-  font-size: 20px;
+  font-size: clamp(18px, 2.5vw, 24px);
   cursor: pointer;
   color: #cccccc;
   transition: color 0.2s;
@@ -72,8 +77,8 @@
 }
 
 .submitIcon {
-  height: 30px;
-  width: 30px;
+  height: clamp(25px, 5vw, 40px);
+  width: clamp(25px, 5vw, 40px);
   display: flex;
   align-items: center;
   justify-self: center;
@@ -87,4 +92,18 @@
 
 .submitIcon:hover {
   transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .textAreaContainer {
+    padding: 10px 15px;
+  }
+
+  .subTitle {
+    margin-bottom: 24px;
+  }
+
+  .submitIcon {
+    margin-top: 10px;
+  }
 }
