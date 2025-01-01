@@ -50,7 +50,7 @@
   border: none;
   background: none;
   outline: none;
-  font-size: clamp(14px, 2.5vw, 18px);
+  font-size: clamp(16px, 2.5vw, 18px);
   flex: 1;
   color: #ffffff;
   resize: none;
@@ -81,13 +81,25 @@
   width: clamp(25px, 5vw, 40px);
   display: flex;
   align-items: center;
-  justify-self: center;
+  justify-content: center;
   background: #ffffff;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   color: #121212;
   transition: transform 0.2s;
+}
+
+.starIcon {
+  min-width: 18px;
+  min-height: 18px;
+  max-width: 24px;
+  min-width: 24px;
+
+  @media (max-width: 768px) {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .submitIcon:hover {
