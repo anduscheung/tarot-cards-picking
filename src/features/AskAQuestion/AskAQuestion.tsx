@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import SummonCircle from "./SummonCircle";
 import styles from "./AskAQuestion.module.scss";
-import StarButton from "../../assets/starButton.svg?react";
+import StarIcon from "../../assets/starIcon.svg?react";
 import { generateUniqueRandomNumbers } from "../../utils/cardDrawing.utils";
 import Results from "./Results";
 
@@ -58,7 +58,7 @@ function AskAQuestion() {
               />
 
               <button type="submit" className={styles.submitIcon}>
-                <StarButton />
+                <StarIcon className={styles.starIcon} />
               </button>
             </div>
           </form>

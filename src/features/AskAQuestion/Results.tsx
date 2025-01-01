@@ -74,9 +74,14 @@ const Results: React.FC<ResultsProps> = ({
               />
             </div>
             <div
-              className={`${styles.cardDescription} ${styles.smallScreen}`}
+              className={`${styles.cardDescription} ${styles.smallScreen} ${
+                flippedCards[num] ? styles.active : ""
+              }`}
               key={index}
             >
+              <div className={`${styles.mask}`}>
+                Tab the card to unveil the content
+              </div>
               <h5>
                 {cardData[num].name} ({titleMeanings[index]})
               </h5>
