@@ -45,8 +45,8 @@ function AskAQuestion() {
         <>
           <h1 className={styles.title}>Discover Your Tarot Insights</h1>
           <h5 className={styles.subTitle}>
-            Ask a question, generate three cards that represent the past,
-            current, and future
+            Ask a question, generate three cards that reveal the future or the
+            best course of action.
           </h5>
           <form onSubmit={handleSubmit} className={styles.questionForm}>
             <div className={styles.textAreaContainer}>

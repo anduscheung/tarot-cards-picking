@@ -1,7 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 import React, { useState } from "react";
 import styles from "./Results.module.scss";
-import { cardData, titleMeanings } from "../../constants/card.constants";
+import { cardData } from "../../constants/card.constants";
 import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
 import GotoIcon from "../../assets/gotoIcon.svg?react";
 import cardBackCopper from "/src/assets/cardBackCopper.png";
@@ -82,9 +82,7 @@ const Results: React.FC<ResultsProps> = ({
               <div className={`${styles.mask}`}>
                 Tab the card to unveil the content
               </div>
-              <h5>
-                {cardData[num].name} ({titleMeanings[index]})
-              </h5>
+              <h5>{cardData[num].name}</h5>
               <p>{cardData[num].desc}</p>
               <p>
                 <strong>Meaning:</strong> {cardData[num].meaning_up}
@@ -101,9 +99,7 @@ const Results: React.FC<ResultsProps> = ({
               className={`${styles.cardDescription} ${styles.largeScreen}`}
               key={index}
             >
-              <h5>
-                {cardData[num].name} ({titleMeanings[index]})
-              </h5>
+              <h5>{cardData[num].name}</h5>
               <p>{cardData[num].desc}</p>
               <p>
                 <strong>Meaning:</strong> {cardData[num].meaning_up}

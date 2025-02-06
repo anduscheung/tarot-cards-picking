@@ -21,9 +21,9 @@ export const generatePromptForChatgpt = (
 
   return `Tarot Card Analysis
 I asked the question: "${question}" and drew the following cards:
-- Past: ${cards[0]}
-- Present: ${cards[1]}
-- Future: ${cards[2]}
+- ${cards[0]}
+- ${cards[1]}
+- ${cards[2]}
 
 Can you help me interpret what this means for my question?`;
 };

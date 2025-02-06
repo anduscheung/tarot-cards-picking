@@ -1,5 +1,3 @@
-export const titleMeanings = ["Past", "Current", "Future"];
-
 export const cardData = [
   {
     id: 0,
