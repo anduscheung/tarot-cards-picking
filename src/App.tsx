@@ -1,10 +1,12 @@
 import "./App.css";
-import AskAQuestion from "./features/AskAQuestion/AskAQuestion";
+import Mode from "./features/Mode";
+// import AskAQuestion from "./features/AskAQuestion/AskAQuestion";
 
 function App() {
   return (
     <div className="App">
-      <AskAQuestion />
+      <Mode />
+      {/* <AskAQuestion /> */}
     </div>
   );
 }

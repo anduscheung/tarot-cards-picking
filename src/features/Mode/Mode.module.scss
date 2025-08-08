@@ -1,0 +1,87 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  // background-color: #121212;
+  background-color: rgb(2 6 23);
+  color: #ffffff;
+  font-family: "Arial", sans-serif;
+}
+
+.title {
+  font-size: clamp(28px, 4vw, 48px);
+  margin: 0;
+  color: #ffffff;
+  text-align: center;
+}
+
+.subTitle {
+  max-width: clamp(260px, 80%, 460px);
+  font-size: clamp(14px, 2vw, 18px);
+  text-align: center;
+  margin-top: 16px;
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.questionForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.textAreaContainer {
+  display: flex;
+  align-items: center;
+  background-color: rgb(15 23 42);
+  border-radius: 25px;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  width: clamp(280px, 80%, 600px);
+  margin: 0 auto;
+  border: 1px solid #1e293b;
+}
+
+.questionTextArea {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: clamp(16px, 2.5vw, 18px);
+  width: 100%;
+  color: #ffffff;
+  resize: none;
+  height: 40px;
+  margin-right: 10px;
+  caret-color: #ffffff;
+  scrollbar-width: none;
+}
+
+.questionTextArea::placeholder {
+  color: #94a3b8;
+  font-size: clamp(12px, 2vw, 16px);
+}
+
+@media (max-width: 768px) {
+  .textAreaContainer {
+    padding: 10px 15px;
+  }
+
+  .subTitle {
+    margin-bottom: 24px;
+  }
+}
+
+.cardContainer {
+  display: flex;
+  width: clamp(280px, 80%, 600px);
+  justify-content: space-between;
+  gap: clamp(20px, 5vw, 48px);
+  align-items: center;
+  margin: 32px 0;
+}
