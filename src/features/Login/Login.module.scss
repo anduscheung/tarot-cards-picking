@@ -1,0 +1,33 @@
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-family: "Arial", sans-serif;
+  gap: 20px;
+
+  input {
+    border-radius: 25px;
+    background-color: #1e1e1e;
+    border: none;
+    outline: none;
+    height: 40px;
+    width: clamp(280px, 70%, 400px);
+    padding: 10px 20px;
+    color: #ffffff;
+    caret-color: #ffffff;
+
+    &:placeholder {
+      color: #aaaaaa;
+    }
+  }
+
+  button {
+    border-radius: 25px;
+    height: 40px;
+    width: clamp(280px, 70%, 400px);
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+}
