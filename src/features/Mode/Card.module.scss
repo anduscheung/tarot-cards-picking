@@ -14,6 +14,12 @@
   text-align: center;
 }
 
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .shimmerCard {
   --radius: 16px;
   --border: 2px; /* border thickness */
@@ -32,6 +38,7 @@
   padding: 0;
   cursor: pointer;
   isolation: isolate; /* keep pseudo elements clipped */
+  box-sizing: border-box; /* keep box math predictable */
 }
 
 /* actual card surface */
@@ -45,75 +52,40 @@
   aspect-ratio: 1 / 1;
   background: var(--bg);
   color: #eaeaea;
-  border-radius: calc(var(--radius) - 1px);
+  border-radius: var(--radius);
   padding: 24px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-  position: relative;
-  z-index: 1;
-}
-.shimmerCard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: var(--border);
-  border-radius: var(--radius);
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    var(--shine1) 60deg,
-    var(--shine2) 120deg,
-    var(--shine3) 180deg,
-    var(--shine2) 240deg,
-    var(--shine1) 300deg,
-    transparent 360deg
-  );
-
-  /* Show gradient only as a ring (border) */
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-
-  filter: blur(0.2px); /* crisper on some displays */
-  animation: shimmer-rotate 2.2s linear infinite;
-  animation-play-state: paused; /* only run on hover/focus */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  /* default border */
+  border: var(--border) solid #1e293b;
+  background-clip: padding-box;
+  transition: border-image 0.3s ease, border-color 0.3s ease;
 }
 
-/* subtle outer glow that fades in on hover */
-.shimmerCard::after {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: calc(var(--radius) + 6px);
-  background: radial-gradient(40% 60% at 50% 50%, rgba(255, 255, 255, 0.08), transparent 60%);
-  opacity: 0;
-  transition: opacity 0.25s ease;
+.shimmerCard:hover .shimmerCardInner,
+.shimmerCard:focus-visible .shimmerCardInner {
+  border: var(--border) solid transparent; /* make room for gradient */
+  background: linear-gradient(var(--bg), var(--bg)) padding-box,
+    conic-gradient(
+        from var(--angle),
+        #3b82f6 0deg,
+        #ffffff 60deg,
+        #8ec5ff 120deg,
+        #b388ff 180deg,
+        #8ec5ff 240deg,
+        #ffffff 300deg,
+        #3b82f6 360deg
+      )
+      border-box;
+
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+
+  animation: spin 2.2s linear infinite;
 }
 
-/* turn animation on when interactive */
-.shimmerCard:hover::before,
-.shimmerCard:focus-visible::before {
-  animation-play-state: running;
-  opacity: 1;
-  visibility: visible;
-  transition-delay: 0s; /* appear immediately */
-}
-.shimmerCard:hover::after,
-.shimmerCard:focus-visible::after {
-  opacity: 1;
-}
-
-@keyframes shimmer-rotate {
+/* animate the gradient angle */
+@keyframes spin {
   to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Respect reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  .shimmerCard::before {
-    animation: none;
+    --angle: 360deg;
   }
 }
