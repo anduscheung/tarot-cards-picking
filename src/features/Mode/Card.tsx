@@ -9,8 +9,10 @@ const Card: React.FC<CardProps> = ({ title, substring }) => {
   return (
     <div className={styles.shimmerCard}>
       <div className={styles.shimmerCardInner}>
-        <div className={`${styles.title} ${styles.text}`}>{title}</div>
-        <div className={`${styles.substring} ${styles.text}`}>{substring}</div>
+        <div className={styles.content}>
+          <div className={`${styles.title} ${styles.text}`}>{title}</div>
+          <div className={`${styles.substring} ${styles.text}`}>{substring}</div>
+        </div>
       </div>
     </div>
   );

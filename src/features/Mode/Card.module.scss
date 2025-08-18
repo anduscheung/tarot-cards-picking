@@ -14,22 +14,13 @@
   text-align: center;
 }
 
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
 .shimmerCard {
   --radius: 16px;
   --border: 2px; /* border thickness */
+  --shimmerBorder: 1px;
   --bg: rgb(15 23 42); /* card background */
-  --shine1: #fff; /* bright points in the shimmer */
-  --shine2: #8ec5ff;
-  --shine3: #b388ff;
 
   width: 100%;
-
   position: relative;
   display: inline-block;
   border: 0;
@@ -61,10 +52,17 @@
   transition: border-image 0.3s ease, border-color 0.3s ease;
 }
 
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .shimmerCard:hover .shimmerCardInner,
 .shimmerCard:focus-visible .shimmerCardInner {
+  --hover-bg: rgb(30, 41, 59);
   border: var(--border) solid transparent; /* make room for gradient */
-  background: linear-gradient(var(--bg), var(--bg)) padding-box,
+  background: linear-gradient(var(--hover-bg), var(--hover-bg)) padding-box,
     conic-gradient(
         from var(--angle),
         #3b82f6 0deg,
@@ -76,7 +74,6 @@
         #3b82f6 360deg
       )
       border-box;
-
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
 
@@ -88,4 +85,34 @@
   to {
     --angle: 360deg;
   }
+}
+
+/* Content pop wrapper */
+.content {
+  transform-origin: center;
+  transform: scale(1); /* default */
+  transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1), filter 1s ease, color 1s ease,
+    letter-spacing 1s ease;
+}
+
+/* On hover: pop the content slightly, no layout change */
+.shimmerCard:hover .content,
+.shimmerCard:focus-visible .content {
+  transform: scale(1.06);
+  filter: drop-shadow(0 2px 6px rgba(62, 130, 246, 0.25));
+}
+
+/* Subtle readability boost */
+.title,
+.substring {
+  transition: color 1s ease, text-shadow 1s ease;
+}
+.shimmerCard:hover .title,
+.shimmerCard:focus-visible .title {
+  color: #eef4ff; /* a hair brighter */
+  text-shadow: 0 0 8px rgba(62, 130, 246, 0.25); /* soft glow */
+}
+.shimmerCard:hover .substring,
+.shimmerCard:focus-visible .substring {
+  color: #b6c3da;
 }
