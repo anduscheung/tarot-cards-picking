@@ -7,6 +7,14 @@ const Mode = () => {
   const [question, setQuestion] = useState("");
   const navigate = useNavigate();
 
+  const onCardClick = (page: string) => {
+    if (question.trim() === "") {
+      alert("Please enter a question.");
+      return;
+    }
+    navigate(page);
+  };
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Discover Your Tarot Insights</h1>
@@ -25,12 +33,12 @@ const Mode = () => {
         <Card
           title="Draw for Me"
           substring="The deck choose at random"
-          onClick={() => navigate("/draw-for-me")}
+          onClick={() => onCardClick("/draw-for-me")}
         />
         <Card
           title="Let Me Pick"
           substring="You select three cards yourself"
-          onClick={() => navigate("/let-me-pick")}
+          onClick={() => onCardClick("let-me-pick")}
         />
       </div>
     </div>
