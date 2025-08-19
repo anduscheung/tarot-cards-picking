@@ -3,11 +3,12 @@ import styles from "./Card.module.scss";
 interface CardProps {
   title: string;
   substring: string;
+  onClick?: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ title, substring }) => {
+const Card: React.FC<CardProps> = ({ title, substring, onClick }) => {
   return (
-    <div className={styles.shimmerCard}>
+    <div onClick={onClick} className={styles.shimmerCard}>
       <div className={styles.shimmerCardInner}>
         <div className={styles.content}>
           <div className={`${styles.title} ${styles.text}`}>{title}</div>
