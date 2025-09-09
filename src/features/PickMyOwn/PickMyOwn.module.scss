@@ -1,0 +1,395 @@
+:root {
+  /* Shadows tuned for black background */
+  --elev-1: 0 10px 26px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  --elev-2: 0 18px 40px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  --elev-3: 0 28px 64px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Stage */
+.container {
+  min-height: 100dvh;
+  color: #d7dde8;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  padding: 16px 0 24px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.toggle {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #121217;
+  color: #eaeaea;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+}
+.disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.hint {
+  opacity: 0.85;
+}
+
+/* Fan area */
+.fan {
+  position: relative;
+  width: 100%;
+  height: var(--fan-h, 420px);
+  overflow: visible;
+  perspective: 1000px;
+
+  display: flex;
+  justify-content: center; /* bottom-center by default */
+  align-items: flex-end;
+}
+
+/* idle / shuffle: anchor truly centered */
+.idle,
+.shuffle,
+.spread,
+.stack {
+  display: block;
+  .anchor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .card {
+    transform: rotate(0deg);
+  }
+}
+
+/* weave / triple / stack / spread: anchor bottom-center */
+.weave,
+.triple {
+  .anchor {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+}
+
+/* anchor + slot */
+.anchor {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+.slot {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/* card */
+.card {
+  position: absolute;
+  left: calc(var(--card-w) * -0.5);
+  bottom: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: 14px;
+  overflow: hidden;
+
+  transform-origin: 50% calc(100% + var(--pivot, 260px));
+  transform: rotate(0deg);
+  transition: transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 240ms ease,
+    filter 240ms ease;
+  box-shadow: var(--elev-1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
+/* ---------- PHASE ANIMATIONS ---------- */
+
+/* 1) chaos shuffle in the center */
+.shuffle .card {
+  animation: chaos var(--cdur) cubic-bezier(0.2, 0.7, 0.2, 1) var(--cdelay) both;
+}
+@keyframes chaos {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    box-shadow: var(--elev-1);
+  }
+  35% {
+    transform: translate(var(--cx), var(--cy)) rotate(var(--crot));
+    box-shadow: var(--elev-3);
+  }
+  70% {
+    transform: translate(calc(var(--cx) * -0.6), calc(var(--cy) * -0.6))
+      rotate(calc(var(--crot) * -0.45));
+    box-shadow: var(--elev-2);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+    box-shadow: var(--elev-1);
+  }
+}
+
+/* 2) WEAVE (vertical up/down with 1–3 rhythm), repeated N passes (handled in TS) */
+.weave .card {
+  --amp: 52px; /* stronger motion for visibility */
+  --phaseDelay: calc((var(--weaveCluster) - 1) * 110ms);
+  animation: weaveUpDown var(--weave-dur) ease-in-out calc(var(--delay) + var(--phaseDelay)) both;
+}
+@keyframes weaveUpDown {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: var(--elev-1);
+  }
+  20% {
+    transform: translateY(calc((var(--pile) - 0.5) * -2 * var(--amp))) rotate(0deg);
+    box-shadow: var(--elev-2);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+    box-shadow: var(--elev-1);
+  }
+  75% {
+    transform: translateY(calc((var(--pile) - 0.5) * 2 * var(--amp))) rotate(0deg);
+    box-shadow: var(--elev-2);
+  }
+  100% {
+    transform: rotate(0deg);
+    box-shadow: var(--elev-1);
+  }
+}
+
+/* 3) triple — 3 piles longer, then middle→left, then (left+middle)→right ON TOP */
+.triple .card {
+  /* horizontal pile positions */
+  --triLeftX: -120px;
+  --triMidX: 0px;
+  --triRightX: 120px;
+
+  /* depth & lift */
+  --liftY: 28px;
+  --zLift: 90px; /* ↑ slightly stronger lift */
+
+  --j: var(--stackJitter, 0px);
+
+  /* NEW: ensure left+middle (tri0/tri1) are above right (tri2) during triple */
+  /* big group weights + per-card index as tiny tiebreaker */
+  z-index: calc(var(--isTri0) * 3000 + var(--isTri1) * 2000 + var(--isTri2) * 1000 + var(--i));
+
+  animation: tripleStacks var(--triple-dur) cubic-bezier(0.2, 0.7, 0.2, 1) var(--delay) both;
+}
+
+/* tripleStacks unchanged except we already have translateZ on left+middle at the end */
+@keyframes tripleStacks {
+  0% {
+    transform: rotate(0deg) translateZ(0);
+    box-shadow: var(--elev-1);
+  }
+
+  /* PHASE A — show 3 piles longer (until 35%) */
+  35% {
+    transform: translateX(
+        calc(
+          var(--isTri0) * var(--triLeftX) + var(--isTri1) * var(--triMidX) + var(--isTri2) *
+            var(--triRightX)
+        )
+      )
+      translateY(calc((var(--isTri0) * -1 + var(--isTri1) * -0.5) * var(--liftY) - var(--j)))
+      rotate(0deg) translateZ(0);
+    box-shadow: var(--elev-2);
+  }
+
+  /* PHASE B — middle → left (35–65%) */
+  65% {
+    transform: translateX(
+        calc((var(--isTri0) + var(--isTri1)) * var(--triLeftX) + var(--isTri2) * var(--triRightX))
+      )
+      translateY(calc((var(--isTri1)) * -1 * var(--liftY) - var(--j)))
+      rotate(calc(var(--isTri1) * -4deg)) translateZ(calc(var(--isTri1) * var(--zLift)));
+    box-shadow: var(--elev-3);
+  }
+
+  /* PHASE C — (left+middle) → right, ABOVE right pile */
+  100% {
+    transform: translateX(var(--triRightX))
+      translateY(calc((var(--isTri0) + var(--isTri1)) * -0.6 * var(--liftY) - var(--j)))
+      rotate(calc((var(--isTri0) + var(--isTri1)) * -3deg))
+      translateZ(calc((var(--isTri0) + var(--isTri1)) * var(--zLift)));
+    box-shadow: var(--elev-3);
+  }
+}
+
+/* 4) STACK: collapse to -80° (still centered) */
+.stack .card {
+  transform: rotate(-80deg);
+  transition-delay: 0ms;
+}
+
+/* 5) SPREAD: apply fan angles; hover only here */
+.isOpen.spread .card {
+  transform: rotate(var(--angle));
+  transition-delay: var(--sweep, var(--delay, 0ms));
+
+  &:hover,
+  &:focus-visible {
+    outline: none;
+    transform: rotate(var(--angle)) translateY(-14px);
+    box-shadow: var(--elev-2);
+    z-index: 6;
+  }
+}
+
+/* Non-spread phases: cannot pick; no hover */
+.fan:not(.isOpen) .card,
+.fan:not(.spread) .card {
+  pointer-events: none;
+}
+
+/* Dim picked in fan */
+.isPicked {
+  opacity: 0.45;
+  filter: saturate(0.75);
+}
+
+/* Tip */
+.tip {
+  margin-top: 12px;
+  text-align: center;
+  color: #cbd5e1;
+  opacity: 0.9;
+}
+
+/* Tray */
+.trayWrap {
+  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+.tray {
+  display: grid;
+  grid-auto-flow: column;
+  gap: clamp(12px, 3vw, 22px);
+  align-items: start;
+}
+.trayItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-items: center;
+  align-items: center;
+}
+
+.badge {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9));
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  font: 600 12px/1 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* 3D flip cards in tray */
+.trayCard {
+  width: clamp(96px, calc(var(--card-w) * 0.9), var(--card-w));
+  height: clamp(155px, calc(var(--card-h) * 0.9), var(--card-h));
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  border-radius: 14px;
+  cursor: pointer;
+}
+.trayInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 560ms cubic-bezier(0.22, 0.7, 0.22, 1);
+  border-radius: inherit;
+  box-shadow: var(--elev-1);
+}
+.back,
+.front {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: inherit;
+}
+.back {
+  transform: rotateY(0deg);
+}
+.front {
+  transform: rotateY(180deg);
+}
+.img {
+  width: 100%;
+  object-fit: fill;
+}
+.flipped .trayInner {
+  transform: rotateY(180deg);
+}
+
+.caption {
+  width: min(260px, 42vw);
+  text-align: center;
+  color: #e7e7e7;
+}
+.cardName {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+.meaning {
+  opacity: 0.9;
+}
+.desc {
+  opacity: 0.75;
+}
+.tapHint {
+  opacity: 0.62;
+  font-style: italic;
+}
+
+/* RWD */
+@media (max-width: 640px) {
+  .controls {
+    flex-wrap: wrap;
+    padding: 0 12px;
+  }
+  .badge {
+    transform: scale(0.95);
+    transform-origin: left top;
+  }
+  .tray {
+    gap: 14px;
+  }
+}

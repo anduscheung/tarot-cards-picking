@@ -1,7 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 import React, { useState } from "react";
 import styles from "./Results.module.scss";
-import { cardData } from "../../constants/card.constants";
+import { CARD_MEANINGS } from "../../constants/card.constants";
 import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
 import GotoIcon from "../../assets/gotoIcon.svg?react";
 import cardBackCopper from "/src/assets/cardBackCopper.png";
@@ -20,17 +20,12 @@ const imageMap: Record<number, string> = Object.fromEntries(
 
 interface ResultsProps {
   numbers: number[];
-  onClickNextQuestion: () => void;
   question: string;
 }
 
-const Results: React.FC<ResultsProps> = ({
-  numbers,
-  onClickNextQuestion,
-  question,
-}) => {
-  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>(
-    () => numbers.reduce((acc, num) => ({ ...acc, [num]: false }), {})
+const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
+  const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>(() =>
+    numbers.reduce((acc, num) => ({ ...acc, [num]: false }), {})
   );
 
   const toggleCardFlip = (num: number) => {
@@ -43,7 +38,7 @@ const Results: React.FC<ResultsProps> = ({
   const generateChatGptPrompt = () => {
     const prompt = generatePromptForChatgpt(
       question,
-      numbers.map((num) => cardData[num].name)
+      numbers.map((num) => CARD_MEANINGS[num].name)
     );
     navigator.clipboard.writeText(prompt);
     alert("Prompt copied to clipboard! You can now paste it into ChatGPT.");
@@ -57,16 +52,10 @@ const Results: React.FC<ResultsProps> = ({
           <>
             <div
               key={index}
-              className={`${styles.card} ${
-                flippedCards[num] ? styles.flipped : ""
-              }`}
+              className={`${styles.card} ${flippedCards[num] ? styles.flipped : ""}`}
               onClick={() => toggleCardFlip(num)}
             >
-              <img
-                className={styles.cardFront}
-                src={imageMap[num]}
-                alt={`Result ${num}`}
-              />
+              <img className={styles.cardFront} src={imageMap[num]} alt={`Result ${num}`} />
               <img
                 className={styles.cardBack}
                 src={[cardBackCopper, cardBackSilver, cardBackGold][index]}
@@ -79,13 +68,11 @@ const Results: React.FC<ResultsProps> = ({
               }`}
               key={index}
             >
-              <div className={`${styles.mask}`}>
-                Tab the card to unveil the content
-              </div>
-              <h5>{cardData[num].name}</h5>
-              <p>{cardData[num].desc}</p>
+              <div className={`${styles.mask}`}>Tab the card to unveil the content</div>
+              <h5>{CARD_MEANINGS[num].name}</h5>
+              <p>{CARD_MEANINGS[num].desc}</p>
               <p>
-                <strong>Meaning:</strong> {cardData[num].meaning_up}
+                <strong>Meaning:</strong> {CARD_MEANINGS[num].meaning_up}
               </p>
             </div>
           </>
@@ -95,28 +82,17 @@ const Results: React.FC<ResultsProps> = ({
       {Object.values(flippedCards).every((item) => item === true) && (
         <>
           {numbers.map((num, index) => (
-            <div
-              className={`${styles.cardDescription} ${styles.largeScreen}`}
-              key={index}
-            >
-              <h5>{cardData[num].name}</h5>
-              <p>{cardData[num].desc}</p>
+            <div className={`${styles.cardDescription} ${styles.largeScreen}`} key={index}>
+              <h5>{CARD_MEANINGS[num].name}</h5>
+              <p>{CARD_MEANINGS[num].desc}</p>
               <p>
-                <strong>Meaning:</strong> {cardData[num].meaning_up}
+                <strong>Meaning:</strong> {CARD_MEANINGS[num].meaning_up}
               </p>
             </div>
           ))}
           <div className={styles.buttonGroup}>
-            <button
-              onClick={onClickNextQuestion}
-              className={styles.askAgainButton}
-            >
-              Ask another question
-            </button>
             <div className={styles.chatGptLink}>
-              <span onClick={generateChatGptPrompt}>
-                Ask ChatGPT to explain it
-              </span>
+              <span onClick={generateChatGptPrompt}>Ask ChatGPT to explain it</span>
               <div className={styles.gotoIconWrapper}>
                 <GotoIcon />
               </div>

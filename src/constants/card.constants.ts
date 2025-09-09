@@ -1,10 +1,9 @@
-export const cardData = [
+export const CARD_MEANINGS = [
   {
     id: 0,
     name: "The Fool",
     desc: "With light step, as if earth and its trammels had little power to restrain him, a young man in gorgeous vestments pauses at the brink of a precipice among the great heights of the world; he surveys the blue distance before him-its expanse of sky rather than the prospect below. His act of eager walking is still indicated, though he is stationary at the given moment; his dog is still bounding. The edge which opens on the depth has no terror; it is as if angels were waiting to uphold him, if it came about that he leaped from the height. His countenance is full of intelligence and expectant dream. He has a rose in one hand and in the other a costly wand, from which depends over his right shoulder a wallet curiously embroidered. He is a prince of the other world on his travels through this one-all amidst the morning glory, in the keen air. The sun, which shines behind him, knows whence he came, whither he is going, and how he will return by another path after many days. He is the spirit in search of experience. Many symbols of the Instituted Mysteries are summarized in this card, which reverses, under high warrants, all the confusions that have preceded it.\nIn his Manual of Cartomancy, Grand Orient has a curious suggestion of the office of Mystic Fool, as apart of his process in higher divination; but it might call for more than ordinary gifts to put it into operation. We shall see how the card fares according to the common arts of fortune-telling, and it will be an example, to those who can discern, of the fact, otherwise so evident, that the Trumps Major had no place originally in the arts of psychic gambling, when cards are used as the counters and pretexts. Of the circumstances under which this art arose we know, however, very little. The conventional explanations say that the Fool signifies the flesh, the sensitive life, and by a peculiar satire its subsidiary name was at one time the alchemist, as depicting folly at the most insensate stage.",
-    meaning_up:
-      "Folly, mania, extravagance, intoxication, delirium, frenzy, bewrayment.",
+    meaning_up: "Folly, mania, extravagance, intoxication, delirium, frenzy, bewrayment.",
   },
   {
     id: 1,
@@ -51,15 +50,13 @@ export const cardData = [
     id: 7,
     name: "The Chariot",
     desc: "An erect and princely figure carrying a drawn sword and corresponding, broadly speaking, to the traditional description which I have given in the first part. On the shoulders of the victorious hero are supposed to be the Urim and Thummim. He has led captivity captive; he is conquest on all planes--in the mind, in science, in progress, in certain trials of initiation. He has thus replied to the sphinx, and it is on this account that I have accepted the variation of Éliphas Lévi; two sphinxes thus draw his chariot. He is above all things triumph in the mind.\nIt is to be understood for this reason (a) that the question of the sphinx is concerned with a Mystery of Nature and not of the world of Grace, to which the charioteer could offer no answer; (b) that the planes of his conquest are manifest or external and not within himself; (c) that the liberation which he effects may leave himself in the bondage of the logical understanding; (d) that the tests of initiation through which he has passed in triumph are to be understood physically or rationally; and (e) that if he came to the pillars of that Temple between which the High Priestess is seated, he could not open the scroll called Tora, nor if she questioned him could he answer. He is not hereditary royalty and he is not priesthood.",
-    meaning_up:
-      "Succour, providence also war, triumph, presumption, vengeance, trouble.",
+    meaning_up: "Succour, providence also war, triumph, presumption, vengeance, trouble.",
   },
   {
     id: 8,
     name: "Strength",
     desc: "A woman, over whose head there broods the same symbol of life which we have seen in the card of the Magician, is closing the jaws of a lion. The only point in which this design differs from the conventional presentations is that her beneficent fortitude has already subdued the lion, which is being led by a chain of flowers. For reasons which satisfy myself, this card has been interchanged with that of justice, which is usually numbered eight. As the variation carries nothing with it which will signify to the reader, there is no cause for explanation. Fortitude, in one of its most exalted aspects, is connected with the Divine Mystery of Union; the virtue, of course, operates in all planes, and hence draws on all in its symbolism. It connects also with innocentia inviolata, and with the strength which resides in contemplation.\nThese higher meanings are, however, matters of inference, and I do not suggest that they are transparent on the surface of the card. They are intimated in a concealed manner by the chain of flowers, which signifies, among many other things, the sweet yoke and the light burden of Divine Law, when it has been taken into the heart of hearts. The card has nothing to do with self-confidence in the ordinary sense, though this has been suggested--but it concerns the confidence of those whose strength is God, who have found their refuge in Him. There is one aspect in which the lion signifies the passions, and she who is called Strength is the higher nature in its liberation. It has walked upon the asp and the basilisk and has trodden down the lion and the dragon.",
-    meaning_up:
-      "Power, energy, action, courage, magnanimity; also complete success and honours.",
+    meaning_up: "Power, energy, action, courage, magnanimity; also complete success and honours.",
   },
   {
     id: 9,
@@ -78,8 +75,7 @@ export const cardData = [
     id: 11,
     name: "Justice",
     desc: "As this card follows the traditional symbolism and carries above all its obvious meanings, there is little to say regarding it outside the few considerations collected in the first part, to which the reader is referred.\nIt will be seen, however, that the figure is seated between pillars, like the High Priestess, and on this account it seems desirable to indicate that the moral principle which deals unto every man according to his works--while, of course, it is in strict analogy with higher things;--differs in its essence from the spiritual justice which is involved in the idea of election. The latter belongs to a mysterious order of Providence, in virtue of which it is possible for certain men to conceive the idea of dedication to the highest things. The operation of this is like the breathing of the Spirit where it wills, and we have no canon of criticism or ground of explanation concerning it. It is analogous to the possession of the fairy gifts and the high gifts and the gracious gifts of the poet: we have them or have not, and their presence is as much a mystery as their absence. The law of Justice is not however involved by either alternative. In conclusion, the pillars of Justice open into one world and the pillars of the High Priestess into another.",
-    meaning_up:
-      "Equity, rightness, probity, executive; triumph of the deserving side in law.",
+    meaning_up: "Equity, rightness, probity, executive; triumph of the deserving side in law.",
   },
   {
     id: 12,
@@ -146,8 +142,7 @@ export const cardData = [
     id: 21,
     name: "The World",
     desc: "As this final message of the Major Trumps is unchanged--and indeed unchangeable--in respect of its design, it has been partly described already regarding its deeper sense. It represents also the perfection and end of the Cosmos, the secret which is within it, the rapture of the universe when it understands itself in God. It is further the state of the soul in the consciousness of Divine Vision, reflected from the self-knowing spirit. But these meanings are without prejudice to that which I have said concerning it on the material side.\nIt has more than one message on the macrocosmic side and is, for example, the state of the restored world when the law of manifestation shall have been carried to the highest degree of natural perfection. But it is perhaps more especially a story of the past, referring to that day when all was declared to be good, when the morning stars sang together and all the Sons of God shouted for joy. One of the worst explanations concerning it is that the figure symbolizes the Magus when he has reached the highest degree of initiation; another account says that it represents the absolute, which is ridiculous. The figure has been said to stand for Truth, which is, however, more properly allocated to the seventeenth card. Lastly, it has been called the Crown of the Magi.",
-    meaning_up:
-      "Assured success, recompense, voyage, route, emigration, flight, change of place.",
+    meaning_up: "Assured success, recompense, voyage, route, emigration, flight, change of place.",
   },
   {
     id: 22,
@@ -384,8 +379,7 @@ export const cardData = [
     id: 55,
     name: "Six of Swords",
     desc: "A ferryman carrying passengers in his punt to the further shore. The course is smooth, and seeing that the freight is light, it may be noted that the work is not beyond his strength.",
-    meaning_up:
-      "Journey by water, route, way, envoy, commissionary, expedient.",
+    meaning_up: "Journey by water, route, way, envoy, commissionary, expedient.",
   },
   {
     id: 56,
@@ -405,8 +399,7 @@ export const cardData = [
     id: 58,
     name: "Nine of Swords",
     desc: "One seated on her couch in lamentation, with the swords over her. She is as one who knows no sorrow which is like unto hers. It is a card of utter desolation.",
-    meaning_up:
-      "Death, failure, miscarriage, delay, deception, disappointment, despair.",
+    meaning_up: "Death, failure, miscarriage, delay, deception, disappointment, despair.",
   },
   {
     id: 59,
@@ -447,8 +440,7 @@ export const cardData = [
     id: 64,
     name: "Ace of Pentacles",
     desc: "A hand--issuing, as usual, from a cloud--holds up a pentacle.",
-    meaning_up:
-      "Perfect contentment, felicity, ecstasy; also speedy intelligence; gold.",
+    meaning_up: "Perfect contentment, felicity, ecstasy; also speedy intelligence; gold.",
   },
   {
     id: 65,
@@ -503,15 +495,13 @@ export const cardData = [
     id: 72,
     name: "Nine of Pentacles",
     desc: "A woman, with a bird upon her wrist, stands amidst a great abundance of grapevines in the garden of a manorial house. It is a wide domain, suggesting plenty in all things. Possibly it is her own possession and testifies to material well-being.",
-    meaning_up:
-      "Prudence, safety, success, accomplishment, certitude, discernment.",
+    meaning_up: "Prudence, safety, success, accomplishment, certitude, discernment.",
   },
   {
     id: 73,
     name: "Ten of Pentacles",
     desc: "A man and woman beneath an archway which gives entrance to a house and domain. They are accompanied by a child, who looks curiously at two dogs accosting an ancient personage seated in the foreground. The child's hand is on one of them.",
-    meaning_up:
-      "Gain, riches; family matters, archives, extraction, the abode of a family.",
+    meaning_up: "Gain, riches; family matters, archives, extraction, the abode of a family.",
   },
   {
     id: 74,

@@ -12,7 +12,7 @@ const Mode = () => {
       alert("Please enter a question.");
       return;
     }
-    navigate(page);
+    navigate(page, { state: { question } });
   };
 
   return (
