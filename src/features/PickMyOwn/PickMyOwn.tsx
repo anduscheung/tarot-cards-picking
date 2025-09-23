@@ -180,7 +180,7 @@ export default function PickMyOwn() {
 
   /** Drag helpers */
   const onDragStartCard = (e: React.DragEvent, idx: number) => {
-    if (!(phase === "spread" && open)) return;
+    if (phase !== "spread") return;
     if (drawn.includes(idx)) return; // already selected
     e.dataTransfer.setData("text/plain", String(idx));
     e.dataTransfer.effectAllowed = "copy";
@@ -189,7 +189,7 @@ export default function PickMyOwn() {
   const onDropToSlot = (slotIndex: number, e: React.DragEvent) => {
     e.preventDefault();
     setOverSlot(null);
-    if (!(phase === "spread" && open)) return;
+    if (phase !== "spread") return;
 
     // Enforce strict sequence
     if (slotIndex !== nextSlotIndex || slots[slotIndex] != null) {
@@ -213,7 +213,7 @@ export default function PickMyOwn() {
   };
 
   const onDragOverSlot = (slotIndex: number, e: React.DragEvent) => {
-    if (!(phase === "spread" && open)) return;
+    if (phase !== "spread") return;
     // Only the next slot (and empty) is droppable
     if (slotIndex !== nextSlotIndex || slots[slotIndex] != null) {
       e.dataTransfer.dropEffect = "none";
@@ -230,7 +230,7 @@ export default function PickMyOwn() {
 
   /** Fallback: click to pick (fills ONLY the next slot) */
   const onCardClick = (idx: number) => {
-    if (phase !== "spread" || !open) return;
+    if (phase !== "spread") return;
     if (drawn.length >= 3) return;
     if (drawn.includes(idx)) return;
 
