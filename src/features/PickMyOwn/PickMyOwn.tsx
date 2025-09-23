@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
 import { CARD_MEANINGS } from "../../constants/card.constants";
@@ -119,9 +119,6 @@ export default function PickMyOwn() {
     []
   );
 
-  /** Weave passes count (3–5) */
-  const [weavePasses, setWeavePasses] = useState<number>(3);
-
   /** Triple cut indices (computed before triple) */
   const [cutA, setCutA] = useState<number | null>(null);
   const [cutB, setCutB] = useState<number | null>(null);
@@ -132,9 +129,8 @@ export default function PickMyOwn() {
     setOpen(false);
     setDrawn([]);
     setFlipped(new Set());
-    setWeavePasses(
-      Math.floor(Math.random() * (WEAVE_PASSES_MAX - WEAVE_PASSES_MIN + 1)) + WEAVE_PASSES_MIN
-    );
+    const passes =
+      Math.floor(Math.random() * (WEAVE_PASSES_MAX - WEAVE_PASSES_MIN + 1)) + WEAVE_PASSES_MIN;
 
     setPhase("shuffle"); // free chaos in the center
 
@@ -144,7 +140,7 @@ export default function PickMyOwn() {
       let pass = 1;
 
       const runNext = () => {
-        if (pass >= weavePasses) {
+        if (pass >= passes) {
           // prepare center-biased triple cuts, then go triple immediately (no visual pause)
           const a = centeredCutIndex(COUNT, 0.24);
           let b = centeredCutIndex(COUNT, 0.24);
@@ -193,11 +189,14 @@ export default function PickMyOwn() {
     "--card-w": `${cardW}px`,
     "--card-h": `${cardH}px`,
   };
+
+  const leftAngleDeg = -totalAngleDeg / 2;
   const fanVars: CSSVars = {
     "--pivot": `${R}px`,
     "--fan-h": `${cardH + (R - R * Math.cos(thetaRad / 2)) + 80}px`,
     "--weave-dur": `${WEAVE_MS}ms`,
     "--triple-dur": `${TRIPLE_MS}ms`,
+    "--left-angle": `${leftAngleDeg}deg`,
   };
 
   /** Per-index helpers */
@@ -205,34 +204,7 @@ export default function PickMyOwn() {
 
   return (
     <div className={styles.container} style={rootVars}>
-      {/* Controls */}
-      <div className={styles.controls}>
-        {phase === "idle" ? (
-          <button className={styles.toggle} onClick={startShuffle}>
-            Shuffle
-          </button>
-        ) : phase === "spread" ? (
-          <button
-            className={styles.toggle}
-            onClick={() => {
-              setPhase("idle");
-              setOpen(false);
-              setDrawn([]);
-              setFlipped(new Set());
-            }}
-          >
-            Reset
-          </button>
-        ) : (
-          <button className={`${styles.toggle} ${styles.disabled}`} disabled>
-            Shuffling…
-          </button>
-        )}
-        <div className={styles.hint}>
-          Keep thinking about your question when the card is being shuffled
-        </div>
-      </div>
-
+      {phase !== "spread" && <h5 className={styles.hint}>Focus on your question</h5>}
       {/* Fan stage with phase class */}
       <div
         className={`${styles.fan} ${open ? styles.isOpen : ""} ${styles[phase]}`}
@@ -240,6 +212,18 @@ export default function PickMyOwn() {
         role="list"
       >
         <div className={styles.anchor}>
+          {/* Starter overlay: visible only while idle, sized to the deck footprint */}
+          {phase === "idle" && (
+            <button
+              type="button"
+              className={styles.starterOverlay}
+              onClick={startShuffle}
+              aria-label="Click the deck to start shuffling"
+            >
+              <span className={styles.starterHint}>Tap to shuffle</span>
+            </button>
+          )}
+
           {backs.map((src, i) => {
             const t = COUNT > 1 ? i / (COUNT - 1) : 0.5;
             const angle = -totalAngleDeg / 2 + totalAngleDeg * t;
@@ -273,14 +257,19 @@ export default function PickMyOwn() {
             };
 
             const picked = drawn.includes(i);
+            const isTopCardAttention = phase === "idle" && i === COUNT - 1;
 
             return (
               <div key={i} className={styles.slot}>
                 <button
                   type="button"
-                  className={`${styles.card} ${picked ? styles.isPicked : ""}`}
+                  className={[
+                    styles.card,
+                    picked ? styles.isPicked : "",
+                    isTopCardAttention ? styles.attention : "",
+                  ].join(" ")}
                   style={vars}
-                  onClick={() => onCardClick(i)}
+                  onClick={() => (phase === "spread" ? onCardClick(i) : undefined)}
                   aria-disabled={
                     phase === "spread" && !picked && drawn.length < 3 ? "false" : "true"
                   }
@@ -292,63 +281,64 @@ export default function PickMyOwn() {
           })}
         </div>
       </div>
+      <div className={styles.result}>
+        {/* Tip while spread and not full */}
+        {phase === "spread" && drawn.length < 3 && (
+          <div className={styles.tip}>Pick 3 cards (selected {drawn.length}/3)</div>
+        )}
 
-      {/* Tip while spread and not full */}
-      {phase === "spread" && drawn.length < 3 && (
-        <div className={styles.tip}>請選擇 3 張牌（已選 {drawn.length}/3）</div>
-      )}
-
-      {/* Tray with 3D flip */}
-      {drawn.length > 0 && (
-        <div className={styles.trayWrap}>
-          <div className={styles.tray}>
-            {drawn.map((idx, k) => {
-              const faceUrl = FACE_IMAGES[idx];
-              const meaning = CARD_MEANINGS[idx];
-              const flippedOn = flipped.has(idx);
-              return (
-                <div key={idx} className={styles.trayItem}>
-                  <div className={styles.badge}>
-                    {k === 0 ? "past" : k === 1 ? "now" : "future"}
-                  </div>
-                  <button
-                    type="button"
-                    className={`${styles.trayCard} ${flippedOn ? styles.flipped : ""}`}
-                    onClick={() => onFlip(idx)}
-                    aria-label={`翻牌 ${k + 1}`}
-                  >
-                    <div className={styles.trayInner}>
-                      <div className={styles.back}>
-                        <img src={backImg} alt="back" className={styles.img} />
-                      </div>
-                      <div className={styles.front}>
-                        <img
-                          src={faceUrl}
-                          alt={meaning?.name ?? `card ${idx}`}
-                          className={styles.img}
-                        />
-                      </div>
+        {/* Tray with 3D flip */}
+        {drawn.length > 0 && (
+          <div className={styles.trayWrap}>
+            <div className={styles.tray}>
+              {drawn.map((idx, k) => {
+                const faceUrl = FACE_IMAGES[idx];
+                const meaning = CARD_MEANINGS[idx];
+                const flippedOn = flipped.has(idx);
+                return (
+                  <div key={idx} className={styles.trayItem}>
+                    <div className={styles.badge}>
+                      {k === 0 ? "past" : k === 1 ? "now" : "future"}
                     </div>
-                  </button>
-                  <div className={styles.caption}>
-                    {flippedOn ? (
-                      <>
-                        <div className={styles.cardName}>{meaning?.name ?? `#${idx}`}</div>
-                        {meaning?.meaning_up && (
-                          <p className={styles.meaning}>{meaning.meaning_up}</p>
-                        )}
-                        {meaning?.desc && <p className={styles.desc}>{meaning.desc}</p>}
-                      </>
-                    ) : (
-                      <div className={styles.tapHint}>點擊卡背翻牌</div>
-                    )}
+                    <button
+                      type="button"
+                      className={`${styles.trayCard} ${flippedOn ? styles.flipped : ""}`}
+                      onClick={() => onFlip(idx)}
+                      aria-label={`翻牌 ${k + 1}`}
+                    >
+                      <div className={styles.trayInner}>
+                        <div className={styles.back}>
+                          <img src={backImg} alt="back" className={styles.img} />
+                        </div>
+                        <div className={styles.front}>
+                          <img
+                            src={faceUrl}
+                            alt={meaning?.name ?? `card ${idx}`}
+                            className={styles.img}
+                          />
+                        </div>
+                      </div>
+                    </button>
+                    <div className={styles.caption}>
+                      {flippedOn ? (
+                        <>
+                          <div className={styles.cardName}>{meaning?.name ?? `#${idx}`}</div>
+                          {meaning?.meaning_up && (
+                            <p className={styles.meaning}>{meaning.meaning_up}</p>
+                          )}
+                          {meaning?.desc && <p className={styles.desc}>{meaning.desc}</p>}
+                        </>
+                      ) : (
+                        <div className={styles.tapHint}>點擊卡背翻牌</div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
