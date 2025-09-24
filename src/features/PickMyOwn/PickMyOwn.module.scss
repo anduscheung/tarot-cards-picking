@@ -508,8 +508,11 @@ button {
   height: 100%;
   perspective: 1000px;
   transform-style: preserve-3d;
-  border-radius: 14px;
   cursor: pointer;
+}
+.trayCard[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.85; // subtle
 }
 
 .trayInner {
@@ -549,5 +552,139 @@ button {
 @media (max-width: 640px) {
   .dropRow {
     gap: 14px;
+  }
+}
+
+.detailsScrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  animation: scrimIn 160ms ease;
+  z-index: 50;
+}
+@keyframes scrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.detailsPanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: clamp(300px, 32vw, 420px);
+  background: rgba(14, 16, 22, 0.96);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  transform: translateX(100%);
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: 51;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+.detailsPanel.open {
+  transform: translateX(0);
+}
+
+.detailsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+}
+.detailsClose {
+  background: transparent;
+  border: 0;
+  color: #e5e7eb;
+  font-size: 18px;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.detailsTabs {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.detailsTab {
+  padding: 6px 12px;
+  color: #cbd5e1;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.detailsTab.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  opacity: 1;
+}
+.detailsTab:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.detailsHero {
+  padding: 12px 12px 0;
+  img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    display: block;
+  }
+}
+
+.detailsBody {
+  padding: 12px 14px 18px;
+  overflow: auto;
+}
+.detailsTitle {
+  margin: 10px 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+.detailsMeaning {
+  color: #d1fae5;
+  margin: 6px 0 10px;
+}
+.detailsDesc {
+  color: #cbd5e1;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* Mobile bottom sheet */
+@media (max-width: 640px) {
+  .detailsPanel {
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: min(76vh, 560px);
+    top: auto;
+    bottom: 0;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px 14px 0 0;
+    transform: translateY(100%);
+  }
+  .detailsPanel.open {
+    transform: translateY(0);
   }
 }

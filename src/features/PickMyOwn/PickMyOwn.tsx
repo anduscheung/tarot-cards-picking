@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
 import { CARD_MEANINGS } from "../../constants/card.constants";
@@ -65,6 +65,30 @@ export default function PickMyOwn() {
   /** Viewport */
   const [vw, setVw] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
   const [vh, setVh] = useState<number>(typeof window !== "undefined" ? window.innerHeight : 800);
+
+  // Drawer state
+  const autoOpenDoneRef = useRef(false);
+  const [detailSlot, setDetailSlot] = useState<number | null>(null);
+  const openDetail = (slot: number) => setDetailSlot(slot);
+  const closeDetail = () => setDetailSlot(null);
+
+  useEffect(() => {
+    const filled = slots.every((s) => s != null);
+    const allFlipped = filled && slots.every((s) => s != null && flipped.has(s!));
+
+    if (allFlipped && !autoOpenDoneRef.current) {
+      setDetailSlot(0);
+      autoOpenDoneRef.current = true;
+    }
+  }, [slots, flipped]);
+
+  // Close on ESC
+  useEffect(() => {
+    if (detailSlot === null) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeDetail();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [detailSlot]);
 
   useEffect(() => {
     const onResize = () => {
@@ -133,6 +157,8 @@ export default function PickMyOwn() {
     setDrawn([]);
     setSlots([null, null, null]);
     setFlipped(new Set());
+    setDetailSlot(null);
+    autoOpenDoneRef.current = false;
     const passes =
       Math.floor(Math.random() * (WEAVE_PASSES_MAX - WEAVE_PASSES_MIN + 1)) + WEAVE_PASSES_MIN;
 
@@ -248,6 +274,7 @@ export default function PickMyOwn() {
     if (!drawn.includes(idx)) return;
     setFlipped((prev) => new Set(prev).add(idx));
   };
+  const threeSelected = slots.every((s) => s != null);
 
   /** Root & stage CSS vars */
   const leftAngleDeg = -totalAngleDeg / 2;
@@ -354,70 +381,147 @@ export default function PickMyOwn() {
 
       {/* ======= Drop area under spread (sequence enforced) ======= */}
       {phase === "spread" && (
-        <div className={styles.dropWrap} aria-label="Drop area for your 3 cards">
-          <div className={styles.dropHint}>
-            Drag 3 cards —{" "}
-            <span className={styles.step}>
-              {nextLabel ? `Next: ${nextLabel.toUpperCase()}` : "All set"}
-            </span>
+        <>
+          <div className={styles.dropWrap} aria-label="Drop area for your 3 cards">
+            <div className={styles.dropHint}>
+              Drag 3 cards —{" "}
+              <span className={styles.step}>
+                {nextLabel ? `Next: ${nextLabel.toUpperCase()}` : "All set"}
+              </span>
+            </div>
+            <div className={styles.dropRow}>
+              {[0, 1, 2].map((slotIdx) => {
+                const cardIdx = slots[slotIdx];
+                const filled = cardIdx != null;
+                const flipOn = filled ? flipped.has(cardIdx!) : false;
+                const isNext = slotIdx === nextSlotIndex && !filled;
+
+                return (
+                  <div
+                    key={slotIdx}
+                    className={[
+                      styles.dropSlot,
+                      filled ? styles.filled : "",
+                      overSlot === slotIdx ? styles.over : "",
+                      isNext ? styles.next : styles.blocked,
+                      shakeSlot === slotIdx ? styles.reject : "",
+                    ].join(" ")}
+                    onDragOver={(e) => onDragOverSlot(slotIdx, e)}
+                    onDragEnter={() => {
+                      if (slotIdx === nextSlotIndex && !slots[slotIdx]) setOverSlot(slotIdx);
+                    }}
+                    onDragLeave={() => onDragLeaveSlot(slotIdx)}
+                    onDrop={(e) => onDropToSlot(slotIdx, e)}
+                    role="region"
+                    aria-label={`Drop zone ${slotIdx + 1} (${["past", "now", "future"][slotIdx]})`}
+                    aria-disabled={slotIdx !== nextSlotIndex || !!slots[slotIdx]}
+                  >
+                    {filled ? (
+                      <button
+                        type="button"
+                        className={`${styles.trayCard} ${flipOn ? styles.flipped : ""}`}
+                        onClick={() => {
+                          // block flips until all 3 are selected
+                          if (!threeSelected) {
+                            // brief “reject” shake on this slot
+                            setShakeSlot(slotIdx);
+                            window.setTimeout(() => setShakeSlot(null), 260);
+                            return;
+                          }
+                          // ready: first click flips, subsequent click opens details
+                          if (!flipOn) {
+                            onFlip(cardIdx!);
+                          } else {
+                            openDetail(slotIdx);
+                          }
+                        }}
+                        disabled={!threeSelected && !flipOn} // native disable before 3 picked
+                        aria-disabled={!threeSelected && !flipOn ? "true" : "false"}
+                        title={!threeSelected && !flipOn ? "Select all 3 cards first" : undefined}
+                        aria-label={`Flip card in slot ${slotIdx + 1}`}
+                      >
+                        <div className={styles.trayInner}>
+                          <div className={styles.back}>
+                            <img src={backImg} alt="back" className={styles.img} />
+                          </div>
+                          <div className={styles.front}>
+                            <img
+                              src={FACE_IMAGES[cardIdx!]}
+                              alt={CARD_MEANINGS[cardIdx!]?.name ?? `card ${cardIdx}`}
+                              className={styles.img}
+                            />
+                          </div>
+                        </div>
+                      </button>
+                    ) : (
+                      <span className={styles.dropLabel}>
+                        {slotIdx === 0 ? "past" : slotIdx === 1 ? "now" : "future"}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className={styles.dropRow}>
-            {[0, 1, 2].map((slotIdx) => {
-              const cardIdx = slots[slotIdx];
-              const filled = cardIdx != null;
-              const flipOn = filled ? flipped.has(cardIdx!) : false;
-              const isNext = slotIdx === nextSlotIndex && !filled;
+          {detailSlot !== null &&
+            (() => {
+              const cardIdx = slots[detailSlot]!;
+              const meaning = CARD_MEANINGS[cardIdx];
 
               return (
-                <div
-                  key={slotIdx}
-                  className={[
-                    styles.dropSlot,
-                    filled ? styles.filled : "",
-                    overSlot === slotIdx ? styles.over : "",
-                    isNext ? styles.next : styles.blocked,
-                    shakeSlot === slotIdx ? styles.reject : "",
-                  ].join(" ")}
-                  onDragOver={(e) => onDragOverSlot(slotIdx, e)}
-                  onDragEnter={() => {
-                    if (slotIdx === nextSlotIndex && !slots[slotIdx]) setOverSlot(slotIdx);
-                  }}
-                  onDragLeave={() => onDragLeaveSlot(slotIdx)}
-                  onDrop={(e) => onDropToSlot(slotIdx, e)}
-                  role="region"
-                  aria-label={`Drop zone ${slotIdx + 1} (${["past", "now", "future"][slotIdx]})`}
-                  aria-disabled={slotIdx !== nextSlotIndex || !!slots[slotIdx]}
-                >
-                  {filled ? (
-                    <button
-                      type="button"
-                      className={`${styles.trayCard} ${flipOn ? styles.flipped : ""}`}
-                      onClick={() => onFlip(cardIdx!)}
-                      aria-label={`Flip card in slot ${slotIdx + 1}`}
-                    >
-                      <div className={styles.trayInner}>
-                        <div className={styles.back}>
-                          <img src={backImg} alt="back" className={styles.img} />
-                        </div>
-                        <div className={styles.front}>
-                          <img
-                            src={FACE_IMAGES[cardIdx!]}
-                            alt={CARD_MEANINGS[cardIdx!]?.name ?? `card ${cardIdx}`}
-                            className={styles.img}
-                          />
-                        </div>
+                <>
+                  <div className={styles.detailsScrim} onClick={closeDetail} />
+                  <aside
+                    className={`${styles.detailsPanel} ${styles.open}`}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Card details"
+                  >
+                    <header className={styles.detailsHeader}>
+                      <div className={styles.detailsTabs}>
+                        {["past", "now", "future"].map((lbl, i) => {
+                          const enabled = slots[i] != null;
+                          return (
+                            <button
+                              key={lbl}
+                              type="button"
+                              className={[
+                                styles.detailsTab,
+                                i === detailSlot ? styles.active : "",
+                              ].join(" ")}
+                              onClick={() => enabled && setDetailSlot(i)}
+                              disabled={!enabled}
+                            >
+                              {lbl}
+                            </button>
+                          );
+                        })}
                       </div>
-                    </button>
-                  ) : (
-                    <span className={styles.dropLabel}>
-                      {slotIdx === 0 ? "past" : slotIdx === 1 ? "now" : "future"}
-                    </span>
-                  )}
-                </div>
+                      <button
+                        className={styles.detailsClose}
+                        onClick={closeDetail}
+                        aria-label="Close"
+                      >
+                        ✕
+                      </button>
+                    </header>
+
+                    <div className={styles.detailsHero}>
+                      <img src={FACE_IMAGES[cardIdx]} alt={meaning?.name ?? `card ${cardIdx}`} />
+                    </div>
+
+                    <div className={styles.detailsBody}>
+                      <h3 className={styles.detailsTitle}>{meaning?.name ?? `#${cardIdx}`}</h3>
+                      {meaning?.meaning_up && (
+                        <p className={styles.detailsMeaning}>{meaning.meaning_up}</p>
+                      )}
+                      {meaning?.desc && <p className={styles.detailsDesc}>{meaning.desc}</p>}
+                    </div>
+                  </aside>
+                </>
               );
-            })}
-          </div>
-        </div>
+            })()}
+        </>
       )}
     </div>
   );
