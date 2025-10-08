@@ -1,78 +1,40 @@
-:root {
-  /* Shadows tuned for black background */
-  --elev-1: 0 10px 26px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
-  --elev-2: 0 18px 40px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-  --elev-3: 0 28px 64px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-}
-
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-button {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-}
-
-/* Stage */
 .container {
-  min-height: 100dvh;
   color: #d7dde8;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  justify-items: center;
-  padding: 16px 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
-/* Controls */
-.controls {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.toggle {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: #121217;
-  color: #eaeaea;
-  padding: 0.55rem 1rem;
-  border-radius: 999px;
-  &:hover {
-    border-color: rgba(255, 255, 255, 0.28);
-  }
-}
-.disabled {
-  opacity: 0.6;
-  cursor: default;
-}
 .hint {
-  opacity: 0.85;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(14px, 2vw, 18px);
 }
 
 /* Fan area */
 .fan {
   position: relative;
-  width: 100%;
-  height: var(--fan-h, 420px);
+  width: 80vw;
+  height: 60vh;
   overflow: visible;
   perspective: 1000px;
 
   display: flex;
-  justify-content: center; /* bottom-center by default */
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
 }
 
-/* idle / shuffle: anchor truly centered */
 .idle,
-.shuffle,
-.spread,
-.stack {
+.shuffle {
   display: block;
   .anchor {
     position: absolute;
@@ -85,7 +47,32 @@ button {
   }
 }
 
-/* weave / triple / stack / spread: anchor bottom-center */
+.stack {
+  display: block;
+  .anchor {
+    position: absolute;
+    top: 30%; /* match spread anchor */
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .card {
+    transform: rotate(var(--left-angle));
+  }
+}
+
+.spread {
+  display: block;
+  .anchor {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .card {
+    transform: rotate(0deg);
+  }
+}
+
 .weave,
 .triple {
   .anchor {
@@ -96,7 +83,6 @@ button {
   }
 }
 
-/* anchor + slot */
 .anchor {
   position: relative;
   width: 0;
@@ -108,21 +94,20 @@ button {
   left: 0;
 }
 
-/* card */
+/* card in fan */
 .card {
   position: absolute;
   left: calc(var(--card-w) * -0.5);
   bottom: 0;
   width: var(--card-w);
   height: var(--card-h);
-  border-radius: 14px;
+  border-radius: 4px;
   overflow: hidden;
 
   transform-origin: 50% calc(100% + var(--pivot, 260px));
   transform: rotate(0deg);
   transition: transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 240ms ease,
     filter 240ms ease;
-  box-shadow: var(--elev-1);
 
   img {
     width: 100%;
@@ -133,89 +118,214 @@ button {
   }
 }
 
-/* ---------- PHASE ANIMATIONS ---------- */
+/* ---------- Starter overlay ---------- */
 
-/* 1) chaos shuffle in the center */
+@media (prefers-reduced-motion: reduce) {
+  .attention,
+  .starterHint {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.starterOverlay {
+  position: absolute;
+  bottom: 0;
+  left: calc(var(--card-w) * -0.5);
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: 14px;
+  background: transparent;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.starterHint {
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 4;
+  background: linear-gradient(
+    270deg,
+    #ff00ff,
+    #ff0000,
+    #ff7a00,
+    #ffee00,
+    #00ff00,
+    #00ffff,
+    #0066ff,
+    #ff00ff
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 6px #fff;
+  animation: rainbowFlow 5s linear infinite;
+}
+
+@keyframes rainbowFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Idle attention fx on top card */
+.attention {
+  /* subtle idle tilt + float */
+  animation: idleNudge 2200ms ease-in-out infinite;
+  transform-origin: 50% 90%;
+  position: relative;
+
+  /* soft pulse halo behind the card */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 14px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0) 60%
+    );
+    filter: blur(4px);
+    animation: pulse 1800ms ease-out infinite;
+    z-index: -1;
+  }
+
+  /* gentle sheen passing diagonally over the card */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0) 35%,
+      rgba(255, 255, 255, 0.18) 50%,
+      rgba(255, 255, 255, 0) 65%
+    );
+    transform: translateX(-120%);
+    animation: sheen 2600ms ease-in-out infinite 400ms;
+    pointer-events: none;
+  }
+}
+
+@keyframes idleNudge {
+  0% {
+    transform: rotate(-0.6deg) translateY(0);
+  }
+  50% {
+    transform: rotate(0.6deg) translateY(-2px);
+  }
+  100% {
+    transform: rotate(-0.6deg) translateY(0);
+  }
+}
+@keyframes pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  30% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+@keyframes sheen {
+  0% {
+    transform: translateX(-120%) rotate(0.001deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(120%) rotate(0.001deg);
+    opacity: 0;
+  }
+}
+
+/* ---------- Phase animations ---------- */
+
+/* 1) Shuffle Phase */
 .shuffle .card {
   animation: chaos var(--cdur) cubic-bezier(0.2, 0.7, 0.2, 1) var(--cdelay) both;
 }
 @keyframes chaos {
   0% {
     transform: translate(0, 0) rotate(0deg);
-    box-shadow: var(--elev-1);
   }
   35% {
     transform: translate(var(--cx), var(--cy)) rotate(var(--crot));
-    box-shadow: var(--elev-3);
   }
   70% {
     transform: translate(calc(var(--cx) * -0.6), calc(var(--cy) * -0.6))
       rotate(calc(var(--crot) * -0.45));
-    box-shadow: var(--elev-2);
   }
   100% {
     transform: translate(0, 0) rotate(0deg);
-    box-shadow: var(--elev-1);
   }
 }
 
-/* 2) WEAVE (vertical up/down with 1–3 rhythm), repeated N passes (handled in TS) */
+/* 2) Weave Phase (vertical up/down with 1–3 rhythm), repeated N passes (handled in TS) */
 .weave .card {
-  --amp: 52px; /* stronger motion for visibility */
+  --amp: 52px;
   --phaseDelay: calc((var(--weaveCluster) - 1) * 110ms);
   animation: weaveUpDown var(--weave-dur) ease-in-out calc(var(--delay) + var(--phaseDelay)) both;
 }
 @keyframes weaveUpDown {
   0% {
     transform: rotate(0deg);
-    box-shadow: var(--elev-1);
   }
   20% {
     transform: translateY(calc((var(--pile) - 0.5) * -2 * var(--amp))) rotate(0deg);
-    box-shadow: var(--elev-2);
   }
   50% {
     transform: translateY(0) rotate(0deg);
-    box-shadow: var(--elev-1);
   }
   75% {
     transform: translateY(calc((var(--pile) - 0.5) * 2 * var(--amp))) rotate(0deg);
-    box-shadow: var(--elev-2);
   }
   100% {
     transform: rotate(0deg);
-    box-shadow: var(--elev-1);
   }
 }
 
-/* 3) triple — 3 piles longer, then middle→left, then (left+middle)→right ON TOP */
+/* 3) Triple Phase — 3 piles longer, then middle→left, then (left+middle)→right ON TOP */
 .triple .card {
-  /* horizontal pile positions */
   --triLeftX: -120px;
   --triMidX: 0px;
   --triRightX: 120px;
-
-  /* depth & lift */
   --liftY: 28px;
-  --zLift: 90px; /* ↑ slightly stronger lift */
-
+  --zLift: 90px;
   --j: var(--stackJitter, 0px);
-
-  /* NEW: ensure left+middle (tri0/tri1) are above right (tri2) during triple */
-  /* big group weights + per-card index as tiny tiebreaker */
+  /* ensure left+middle (tri0/tri1) are above right (tri2) during triple */
   z-index: calc(var(--isTri0) * 3000 + var(--isTri1) * 2000 + var(--isTri2) * 1000 + var(--i));
-
   animation: tripleStacks var(--triple-dur) cubic-bezier(0.2, 0.7, 0.2, 1) var(--delay) both;
 }
-
-/* tripleStacks unchanged except we already have translateZ on left+middle at the end */
 @keyframes tripleStacks {
   0% {
     transform: rotate(0deg) translateZ(0);
-    box-shadow: var(--elev-1);
   }
-
-  /* PHASE A — show 3 piles longer (until 35%) */
   35% {
     transform: translateX(
         calc(
@@ -225,53 +335,53 @@ button {
       )
       translateY(calc((var(--isTri0) * -1 + var(--isTri1) * -0.5) * var(--liftY) - var(--j)))
       rotate(0deg) translateZ(0);
-    box-shadow: var(--elev-2);
   }
-
-  /* PHASE B — middle → left (35–65%) */
+  /* middle → left */
   65% {
     transform: translateX(
         calc((var(--isTri0) + var(--isTri1)) * var(--triLeftX) + var(--isTri2) * var(--triRightX))
       )
-      translateY(calc((var(--isTri1)) * -1 * var(--liftY) - var(--j)))
+      translateY(calc(var(--isTri1) * -1 * var(--liftY) - var(--j)))
       rotate(calc(var(--isTri1) * -4deg)) translateZ(calc(var(--isTri1) * var(--zLift)));
-    box-shadow: var(--elev-3);
   }
-
-  /* PHASE C — (left+middle) → right, ABOVE right pile */
+  /* (left+middle) → right, ABOVE right pile */
   100% {
     transform: translateX(var(--triRightX))
       translateY(calc((var(--isTri0) + var(--isTri1)) * -0.6 * var(--liftY) - var(--j)))
       rotate(calc((var(--isTri0) + var(--isTri1)) * -3deg))
       translateZ(calc((var(--isTri0) + var(--isTri1)) * var(--zLift)));
-    box-shadow: var(--elev-3);
   }
 }
 
-/* 4) STACK: collapse to -80° (still centered) */
+/* 4) Stack Phase */
 .stack .card {
-  transform: rotate(-80deg);
+  transform: rotate(var(--left-angle));
   transition-delay: 0ms;
 }
 
-/* 5) SPREAD: apply fan angles; hover only here */
-.isOpen.spread .card {
+/* 5) Spread Phase: apply fan angles */
+.spread .card {
   transform: rotate(var(--angle));
   transition-delay: var(--sweep, var(--delay, 0ms));
-
-  &:hover,
-  &:focus-visible {
-    outline: none;
-    transform: rotate(var(--angle)) translateY(-14px);
-    box-shadow: var(--elev-2);
-    z-index: 6;
-  }
 }
 
-/* Non-spread phases: cannot pick; no hover */
-.fan:not(.isOpen) .card,
-.fan:not(.spread) .card {
+/* Lift ONLY when:
+   - we're in spread
+   - not full
+   - and the card is NOT picked */
+.spread:not(.isPickFull) .card:not(.isPicked):hover,
+.spread:not(.isPickFull) .card:not(.isPicked):focus-visible {
+  outline: none;
+  transform: rotate(var(--angle)) translateY(-14px);
+  cursor: pointer;
+}
+
+.fan:not(.spread) .card, // Non-spread phases: cannot pick 
+.spread .card.isPicked, // Never hover/drag picked cards in the fan
+.spread.isPickFull .card // When selection is full (3 chosen), disable all card hovers
+{
   pointer-events: none;
+  cursor: default;
 }
 
 /* Dim picked in fan */
@@ -280,116 +390,317 @@ button {
   filter: saturate(0.75);
 }
 
-/* Tip */
-.tip {
-  margin-top: 12px;
-  text-align: center;
-  color: #cbd5e1;
-  opacity: 0.9;
-}
+/* ================== Drop area ================== */
 
-/* Tray */
-.trayWrap {
-  margin-top: 16px;
+.dropWrap {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: grid;
-  gap: 12px;
+  gap: 10px;
   justify-items: center;
 }
-.tray {
+
+.dropHint {
+  color: #cbd5e1;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.step {
+  color: #a7f3d0;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.dropRow {
   display: grid;
   grid-auto-flow: column;
   gap: clamp(12px, 3vw, 22px);
   align-items: start;
 }
-.trayItem {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-items: center;
-  align-items: center;
+
+/* RWD */
+@media (max-width: 640px) {
+  .dropRow {
+    gap: 14px;
+  }
 }
 
-.badge {
-  background: linear-gradient(90deg, rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9));
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 999px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-  font: 600 12px/1 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-
-/* 3D flip cards in tray */
-.trayCard {
-  width: clamp(96px, calc(var(--card-w) * 0.9), var(--card-w));
-  height: clamp(155px, calc(var(--card-h) * 0.9), var(--card-h));
-  perspective: 1000px;
-  transform-style: preserve-3d;
+.dropSlot {
+  width: clamp(116px, calc(var(--card-w) * 1.12), calc(var(--card-w) * 1.22));
+  height: clamp(186px, calc(var(--card-h) * 1.12), calc(var(--card-h) * 1.22));
   border-radius: 14px;
-  cursor: pointer;
+  border: 2px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.02);
+  display: grid;
+  place-items: center;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease,
+    transform 160ms ease;
+
+  &.over {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.35) inset;
+    background: rgba(147, 197, 253, 0.06);
+  }
+
+  &.filled {
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.12);
+    background: transparent;
+  }
+
+  /* Only NEXT slot looks active */
+  &.next {
+    border-color: #34d399; /* emerald */
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.28) inset, 0 0 18px rgba(52, 211, 153, 0.22);
+    background: rgba(52, 211, 153, 0.06);
+    animation: nextGlow 1600ms ease-in-out infinite;
+  }
+
+  /* Blocked slots appear muted until it's their turn */
+  &.blocked:not(.filled) {
+    opacity: 0.55;
+    filter: saturate(0.7);
+  }
+
+  /* Invalid drop feedback */
+  &.reject {
+    animation: shakeShort 220ms ease-in-out;
+    border-color: #fca5a5;
+    box-shadow: 0 0 0 3px rgba(252, 165, 165, 0.35) inset;
+  }
 }
+
+@keyframes nextGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.28) inset, 0 0 14px rgba(52, 211, 153, 0.16);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.36) inset, 0 0 24px rgba(52, 211, 153, 0.28);
+  }
+}
+
+@keyframes shakeShort {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.dropLabel {
+  color: #cbd5e1;
+  opacity: 0.75;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* --- Seam-free 3D flip for the tray --- */
+
+.trayCard {
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  transform-style: preserve-3d;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  /* optional tiny backdrop prevents any subpixel flash */
+  background: rgba(0, 0, 0, 0.02);
+}
+
 .trayInner {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform 560ms cubic-bezier(0.22, 0.7, 0.22, 1);
+  will-change: transform;
   border-radius: inherit;
-  box-shadow: var(--elev-1);
+  /* DO NOT set backface-visibility here */
 }
+
+.flipped .trayInner {
+  transform: rotateY(180deg);
+}
+
+/* Face layers: paint images as backgrounds (not <img>) */
 .back,
 .front {
   position: absolute;
   inset: 0;
-  backface-visibility: hidden;
   border-radius: inherit;
+  overflow: hidden;
+
+  /* Hide backfaces (on the faces only) */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  /* Paint image as background: no seams with rounded corners */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%; /* exact fit; you can use 'cover' if you prefer */
+  /* A hairline inset shadow masks any rounding subpixels on some iOS builds */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.001) inset;
+
+  /* Avoid layout/paint surprises mid-rotation */
+  contain: paint;
 }
+
+/* Orientations: back shows first, front after flip */
 .back {
   transform: rotateY(0deg);
 }
 .front {
   transform: rotateY(180deg);
 }
-.img {
-  width: 100%;
-  object-fit: fill;
+
+.detailsScrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  animation: scrimIn 160ms ease;
+  z-index: 50;
 }
-.flipped .trayInner {
-  transform: rotateY(180deg);
+@keyframes scrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.caption {
-  width: min(260px, 42vw);
-  text-align: center;
-  color: #e7e7e7;
+.detailsPanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: clamp(300px, 32vw, 420px);
+  background: rgba(14, 16, 22, 0.96);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  transform: translateX(100%);
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: 51;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
 }
-.cardName {
+.detailsPanel.open {
+  transform: translateX(0);
+}
+
+.detailsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+}
+.detailsClose {
+  background: transparent;
+  border: 0;
+  color: #e5e7eb;
+  font-size: 18px;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.detailsTabs {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.detailsTab {
+  padding: 6px 12px;
+  color: #cbd5e1;
   font-weight: 700;
-  letter-spacing: 0.3px;
-  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.8;
 }
-.meaning {
-  opacity: 0.9;
+.detailsTab.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  opacity: 1;
 }
-.desc {
-  opacity: 0.75;
-}
-.tapHint {
-  opacity: 0.62;
-  font-style: italic;
+.detailsTab:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
-/* RWD */
+.detailsHero {
+  padding: 12px 12px 0;
+  img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    display: block;
+  }
+}
+
+.detailsBody {
+  padding: 12px 14px 18px;
+  overflow: auto;
+}
+.detailsTitle {
+  margin: 10px 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+.detailsMeaning {
+  color: #d1fae5;
+  margin: 6px 0 10px;
+}
+.detailsDesc {
+  color: #cbd5e1;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* Mobile bottom sheet */
 @media (max-width: 640px) {
-  .controls {
-    flex-wrap: wrap;
-    padding: 0 12px;
+  .detailsPanel {
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: min(76vh, 560px);
+    top: auto;
+    bottom: 0;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px 14px 0 0;
+    transform: translateY(100%);
   }
-  .badge {
-    transform: scale(0.95);
-    transform-origin: left top;
-  }
-  .tray {
-    gap: 14px;
+  .detailsPanel.open {
+    transform: translateY(0);
   }
 }
