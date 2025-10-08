@@ -31,12 +31,12 @@ const STAGGER_MS = 10;
 
 /** Animation timings */
 const CHAOS_MS = 1200; // free shuffle
-const WEAVE_PASSES_MIN = 3; // 3–5 passes
+const WEAVE_PASSES_MIN = 3;
 const WEAVE_PASSES_MAX = 5;
-const WEAVE_MS = 1800; // each pass length
-const TRIPLE_MS = 2600; // longer triple so it reads clearly
+const WEAVE_MS = 1800;
+const TRIPLE_MS = 2600;
 const STACK_MS = 520;
-const AUTO_SPREAD_DELAY = 800; // small pause before spreading
+const AUTO_SPREAD_DELAY = 800;
 
 /** Center-biased cut (normal-like distribution) */
 function centeredCutIndex(n: number, spread = 0.2): number {
@@ -60,29 +60,31 @@ export default function PickMyOwn() {
   /** Drag & drop slots (exactly 3) */
   const [slots, setSlots] = useState<(number | null)[]>([null, null, null]);
   const [overSlot, setOverSlot] = useState<number | null>(null);
-  const [shakeSlot, setShakeSlot] = useState<number | null>(null); // invalid-drop feedback
+  const [shakeSlot, setShakeSlot] = useState<number | null>(null);
 
   /** Viewport */
   const [vw, setVw] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
   const [vh, setVh] = useState<number>(typeof window !== "undefined" ? window.innerHeight : 800);
 
-  // Drawer state
+  /** Drawer state */
   const autoOpenDoneRef = useRef(false);
+  const autoFlipDoneRef = useRef(false);
   const [detailSlot, setDetailSlot] = useState<number | null>(null);
   const openDetail = (slot: number) => setDetailSlot(slot);
   const closeDetail = () => setDetailSlot(null);
 
-  useEffect(() => {
-    const filled = slots.every((s) => s != null);
-    const allFlipped = filled && slots.every((s) => s != null && flipped.has(s!));
+  const threeSelected = slots.every((s) => s != null);
 
+  // Auto-open drawer once all flipped
+  useEffect(() => {
+    const allFlipped = threeSelected && slots.every((s) => s != null && flipped.has(s!));
     if (allFlipped && !autoOpenDoneRef.current) {
       setDetailSlot(0);
       autoOpenDoneRef.current = true;
     }
-  }, [slots, flipped]);
+  }, [slots, flipped, threeSelected]);
 
-  // Close on ESC
+  // Close drawer on ESC
   useEffect(() => {
     if (detailSlot === null) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeDetail();
@@ -151,7 +153,7 @@ export default function PickMyOwn() {
   const [cutA, setCutA] = useState<number | null>(null);
   const [cutB, setCutB] = useState<number | null>(null);
 
-  /** Start: idle → shuffle → weave (N passes) → triple → stack → spread */
+  /** Start: idle → shuffle → weave → triple → stack → spread */
   const startShuffle = () => {
     if (phase !== "idle") return;
     setDrawn([]);
@@ -159,19 +161,19 @@ export default function PickMyOwn() {
     setFlipped(new Set());
     setDetailSlot(null);
     autoOpenDoneRef.current = false;
+    autoFlipDoneRef.current = false;
+
     const passes =
       Math.floor(Math.random() * (WEAVE_PASSES_MAX - WEAVE_PASSES_MIN + 1)) + WEAVE_PASSES_MIN;
 
-    setPhase("shuffle"); // free chaos in the center
+    setPhase("shuffle");
 
-    // chain weave passes sequentially with no gap to triple
     window.setTimeout(() => {
       setPhase("weave");
       let pass = 1;
 
       const runNext = () => {
         if (pass >= passes) {
-          // prepare center-biased triple cuts, then go triple immediately (no visual pause)
           const a = centeredCutIndex(COUNT, 0.24);
           let b = centeredCutIndex(COUNT, 0.24);
           if (a === b) b = Math.min(COUNT - 1, a + 1);
@@ -180,24 +182,37 @@ export default function PickMyOwn() {
           setCutB(c2);
 
           setPhase("triple");
-          // after triple animation, stack then spread
           window.setTimeout(() => {
             setPhase("stack");
-            window.setTimeout(() => {
-              setPhase("spread");
-            }, STACK_MS + AUTO_SPREAD_DELAY);
+            window.setTimeout(() => setPhase("spread"), STACK_MS + AUTO_SPREAD_DELAY);
           }, TRIPLE_MS);
           return;
         }
-        // schedule next weave pass
         pass += 1;
         window.setTimeout(runNext, WEAVE_MS);
       };
 
-      // kick first pass timer
       window.setTimeout(runNext, WEAVE_MS);
     }, CHAOS_MS);
   };
+
+  /** Auto-flip sequence after 3 are picked (0.5s delay, staggered) */
+  useEffect(() => {
+    if (!threeSelected || autoFlipDoneRef.current) return;
+    const [a, b, c] = slots as [number, number, number];
+
+    const t0 = setTimeout(() => setFlipped((s) => new Set(s).add(a)), 500);
+    const t1 = setTimeout(() => setFlipped((s) => new Set(s).add(b)), 500 + 220);
+    const t2 = setTimeout(() => setFlipped((s) => new Set(s).add(c)), 500 + 440);
+
+    autoFlipDoneRef.current = true;
+
+    return () => {
+      clearTimeout(t0);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [threeSelected, slots]);
 
   /** Sequence control */
   const labels = ["past", "now", "future"] as const;
@@ -217,7 +232,6 @@ export default function PickMyOwn() {
     setOverSlot(null);
     if (phase !== "spread") return;
 
-    // Enforce strict sequence
     if (slotIndex !== nextSlotIndex || slots[slotIndex] != null) {
       setShakeSlot(slotIndex);
       window.setTimeout(() => setShakeSlot(null), 260);
@@ -260,7 +274,7 @@ export default function PickMyOwn() {
     if (drawn.length >= 3) return;
     if (drawn.includes(idx)) return;
 
-    if (slots[nextSlotIndex] != null) return; // guard
+    if (slots[nextSlotIndex] != null) return;
     setSlots((prev) => {
       const next = [...prev];
       next[nextSlotIndex] = idx;
@@ -268,13 +282,6 @@ export default function PickMyOwn() {
     });
     setDrawn((d) => [...d, idx]);
   };
-
-  /** Flip in slot */
-  const onFlip = (idx: number) => {
-    if (!drawn.includes(idx)) return;
-    setFlipped((prev) => new Set(prev).add(idx));
-  };
-  const threeSelected = slots.every((s) => s != null);
 
   /** Root & stage CSS vars */
   const leftAngleDeg = -totalAngleDeg / 2;
@@ -292,7 +299,6 @@ export default function PickMyOwn() {
 
   /** Per-index helpers */
   const mid = Math.floor(COUNT / 2);
-
   const isPickFull = drawn.length >= 3;
 
   return (
@@ -421,36 +427,29 @@ export default function PickMyOwn() {
                         type="button"
                         className={`${styles.trayCard} ${flipOn ? styles.flipped : ""}`}
                         onClick={() => {
-                          // block flips until all 3 are selected
                           if (!threeSelected) {
-                            // brief “reject” shake on this slot
                             setShakeSlot(slotIdx);
                             window.setTimeout(() => setShakeSlot(null), 260);
                             return;
                           }
-                          // ready: first click flips, subsequent click opens details
                           if (!flipOn) {
-                            onFlip(cardIdx!);
+                            setFlipped((s) => new Set(s).add(cardIdx!));
                           } else {
                             openDetail(slotIdx);
                           }
                         }}
-                        disabled={!threeSelected && !flipOn} // native disable before 3 picked
-                        aria-disabled={!threeSelected && !flipOn ? "true" : "false"}
-                        title={!threeSelected && !flipOn ? "Select all 3 cards first" : undefined}
-                        aria-label={`Flip card in slot ${slotIdx + 1}`}
+                        aria-label={`Reveal or open details for slot ${slotIdx + 1}`}
                       >
                         <div className={styles.trayInner}>
-                          <div className={styles.back}>
-                            <img src={backImg} alt="back" className={styles.img} />
-                          </div>
-                          <div className={styles.front}>
-                            <img
-                              src={FACE_IMAGES[cardIdx!]}
-                              alt={CARD_MEANINGS[cardIdx!]?.name ?? `card ${cardIdx}`}
-                              className={styles.img}
-                            />
-                          </div>
+                          <div
+                            className={styles.back}
+                            style={{ backgroundImage: `url(${backImg})` }}
+                          />
+                          <div
+                            className={styles.front}
+                            style={{ backgroundImage: `url(${FACE_IMAGES[cardIdx!]})` }}
+                            aria-hidden={!flipOn}
+                          />
                         </div>
                       </button>
                     ) : (
@@ -463,6 +462,7 @@ export default function PickMyOwn() {
               })}
             </div>
           </div>
+
           {detailSlot !== null &&
             (() => {
               const cardIdx = slots[detailSlot]!;

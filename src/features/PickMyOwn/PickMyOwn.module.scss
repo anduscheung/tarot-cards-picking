@@ -421,6 +421,13 @@ button {
   align-items: start;
 }
 
+/* RWD */
+@media (max-width: 640px) {
+  .dropRow {
+    gap: 14px;
+  }
+}
+
 .dropSlot {
   width: clamp(116px, calc(var(--card-w) * 1.12), calc(var(--card-w) * 1.22));
   height: clamp(186px, calc(var(--card-h) * 1.12), calc(var(--card-h) * 1.22));
@@ -502,17 +509,19 @@ button {
   letter-spacing: 0.4px;
 }
 
-/* Reuse your tray flip visuals for filled slots */
+/* --- Seam-free 3D flip for the tray --- */
+
 .trayCard {
   width: 100%;
   height: 100%;
   perspective: 1000px;
+  -webkit-perspective: 1000px;
   transform-style: preserve-3d;
+  border-radius: 4px;
+  overflow: hidden;
   cursor: pointer;
-}
-.trayCard[aria-disabled="true"] {
-  cursor: not-allowed;
-  opacity: 0.85; // subtle
+  /* optional tiny backdrop prevents any subpixel flash */
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .trayInner {
@@ -520,39 +529,46 @@ button {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform 560ms cubic-bezier(0.22, 0.7, 0.22, 1);
+  will-change: transform;
   border-radius: inherit;
-}
-
-.back,
-.front {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: inherit;
-}
-.back {
-  transform: rotateY(0deg);
-}
-.front {
-  transform: rotateY(180deg);
-}
-
-.img {
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
+  /* DO NOT set backface-visibility here */
 }
 
 .flipped .trayInner {
   transform: rotateY(180deg);
 }
 
-/* RWD */
-@media (max-width: 640px) {
-  .dropRow {
-    gap: 14px;
-  }
+/* Face layers: paint images as backgrounds (not <img>) */
+.back,
+.front {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+
+  /* Hide backfaces (on the faces only) */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  /* Paint image as background: no seams with rounded corners */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%; /* exact fit; you can use 'cover' if you prefer */
+  /* A hairline inset shadow masks any rounding subpixels on some iOS builds */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.001) inset;
+
+  /* Avoid layout/paint surprises mid-rotation */
+  contain: paint;
+}
+
+/* Orientations: back shows first, front after flip */
+.back {
+  transform: rotateY(0deg);
+}
+.front {
+  transform: rotateY(180deg);
 }
 
 .detailsScrim {
