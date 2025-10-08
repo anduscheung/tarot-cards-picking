@@ -353,9 +353,9 @@ button {
   }
 }
 
-/* 4) Stack Phase: collapse to -80° (still centered) */
+/* 4) Stack Phase */
 .stack .card {
-  transform: rotate(-80deg);
+  transform: rotate(var(--left-angle));
   transition-delay: 0ms;
 }
 
