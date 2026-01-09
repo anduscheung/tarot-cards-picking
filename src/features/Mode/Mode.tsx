@@ -1,11 +1,16 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { TAROT_KEY } from "../../hooks/useTarotCards";
 import Card from "./Card";
 import styles from "./Mode.module.scss";
+
+const fetchCards = () => fetch("/tarot_cards.json", { cache: "force-cache" }).then((r) => r.json());
 
 const Mode = () => {
   const [question, setQuestion] = useState("");
   const navigate = useNavigate();
+  const qc = useQueryClient();
 
   const onCardClick = (page: string) => {
     if (question.trim() === "") {
@@ -14,6 +19,9 @@ const Mode = () => {
     }
     navigate(page, { state: { question } });
   };
+
+  const prefetch = () =>
+    qc.prefetchQuery({ queryKey: TAROT_KEY, queryFn: fetchCards, staleTime: 3600_000 });
 
   return (
     <div className={styles.container}>
@@ -33,12 +41,18 @@ const Mode = () => {
         <Card
           title="Draw for Me"
           substring="The deck choose at random"
-          onClick={() => onCardClick("/draw-for-me")}
+          onClick={() => {
+            prefetch();
+            onCardClick("/draw-for-me");
+          }}
         />
         <Card
           title="Let Me Pick"
           substring="You select three cards yourself"
-          onClick={() => onCardClick("let-me-pick")}
+          onClick={() => {
+            prefetch();
+            onCardClick("let-me-pick");
+          }}
         />
       </div>
     </div>

@@ -1,0 +1,704 @@
+[
+  {
+    "id": 0,
+    "name": "The Fool",
+    "arcana": "Major",
+    "suit": null,
+    "number": 0,
+    "meaning_up": "New beginning, possibilities, innocence, spontaneous, optimism, trust in life, blind faith, adventure, opportunity, pleasure",
+    "meaning_rev": "Holding back, indecision, hesitation, recklessness, fearlessness, bad choices, risk taking"
+  },
+  {
+    "id": 1,
+    "name": "The Magician",
+    "arcana": "Major",
+    "suit": null,
+    "number": 1,
+    "meaning_up": "Action, creation, manifestation, power, self confidence, clarity, will-power, skill, creativity",
+    "meaning_rev": "Manipulation, poor planning, untapped talents, insecure, lack of confidence, narcissism"
+  },
+  {
+    "id": 2,
+    "name": "The High Priestess",
+    "arcana": "Major",
+    "suit": null,
+    "number": 2,
+    "meaning_up": "Intuition, sacred knowledge, the subconscious, divine feminine, trust yourself, sensitivity, purity, high morals",
+    "meaning_rev": "Secrets, harm, hidden agenda, disconnected from intuition, withdraw, silence, selfish, shallowness, ignorance misunderstanding"
+  },
+  {
+    "id": 3,
+    "name": "The Empress",
+    "arcana": "Major",
+    "suit": null,
+    "number": 3,
+    "meaning_up": "Abundance, nurturing, fertility, feminine, good parenting, development, accomplishment, growth, evolution, action",
+    "meaning_rev": "Creative block, selfish, impatient, dependent on others, inaction, lack of concentration, indecisive, overwhelmed, anxiety, infidelity"
+  },
+  {
+    "id": 4,
+    "name": "The Emperor",
+    "arcana": "Major",
+    "suit": null,
+    "number": 4,
+    "meaning_up": "Respect, leadership, stability, structure, rules and power, authority, father figure, protection, control, discipline, focus, practicality",
+    "meaning_rev": "Domineering, controlling, lack of discipline, rigid, stubborn, tyrant, recklessness"
+  },
+  {
+    "id": 5,
+    "name": "The Hierophant",
+    "arcana": "Major",
+    "suit": null,
+    "number": 5,
+    "meaning_up": "Institutions, tradition, religion, society and its rules, social approval conformity, forgiveness, bonded, mercy wisdom trust",
+    "meaning_rev": "Personal beliefs, freedom, going against the grain, unconventional, foolish, generosity, frailty, unorthodox hypocrisy, blind faith, misconception"
+  },
+  {
+    "id": 6,
+    "name": "The Lovers",
+    "arcana": "Major",
+    "suit": null,
+    "number": 6,
+    "meaning_up": "Love, harmony, relationships, union, partnerships, sexuality, passion, values, alignment, deep love, a choice, the strength of two together",
+    "meaning_rev": "Self love, disharmony, imbalance, misalignment of values, suffering, detachment, obedience, conflict, bad choices, indecision, fear of commitment"
+  },
+  {
+    "id": 7,
+    "name": "The Chariot",
+    "arcana": "Major",
+    "suit": null,
+    "number": 7,
+    "meaning_up": "Movement, progress, action, integration, determination, willpower, control, direction, departure, courage",
+    "meaning_rev": "Self discipline, opposition, lack of direction, lack of control, aggression, arrogance, carelessness"
+  },
+  {
+    "id": 8,
+    "name": "Strength",
+    "arcana": "Major",
+    "suit": null,
+    "number": 8,
+    "meaning_up": "Courage, passion, subtle power, persuasion, influence, inner strength, focus, compassion",
+    "meaning_rev": "Inner strength, self doubt, weakness, insecurity, low energy, raw emotion, struggle, pride"
+  },
+  {
+    "id": 9,
+    "name": "The Hermit",
+    "arcana": "Major",
+    "suit": null,
+    "number": 9,
+    "meaning_up": "Soul searching, introspection, contemplation, wisdom, truth seeking, being alone, independence, inner guidance, meditation, consciousness",
+    "meaning_rev": "Isolation, loneliness, withdraw, resignation, distance, lost your way"
+  },
+  {
+    "id": 10,
+    "name": "Wheel of Fortune",
+    "arcana": "Major",
+    "suit": null,
+    "number": 10,
+    "meaning_up": "Good luck, karma life cycles, destiny, turning point, change, inevitable fate, ups and downs, unpredictable",
+    "meaning_rev": "Bad luck, no control, resistance to change, breaking cycles, negative phase"
+  },
+  {
+    "id": 11,
+    "name": "Justice",
+    "arcana": "Major",
+    "suit": null,
+    "number": 11,
+    "meaning_up": "Justice, fairness, truth, clarity, equality, balance, cause and effect, law",
+    "meaning_rev": "Unfairness, lack of accountability, guilt, dishonesty, punishment"
+  },
+  {
+    "id": 12,
+    "name": "The Hanged Man",
+    "arcana": "Major",
+    "suit": null,
+    "number": 12,
+    "meaning_up": "Pause, surrender, letting go, new perspective, enlightenment viewing things, different than before, deep insight, sacrifice, change, release",
+    "meaning_rev": "Delays, standstill, resistance, stalling, indecision, fear of sacrifice, lack of control"
+  },
+  {
+    "id": 13,
+    "name": "Death",
+    "arcana": "Major",
+    "suit": null,
+    "number": 13,
+    "meaning_up": "Endings, beginnings, change, transformation, transition, metamorphosis, and of cycle",
+    "meaning_rev": "Resistance to change, fearing change, holding on, stagnation, decay, personal transformation"
+  },
+  {
+    "id": 14,
+    "name": "Temperance",
+    "arcana": "Major",
+    "suit": null,
+    "number": 14,
+    "meaning_up": "Balance, harmony, moderation, patience, being sensible, purpose, finding meaning",
+    "meaning_rev": "Imbalance, excess, extremes, overindulgence, alcoholism, addiction, self healing, re-alignment"
+  },
+  {
+    "id": 15,
+    "name": "The Devil",
+    "arcana": "Major",
+    "suit": null,
+    "number": 15,
+    "meaning_up": "Shadow self, attachment, addiction, restriction, sexuality, temptation, seduction, destructive behavior, materialism, co-dependency, toxicity",
+    "meaning_rev": "Releasing limiting beliefs, exploring dark thoughts, detachment, freedom, restoring control, resentment, lack of will"
+  },
+  {
+    "id": 16,
+    "name": "The Tower",
+    "arcana": "Major",
+    "suit": null,
+    "number": 16,
+    "meaning_up": "Sudden change, upheaval, chaos, revelation, disaster, awakening, release, sudden insight",
+    "meaning_rev": "Personal transformation, fear of change, averting or delayed disaster, suffering, collapse, stormy time, restlessness"
+  },
+  {
+    "id": 17,
+    "name": "The Star",
+    "arcana": "Major",
+    "suit": null,
+    "number": 17,
+    "meaning_up": "Hope, calm faith, purpose, renewal, spirituality, fortune, good omen, rejuvenation",
+    "meaning_rev": "Lack of faith, despair, discouragement, insecurity, self trust, disconnection"
+  },
+  {
+    "id": 18,
+    "name": "The Moon",
+    "arcana": "Major",
+    "suit": null,
+    "number": 18,
+    "meaning_up": "Illusion, mystery, dreams, intuition, fear, anxiety, subconscious",
+    "meaning_rev": "Release of fear, repressing emotions, inner confusion, misinterpretation, darkness, insecurities"
+  },
+  {
+    "id": 19,
+    "name": "The Sun",
+    "arcana": "Major",
+    "suit": null,
+    "number": 19,
+    "meaning_up": "Positivity, pleasure, happiness, vitality, fun, joy, warmth, celebration, success, rebirth, all is well",
+    "meaning_rev": "Inner child, feeling down, overly optimistic, negativity, depression, sadness, carelessness, arrogance"
+  },
+  {
+    "id": 20,
+    "name": "Judgement",
+    "arcana": "Major",
+    "suit": null,
+    "number": 20,
+    "meaning_up": "Judgment, rebirth, inner calling, a new phase, absolution, reckoning, awakening, redemption, forgiveness, mercy",
+    "meaning_rev": "Self doubt, lack of self awareness, inner critic, self loathing, punishment, destruction, ignoring the call"
+  },
+  {
+    "id": 21,
+    "name": "The World",
+    "arcana": "Major",
+    "suit": null,
+    "number": 21,
+    "meaning_up": "Completion, accomplishment, wholeness, attainment, fulfillment, travel, celebration of life, arriving",
+    "meaning_rev": "Seeking personal closure, short-cuts, delays, no closure, incompletion"
+  },
+  {
+    "id": 22,
+    "name": "Ace of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 1,
+    "meaning_up": "New project, inspiration ,urge to create, willpower, desire, power, potential beginnings, new opportunities, growth",
+    "meaning_rev": "Delays, lack of motivation, lack of energy, lack of passion, weighed down, boredom"
+  },
+  {
+    "id": 23,
+    "name": "Two of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 2,
+    "meaning_up": "Planning, progress, making decisions, discovery, leaving home, travel plans",
+    "meaning_rev": "Personal goals, inner alignment, fear of unknown, fear of change, playing it safe, lack of planning"
+  },
+  {
+    "id": 24,
+    "name": "Three of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 3,
+    "meaning_up": "Preparation, progress, foresight, enterprise, expansion, overseas opportunities",
+    "meaning_rev": "Playing small, lack of planning, lack of foresight, unexpected delays, obstacles to long term goals"
+  },
+  {
+    "id": 25,
+    "name": "Four of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 4,
+    "meaning_up": "Celebration, joy, harmony, marriage, home, community, homecoming",
+    "meaning_rev": "Personal celebration, inner harmony, conflict with others, lack of support, breakdown in communication, home conflict, transition, transience"
+  },
+  {
+    "id": 26,
+    "name": "Five of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 5,
+    "meaning_up": "Competition, rivalry, conflict, disagreement, strife, tension",
+    "meaning_rev": "Avoiding conflict, respecting differences, agreeing to disagree, diversity"
+  },
+  {
+    "id": 27,
+    "name": "Six of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 6,
+    "meaning_up": "Public recognition, victory, progress, self confidence",
+    "meaning_rev": "Egotism, lack of confidence, lack of recognition, unpopular, discredited, private achievement"
+  },
+  {
+    "id": 28,
+    "name": "Seven of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 7,
+    "meaning_up": "Challenge, competition, protection, perseverance, defense, maintaining control",
+    "meaning_rev": "Exhaustion, giving up, destroyed confidence, overwhelmed, overly protective"
+  },
+  {
+    "id": 29,
+    "name": "Eight of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 8,
+    "meaning_up": "Speed, rapid action, movement, swift change, manifesting quickly, quick decisions, air travel",
+    "meaning_rev": "Delays, frustration, holding off, waiting, panic, slowdown"
+  },
+  {
+    "id": 30,
+    "name": "Nine of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 9,
+    "meaning_up": "Courage, persistence, test of faith, resilience, boundaries, last stand, gearing up for worst pessimism, weary",
+    "meaning_rev": "Inner resources, struggle, overwhelmed, on edge, defensive, paranoia, exhaustion, fatigue, lack of motivation"
+  },
+  {
+    "id": 31,
+    "name": "Ten of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 10,
+    "meaning_up": "Burden, extra responsibility, hard work, completion",
+    "meaning_rev": "Doing it all, carrying the burden, delegation, release, overstressed, burn out"
+  },
+  {
+    "id": 32,
+    "name": "Page of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 11,
+    "meaning_up": "Inspiration, ideas, discovery, limitless potential, free spirit, exploration, excitement, freedom",
+    "meaning_rev": "Lack of direction, procrastination, creating conflict, self-limiting beliefs, spiritual path, newly formed idea"
+  },
+  {
+    "id": 33,
+    "name": "Knight of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 12,
+    "meaning_up": "Energy, passionate, inspired action, adventure, fearless, impulsiveness",
+    "meaning_rev": "Passion project, anger, scattered energy, delays, frustration"
+  },
+  {
+    "id": 34,
+    "name": "Queen of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 13,
+    "meaning_up": "Courage, confidence, independence, focused, zest for life, determination, joy",
+    "meaning_rev": "Self respect, self confidence, introverted, selfishness, jealousy, insecurity"
+  },
+  {
+    "id": 35,
+    "name": "King of Wands",
+    "arcana": "Minor",
+    "suit": "Wands",
+    "number": 14,
+    "meaning_up": "Natural leader, visionary, entrepreneur, big picture, leader, overcoming challenges, mature, career focused",
+    "meaning_rev": "Impulsiveness, ruthless, high expectations, haste, unachievable expectations"
+  },
+  {
+    "id": 36,
+    "name": "Ace of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 1,
+    "meaning_up": "Love, compassion, creativity, new feelings, spirituality, intuition, new baby, proposal, marriage",
+    "meaning_rev": "Emotional loss, blocked creativity, emptiness, self love, intuition, repressed emotions"
+  },
+  {
+    "id": 37,
+    "name": "Two of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 2,
+    "meaning_up": "Unified love, partnership, mutual attraction, proposal, marriage, connection",
+    "meaning_rev": "Self love, disharmony, distrust, breakups, imbalance, tension, broken communication"
+  },
+  {
+    "id": 38,
+    "name": "Three of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 3,
+    "meaning_up": "Celebration, friendship, collaboration, creativity, community, happiness",
+    "meaning_rev": "Overindulgence, heavy partying, isolation, independence, alone time, threes a crowd, gossip"
+  },
+  {
+    "id": 39,
+    "name": "Four of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 4,
+    "meaning_up": "Meditation, contemplation, apathy, reevaluation, disconnected",
+    "meaning_rev": "Sudden awareness, choosing happiness, acceptance, retreat, withdrawal, checking in for realignment"
+  },
+  {
+    "id": 40,
+    "name": "Five of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 5,
+    "meaning_up": "Regret, failure, disappointment, pessimism, loss, grief",
+    "meaning_rev": "Acceptance, moving on, finding peace, personal setbacks, self forgiveness"
+  },
+  {
+    "id": 41,
+    "name": "Six of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 6,
+    "meaning_up": "Familiarity, happy memories, reminiscing, childhood memories, innocence, joy, nostalgia",
+    "meaning_rev": "Living in the past, forgiveness, lacking playfulness, moving forward, leaving home, independence"
+  },
+  {
+    "id": 42,
+    "name": "Seven of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 7,
+    "meaning_up": "Opportunities, wishful thinking, choices, illusion, searching for purpose, daydreaming",
+    "meaning_rev": "Alignment, personal values, overwhelmed by choices, lack of purpose, fantasy, illusion, diversion, confusion"
+  },
+  {
+    "id": 43,
+    "name": "Eight of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 8,
+    "meaning_up": "Disappointment, abandonment, withdrawal, escapism, walking away, leaving behind",
+    "meaning_rev": "Trying one more time, indecision, aimless drifting, avoidance, fear of change, fear of loss"
+  },
+  {
+    "id": 44,
+    "name": "Nine of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 9,
+    "meaning_up": "Wish come true, contentment, satisfaction, emotional stability, luxury, gratitude",
+    "meaning_rev": "Lack of inner joy, smugness, dissatisfaction, indulgence, materialism, inner happiness"
+  },
+  {
+    "id": 45,
+    "name": "Ten of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 10,
+    "meaning_up": "Divine love, harmony, blissful relationships, alignment, inner happiness, fulfillment, total love and support",
+    "meaning_rev": "Shattered dreams, broken family, domestic disharmony, disconnection, misaligned values, struggling relationships"
+  },
+  {
+    "id": 46,
+    "name": "Page of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 11,
+    "meaning_up": "Creative opportunities, intuitive messages, curiosity, possibility, happy surprise, dreamer, sensitivity, new love",
+    "meaning_rev": "Emotional immaturity, insecurity, disappointment, new ideas, creative blocks"
+  },
+  {
+    "id": 47,
+    "name": "Knight of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 12,
+    "meaning_up": "Creativity, romantic, charm, imagination, beauty, knight and shining armor, following the heart, prince charming, proposals",
+    "meaning_rev": "Moodiness, disappointment, overactive imagination, jealousy"
+  },
+  {
+    "id": 48,
+    "name": "Queen of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 13,
+    "meaning_up": "Compassion, comfort, calm, nurturing, healing, emotionally stable, intuitive, caring",
+    "meaning_rev": "Inner feeling, self care, self love, co-dependency, insecurity"
+  },
+  {
+    "id": 49,
+    "name": "King of Cups",
+    "arcana": "Minor",
+    "suit": "Cups",
+    "number": 14,
+    "meaning_up": "Emotionally balanced, compassion, diplomatic, control, balance, supportive leader, tolerance, empathic",
+    "meaning_rev": "Cold, bad advice, emotional manipulation, moodiness, self compassion, inner feelings"
+  },
+  {
+    "id": 50,
+    "name": "Ace of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 1,
+    "meaning_up": "Mental clarity, breakthroughs, new ideas, success, sharp mind, new conflict, surgery",
+    "meaning_rev": "Confusion, brutality, chaos, inner clarity, rethinking an idea, clouded judgment"
+  },
+  {
+    "id": 51,
+    "name": "Two of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 2,
+    "meaning_up": "Difficult decisions, weighing options, avoidance, deadlock",
+    "meaning_rev": "Lesser of two evils, no right choice, confusion, indecision, information overload"
+  },
+  {
+    "id": 52,
+    "name": "Three of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 3,
+    "meaning_up": "Heartbreak, suffering, grief, emotional pain, sorrow, hurt, divorce, loss, depression",
+    "meaning_rev": "Negative self talk, releasing pain, forgiveness, optimism, recovery, moving on"
+  },
+  {
+    "id": 53,
+    "name": "Four of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 4,
+    "meaning_up": "Rest, relaxation, meditation, contemplation, recuperation, retreat, renewal, solitude",
+    "meaning_rev": "Exhaustion, burn out, deep contemplation, stagnation, restlessness, stress"
+  },
+  {
+    "id": 54,
+    "name": "Five of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 5,
+    "meaning_up": "Conflict, disagreements, competition, defeat, winning at all costs, sneakiness, bullies, theft, abusive relationships",
+    "meaning_rev": "Past resentment, desire to reconcile, making amends, desire to forgive"
+  },
+  {
+    "id": 55,
+    "name": "Six of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 6,
+    "meaning_up": "Transition, change, leaving behind, releasing baggage, moving on",
+    "meaning_rev": "Personal transition, resistance to change, unfinished business, emotional baggage"
+  },
+  {
+    "id": 56,
+    "name": "Seven of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 7,
+    "meaning_up": "Betrayal, deception, getting away with something, acting strategically, trickery",
+    "meaning_rev": "Coming clean, rethinking approach, deception, self deceit, keeping secrets"
+  },
+  {
+    "id": 57,
+    "name": "Eight of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 8,
+    "meaning_up": "Negative thoughts, self imposed restriction, imprisonment, victim mentality, entrapment",
+    "meaning_rev": "Self limiting beliefs, inner critic, releasing negative thoughts, opening to new perspectives, self acceptance, freedom"
+  },
+  {
+    "id": 58,
+    "name": "Nine of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 9,
+    "meaning_up": "Anxiety, worry, fear, depression, nightmares, insomnia, hopelessness, trauma, despair",
+    "meaning_rev": "Inner turmoil, deep seeded fears, secrets, releasing worry, hope, reaching out"
+  },
+  {
+    "id": 59,
+    "name": "Ten of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 10,
+    "meaning_up": "Painful endings, deep wounds, betrayal, loss, crisis, failure, collapse, defeat",
+    "meaning_rev": "Can't get worse, only upwards, recovery, regeneration, resisting an inevitable end"
+  },
+  {
+    "id": 60,
+    "name": "Page of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 11,
+    "meaning_up": "New ideas, curiosity, thirst for knowledge, new ways of communicating, restless, mental energy",
+    "meaning_rev": "Deception, manipulation, all talk, haste, haphazard action, self expression"
+  },
+  {
+    "id": 61,
+    "name": "Knight of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 12,
+    "meaning_up": "Ambitious, action orientated, driven to succeed, fast thinking, defending beliefs",
+    "meaning_rev": "Restless, unfocused, burn out, impulsive, no direction, unpredictable, disregard for consequence"
+  },
+  {
+    "id": 62,
+    "name": "Queen of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 13,
+    "meaning_up": "Unbiased judgment, independence, clear boundaries, direct communication, clear minded, perceptive",
+    "meaning_rev": "Overly emotional, easily influenced, bitchy, cold-hearted, cruel, bitterness"
+  },
+  {
+    "id": 63,
+    "name": "King of Swords",
+    "arcana": "Minor",
+    "suit": "Swords",
+    "number": 14,
+    "meaning_up": "Head over heart, disciplined, truthful, honest, mental clarity, authority",
+    "meaning_rev": "Quiet power, inner truth, callous, weakness, loss of emotional control, manipulation, misuse of power"
+  },
+  {
+    "id": 64,
+    "name": "Ace of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 1,
+    "meaning_up": "Abundance, manifestation, opportunity, new career or financial opportunity, new venture, prosperity",
+    "meaning_rev": "Lost opportunity, missed chance, bad investment, lack of planning and foresight"
+  },
+  {
+    "id": 65,
+    "name": "Two of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 2,
+    "meaning_up": "Multiple priorities, time management, adaptability, balancing decisions",
+    "meaning_rev": "Over committed, disorganized, re-prioritize, lack of balance, overwhelmed"
+  },
+  {
+    "id": 66,
+    "name": "Three of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 3,
+    "meaning_up": "Teamwork, collaboration, learning, implementation, building something",
+    "meaning_rev": "Disharmony, misalignment, working alone, lack of teamwork, disorganized, group conflict"
+  },
+  {
+    "id": 67,
+    "name": "Four of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 4,
+    "meaning_up": "Saving money, security, conservation, scarcity, control, frugality",
+    "meaning_rev": "Greediness, possessiveness, stringiness, overspending, self protection"
+  },
+  {
+    "id": 68,
+    "name": "Five of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 5,
+    "meaning_up": "Financial loss, lack mindset, lss, isolation, worry, need, poverty, insecurity",
+    "meaning_rev": "Recovery from financial loss, spiritual poverty, charity, improvement"
+  },
+  {
+    "id": 69,
+    "name": "Six of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 6,
+    "meaning_up": "Giving, receiving, sharing wealth, generosity, charity, sharing",
+    "meaning_rev": "Self care, unpaid debts, one sided charity, strings attached, power and domination"
+  },
+  {
+    "id": 70,
+    "name": "Seven of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 7,
+    "meaning_up": "Long term view, hard work, perseverance, diligence, sustainable results, investment",
+    "meaning_rev": "Lack of long term vision, limited success or reward, work without results, distractions"
+  },
+  {
+    "id": 71,
+    "name": "Eight of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 8,
+    "meaning_up": "Diligence, passion, high standard, apprenticeship, mastery, skill development, repetitive tasks",
+    "meaning_rev": "Self development, perfectionism, misdirected activity, no passion, uninspired, no motivation"
+  },
+  {
+    "id": 72,
+    "name": "Nine of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 9,
+    "meaning_up": "Fruits of labor, rewards, luxury, self sufficiency, financial independence",
+    "meaning_rev": "Self worth, hustling, living beyond means, obsession with work, false success"
+  },
+  {
+    "id": 73,
+    "name": "Ten of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 10,
+    "meaning_up": "Wealth, financial security, family, long term success, contribution",
+    "meaning_rev": "Dark side of wealth, financial failure or loss, fleeting success, lack of stability, lack of resources"
+  },
+  {
+    "id": 74,
+    "name": "Page of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 11,
+    "meaning_up": "Manifestation, financial opportunity, skill development, ambition, desire, diligence",
+    "meaning_rev": "Lack of commitment, greediness, laziness, procrastination, learn from failure"
+  },
+  {
+    "id": 75,
+    "name": "Knight of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 12,
+    "meaning_up": "Hard work, productivity, routine, conservation, efficiency, responsibility",
+    "meaning_rev": "Self discipline, boredom, feeling stuck, perfectionism, work without reward"
+  },
+  {
+    "id": 76,
+    "name": "Queen of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 13,
+    "meaning_up": "Nurturing, practical, providing financially, a working parent",
+    "meaning_rev": "Financial independence, self care, work-home conflict, self centered, jealousy, smothering"
+  },
+  {
+    "id": 77,
+    "name": "King of Pentacles",
+    "arcana": "Minor",
+    "suit": "Pentacles",
+    "number": 14,
+    "meaning_up": "Wealth, business, leadership, security, discipline, abundance, prosperity, generosity",
+    "meaning_rev": "Greed, indulgence, material loss, stubborn, obsessed with wealth and status, financially inept"
+  }
+]

@@ -1,22 +1,13 @@
 /// <reference types="vite-plugin-svgr/client" />
 import React, { useState } from "react";
 import styles from "./Results.module.scss";
-import { CARD_MEANINGS } from "../../constants/card.constants";
+import { useTarotCards } from "../../hooks/useTarotCards";
 import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
 import GotoIcon from "../../assets/gotoIcon.svg?react";
+import { imageUrlByIndex } from "../../utils/cardAssets";
 import cardBackCopper from "/src/assets/cardBackCopper.png";
 import cardBackSilver from "/src/assets/cardBackSilver.png";
 import cardBackGold from "/src/assets/cardBackGold.png";
-
-const images = import.meta.glob("/src/assets/cards/*.png", { eager: true });
-
-const imageMap: Record<number, string> = Object.fromEntries(
-  Object.entries(images).map(([path, module]) => {
-    const imagePath = (module as { default: string }).default;
-    const key = path.match(/(\d+)\.png$/)?.[1] ?? "";
-    return [parseInt(key), imagePath];
-  })
-);
 
 interface ResultsProps {
   numbers: number[];
@@ -24,6 +15,8 @@ interface ResultsProps {
 }
 
 const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
+  const { data: cards } = useTarotCards();
+
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>(() =>
     numbers.reduce((acc, num) => ({ ...acc, [num]: false }), {})
   );
@@ -38,7 +31,7 @@ const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
   const generateChatGptPrompt = () => {
     const prompt = generatePromptForChatgpt(
       question,
-      numbers.map((num) => CARD_MEANINGS[num].name)
+      numbers.map((num) => cards[num].name)
     );
     navigator.clipboard.writeText(prompt);
     alert("Prompt copied to clipboard! You can now paste it into ChatGPT.");
@@ -55,7 +48,7 @@ const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
               className={`${styles.card} ${flippedCards[num] ? styles.flipped : ""}`}
               onClick={() => toggleCardFlip(num)}
             >
-              <img className={styles.cardFront} src={imageMap[num]} alt={`Result ${num}`} />
+              <img className={styles.cardFront} src={imageUrlByIndex(num)} alt={`Result ${num}`} />
               <img
                 className={styles.cardBack}
                 src={[cardBackCopper, cardBackSilver, cardBackGold][index]}
@@ -69,10 +62,10 @@ const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
               key={index}
             >
               <div className={`${styles.mask}`}>Tab the card to unveil the content</div>
-              <h5>{CARD_MEANINGS[num].name}</h5>
-              <p>{CARD_MEANINGS[num].desc}</p>
+              <h5>{cards[num].name}</h5>
+              <p>{cards[num].desc}</p>
               <p>
-                <strong>Meaning:</strong> {CARD_MEANINGS[num].meaning_up}
+                <strong>Meaning:</strong> {cards[num].meaning_up}
               </p>
             </div>
           </>
@@ -83,10 +76,10 @@ const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
         <>
           {numbers.map((num, index) => (
             <div className={`${styles.cardDescription} ${styles.largeScreen}`} key={index}>
-              <h5>{CARD_MEANINGS[num].name}</h5>
-              <p>{CARD_MEANINGS[num].desc}</p>
+              <h5>{cards[num].name}</h5>
+              <p>{cards[num].desc}</p>
               <p>
-                <strong>Meaning:</strong> {CARD_MEANINGS[num].meaning_up}
+                <strong>Meaning:</strong> {cards[num].meaning_up}
               </p>
             </div>
           ))}

@@ -1,22 +1,8 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
-import { CARD_MEANINGS } from "../../constants/card.constants";
-
-/** Load /src/assets/cards/0.png..77.png -> FACE_IMAGES[index] */
-const PRE_IMAGES = import.meta.glob("/src/assets/cards/*.png", { eager: true }) as Record<
-  string,
-  { default: string }
->;
-const FACE_IMAGES: Record<number, string> = Object.fromEntries(
-  Object.entries(PRE_IMAGES)
-    .map(([path, mod]) => {
-      const m = path.match(/(\d+)\.png$/);
-      if (!m) return null;
-      return [Number(m[1]), mod.default] as const;
-    })
-    .filter(Boolean) as [number, string][]
-);
+import { useTarotCards } from "../../hooks/useTarotCards";
+import { imageUrlByIndex } from "../../utils/cardAssets";
 
 /** CSS variables helper type (no `any`) */
 type CSSVars = React.CSSProperties & { [k in `--${string}`]?: string };
@@ -50,6 +36,8 @@ function centeredCutIndex(n: number, spread = 0.2): number {
 }
 
 export default function PickMyOwn() {
+  const { data: cards, error } = useTarotCards();
+
   /** Phases */
   const [phase, setPhase] = useState<Phase>("idle");
 
@@ -301,6 +289,8 @@ export default function PickMyOwn() {
   const mid = Math.floor(COUNT / 2);
   const isPickFull = drawn.length >= 3;
 
+  if (error || !cards) return <p style={{ color: "red" }}>Failed to load cards.</p>;
+
   return (
     <div className={styles.container} style={rootVars}>
       {phase !== "spread" && <h5 className={styles.hint}>Focus on your question</h5>}
@@ -447,7 +437,7 @@ export default function PickMyOwn() {
                           />
                           <div
                             className={styles.front}
-                            style={{ backgroundImage: `url(${FACE_IMAGES[cardIdx!]})` }}
+                            style={{ backgroundImage: `url(${imageUrlByIndex(cardIdx!)})` }}
                             aria-hidden={!flipOn}
                           />
                         </div>
@@ -466,7 +456,7 @@ export default function PickMyOwn() {
           {detailSlot !== null &&
             (() => {
               const cardIdx = slots[detailSlot]!;
-              const meaning = CARD_MEANINGS[cardIdx];
+              const card = cards[cardIdx];
 
               return (
                 <>
@@ -507,15 +497,14 @@ export default function PickMyOwn() {
                     </header>
 
                     <div className={styles.detailsHero}>
-                      <img src={FACE_IMAGES[cardIdx]} alt={meaning?.name ?? `card ${cardIdx}`} />
+                      <img src={imageUrlByIndex(cardIdx)} alt={card?.name ?? `card ${cardIdx}`} />
                     </div>
 
                     <div className={styles.detailsBody}>
-                      <h3 className={styles.detailsTitle}>{meaning?.name ?? `#${cardIdx}`}</h3>
-                      {meaning?.meaning_up && (
-                        <p className={styles.detailsMeaning}>{meaning.meaning_up}</p>
+                      <h3 className={styles.detailsTitle}>{card?.name ?? `#${cardIdx}`}</h3>
+                      {card?.meaning_up && (
+                        <p className={styles.detailsMeaning}>{card.meaning_up}</p>
                       )}
-                      {meaning?.desc && <p className={styles.detailsDesc}>{meaning.desc}</p>}
                     </div>
                   </aside>
                 </>
