@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 
 import "./App.css";
-import Mode from "./features/Mode";
+import Home from "./features/Home";
+// import Mode from "./features/Mode";
 import PickMyOwn from "./features/PickMyOwn";
 import DrawForMe from "./features/DrawForMe";
 import ComingSoon from "./features/ComingSoon";
@@ -10,7 +11,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      Component: Mode,
+      Component: Home,
     },
     {
       path: "/let-me-pick",
