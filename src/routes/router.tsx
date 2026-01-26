@@ -8,7 +8,7 @@ import { ROUTES } from "./";
 
 export const router = createBrowserRouter([
   { path: ROUTES.home, Component: Home },
-  { path: ROUTES.letMePick, Component: PickMyOwn },
+  { path: ROUTES.pickMyOwn, Component: PickMyOwn },
   { path: ROUTES.drawForMe, Component: DrawForMe },
   { path: "*", Component: ComingSoon }, // catches invalid navigation (like unfinished pages)
 ]);

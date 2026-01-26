@@ -52,7 +52,7 @@ const Mode = () => {
           substring="You select three cards yourself"
           onClick={() => {
             prefetch();
-            onCardClick(ROUTES.letMePick);
+            onCardClick(ROUTES.pickMyOwn);
           }}
         />
       </div>
