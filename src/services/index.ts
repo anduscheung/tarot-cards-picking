@@ -25,7 +25,7 @@ window.addEventListener("storage", (e) => {
     // update any in-memory auth state here
     if (!newToken) {
       // token cleared in another tab -> force logout UX
-      // e.g. queryClient.clear(); navigate("/login");
+      // e.g. queryClient.clear(); navigate(ROUTES.login);
     }
   }
 });
@@ -61,5 +61,5 @@ serviceInstance.interceptors.response.use(
       // redirect to login
     }
     return Promise.reject(e);
-  }
+  },
 );

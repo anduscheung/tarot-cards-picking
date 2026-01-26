@@ -1,6 +1,7 @@
 import { memo, useRef } from "react";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
+import { ROUTES } from "../../routes";
 import styles from "./Home.module.scss";
 
 export default function Home() {
@@ -35,7 +36,7 @@ export default function Home() {
         >
           <div
             onClick={() => {
-              navigate("/login");
+              navigate(ROUTES.login);
             }}
             className={styles.btnLogin}
           >
@@ -43,7 +44,7 @@ export default function Home() {
           </div>
           <div
             onClick={() => {
-              navigate("/signup");
+              navigate(ROUTES.signup);
             }}
             className={styles.btnSignup}
           >

@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { TAROT_KEY } from "../../hooks/useTarotCards";
+import { ROUTES } from "../../routes";
 import Card from "./Card";
 import styles from "./Mode.module.scss";
 
@@ -12,12 +13,12 @@ const Mode = () => {
   const navigate = useNavigate();
   const qc = useQueryClient();
 
-  const onCardClick = (page: string) => {
+  const onCardClick = (route: string) => {
     if (question.trim() === "") {
       alert("Please enter a question.");
       return;
     }
-    navigate(page, { state: { question } });
+    navigate(route, { state: { question } });
   };
 
   const prefetch = () =>
@@ -43,7 +44,7 @@ const Mode = () => {
           substring="The deck choose at random"
           onClick={() => {
             prefetch();
-            onCardClick("/draw-for-me");
+            onCardClick(ROUTES.drawForMe);
           }}
         />
         <Card
@@ -51,7 +52,7 @@ const Mode = () => {
           substring="You select three cards yourself"
           onClick={() => {
             prefetch();
-            onCardClick("let-me-pick");
+            onCardClick(ROUTES.letMePick);
           }}
         />
       </div>
