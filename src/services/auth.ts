@@ -1,10 +1,11 @@
+import { setToken } from "../utils/auth";
 import { serviceInstance } from "./";
 
 export type LoginResp = { token: string; user: { id: string; email: string } };
 
 export async function login(email: string, password: string) {
   const { data } = await serviceInstance.post<LoginResp>("/api/auth/login", { email, password });
-  localStorage.setItem("token", data.token);
+  setToken(data.token);
   return data;
 }
 
@@ -14,6 +15,6 @@ export async function signup(email: string, password: string, display_name?: str
     password,
     display_name,
   });
-  localStorage.setItem("token", data.token);
+  setToken(data.token);
   return data;
 }

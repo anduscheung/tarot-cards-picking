@@ -1,5 +1,6 @@
 import axios, { AxiosHeaders } from "axios";
 export { login, signup } from "./auth";
+import { getToken, clearToken } from "../utils/auth";
 export { listDraws, createDraw } from "./draws";
 
 export const serviceInstance = axios.create({
@@ -10,7 +11,7 @@ export const serviceInstance = axios.create({
 
 // Attach token on every request
 serviceInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = getToken();
   if (token) {
     if (!config.headers) config.headers = new AxiosHeaders();
     (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
@@ -57,7 +58,7 @@ serviceInstance.interceptors.response.use(
       e.status === 419 || // CSRF
       e.status === 440 // Login Timeout
     ) {
-      localStorage.removeItem("token");
+      clearToken();
       // redirect to login
     }
     return Promise.reject(e);
