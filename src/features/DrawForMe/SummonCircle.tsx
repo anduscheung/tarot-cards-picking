@@ -1,4 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
+import { FC, useEffect, useState } from "react";
 import styles from "./SummonCircle.module.scss";
 import RingOuter from "../../assets/summoning/ringOuter.svg?react";
 import Star from "../../assets/summoning/star.svg?react";
@@ -9,9 +10,8 @@ import Circle4 from "../../assets/summoning/circle4.svg?react";
 import Circle3 from "../../assets/summoning/circle3.svg?react";
 import Circle2 from "../../assets/summoning/circle2.svg?react";
 import Circle1 from "../../assets/summoning/circle1.svg?react";
-import { useEffect, useState } from "react";
 
-function SummonCircle() {
+const SummonCircle: FC = () => {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -35,6 +35,6 @@ function SummonCircle() {
       <Star className={styles.star} />
     </div>
   );
-}
+};
 
 export default SummonCircle;

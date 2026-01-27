@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import { useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { useLocation, Navigate } from "react-router";
 import SummonCircle from "./SummonCircle";
 import styles from "./DrawForMe.module.scss";
@@ -10,7 +10,7 @@ import Results from "./Results";
 const TOTAL_ANIMATION_DURATION = 12000;
 type LocationState = { question?: string };
 
-const DrawForMe = () => {
+const DrawForMe: FC = () => {
   const { data: cards, error } = useTarotCards();
   const [numbers, setNumbers] = useState<number[] | null>(null);
   const { state } = useLocation() as { state: LocationState | null };

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
+import React, { FC, useMemo, useState, useEffect, useRef } from "react";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
 import { useTarotCards } from "../../hooks/useTarotCards";
@@ -35,7 +35,7 @@ function centeredCutIndex(n: number, spread = 0.2): number {
   return Math.min(n - 1, Math.max(1, idx));
 }
 
-export default function PickMyOwn() {
+const PickMyOwn: FC = () => {
   const { data: cards, error } = useTarotCards();
 
   /** Phases */
@@ -124,7 +124,7 @@ export default function PickMyOwn() {
         return { dx, dy, rot, delay, dur };
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [vw, vh]
+    [vw, vh],
   );
 
   /** Sweep delays for nice spread */
@@ -134,7 +134,7 @@ export default function PickMyOwn() {
         const t = COUNT > 1 ? i / (COUNT - 1) : 0.5;
         return Math.round(240 * t);
       }),
-    []
+    [],
   );
 
   /** Triple cut indices (computed before triple) */
@@ -514,4 +514,6 @@ export default function PickMyOwn() {
       )}
     </div>
   );
-}
+};
+
+export default PickMyOwn;

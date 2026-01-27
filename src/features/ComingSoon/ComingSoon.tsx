@@ -1,4 +1,6 @@
-const ComingSoon = () => {
+import { FC } from "react";
+
+const ComingSoon: FC = () => {
   return (
     <div style={{ padding: "2rem", textAlign: "center", color: "white" }}>
       <h1>Oops! It's in progress</h1>

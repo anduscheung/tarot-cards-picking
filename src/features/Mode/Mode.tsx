@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router";
 import { TAROT_KEY } from "../../hooks/useTarotCards";
 import { ROUTES } from "../../routes";
@@ -8,7 +8,7 @@ import styles from "./Mode.module.scss";
 
 const fetchCards = () => fetch("/tarot_cards.json", { cache: "force-cache" }).then((r) => r.json());
 
-const Mode = () => {
+const Mode: FC = () => {
   const [question, setQuestion] = useState("");
   const navigate = useNavigate();
   const qc = useQueryClient();

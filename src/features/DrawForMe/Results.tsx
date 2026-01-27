@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import React, { useState } from "react";
+import { FC, useState } from "react";
 import styles from "./Results.module.scss";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
@@ -14,11 +14,11 @@ interface ResultsProps {
   question: string;
 }
 
-const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
+const Results: FC<ResultsProps> = ({ numbers, question }) => {
   const { data: cards } = useTarotCards();
 
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>(() =>
-    numbers.reduce((acc, num) => ({ ...acc, [num]: false }), {})
+    numbers.reduce((acc, num) => ({ ...acc, [num]: false }), {}),
   );
 
   const toggleCardFlip = (num: number) => {
@@ -31,7 +31,7 @@ const Results: React.FC<ResultsProps> = ({ numbers, question }) => {
   const generateChatGptPrompt = () => {
     const prompt = generatePromptForChatgpt(
       question,
-      numbers.map((num) => cards[num].name)
+      numbers.map((num) => cards[num].name),
     );
     navigator.clipboard.writeText(prompt);
     alert("Prompt copied to clipboard! You can now paste it into ChatGPT.");

@@ -1,10 +1,10 @@
-import { memo, useRef } from "react";
+import { FC, memo, useRef } from "react";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { ROUTES } from "../../routes";
 import styles from "./Home.module.scss";
 
-export default function Home() {
+const Home: FC = () => {
   const navigate = useNavigate();
   return (
     <>
@@ -54,7 +54,9 @@ export default function Home() {
       </div>
     </>
   );
-}
+};
+
+export default Home;
 
 /* ---------- Decorative pieces (pure SVG) ---------- */
 function Stars() {
