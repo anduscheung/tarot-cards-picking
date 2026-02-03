@@ -4,13 +4,19 @@ import Mode from "../features/Mode";
 import PickMyOwn from "../features/PickMyOwn";
 import DrawForMe from "../features/DrawForMe";
 import ComingSoon from "../features/ComingSoon";
-import Login from "../features/Login";
-import { ROUTES } from "./";
+import { ROUTES } from ".";
+import HomeWithModal from "./RootWithModal";
 import ProtectedLayout from "./ProtectedLayout";
 
 export const router = createBrowserRouter([
-  { path: ROUTES.home, Component: Home },
-  { path: ROUTES.login, Component: Login },
+  {
+    element: <HomeWithModal />,
+    children: [
+      { path: ROUTES.home, element: <Home /> },
+      { path: ROUTES.login, element: <Home /> },
+      { path: ROUTES.signup, element: <Home /> },
+    ],
+  },
   {
     element: <ProtectedLayout />,
     children: [
