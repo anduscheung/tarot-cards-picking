@@ -1,0 +1,152 @@
+.panel {
+  width: min(92vw, 440px);
+  padding: 28px 24px;
+  border-radius: 16px;
+  background: rgba(14, 23, 42, 0.55);
+  border: 1px solid rgba(255, 185, 58, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(255, 185, 58, 0.08) inset,
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 185, 58, 0.15);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* The visual box (not the input) */
+.inputBox {
+  border: 1px solid rgba(255, 185, 58, 0.25);
+  border-radius: 10px;
+  background: #0e172a;
+  position: relative;
+  /* make sure inner shadows don’t clip */
+  overflow: hidden;
+}
+
+/* Focus border color (Safari supports :has) */
+.inputBox:has(input:focus) {
+  border-color: #ffb93a !important;
+}
+
+/* Autofilled look (paint bg via inset shadow so it wins over WebKit) */
+.inputBox:has(input:-webkit-autofill) {
+  /* background repaint */
+  box-shadow: 0 0 0 1000px #0e172a inset;
+  border-color: rgba(255, 185, 58, 0.25);
+}
+
+/* Firefox autofill */
+.inputBox:has(input:-moz-autofill) {
+  box-shadow: 0 0 0 1000px #0e172a inset;
+}
+
+/* The actual input becomes transparent */
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  outline: 0;
+  background: transparent !important;
+  color: #fff;
+  caret-color: #fff;
+  /* Safari/Chrome text color when autofilled */
+  -webkit-text-fill-color: #fff !important;
+}
+
+/* keep highlight consistent when autofilled & focused */
+.input:focus:-webkit-autofill {
+  /* no border here, border lives on .inputBox */
+}
+
+/* If you still want a direct fallback on the input (not always needed) */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #0e172a inset !important;
+  box-shadow: 0 0 0 1000px #0e172a inset !important;
+  -webkit-text-fill-color: #fff !important;
+  border: 0 !important; /* border is on wrapper */
+}
+
+.showBtn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #121212;
+  background: #ffb93a;
+  border: none;
+  cursor: pointer;
+}
+
+.error {
+  color: #ff8e8e;
+  font-size: 13px;
+  background: rgba(255, 0, 0, 0.08);
+  border: 1px solid rgba(255, 0, 0, 0.18);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.submit {
+  margin-top: 4px;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid #ffb93a;
+  background: #ffb93a;
+  color: #121212;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 24px rgba(255, 185, 58, 0.25);
+  transition: transform 0.06s ease;
+}
+
+.submit:active {
+  transform: translateY(1px);
+}
+
+.swap {
+  margin-top: 14px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+.link {
+  padding: 0;
+  margin-left: 6px;
+  border: none;
+  background: none;
+  color: #ffb93a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* shimmer for title */
+@keyframes shimmer {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
