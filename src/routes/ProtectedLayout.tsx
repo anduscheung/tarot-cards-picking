@@ -9,7 +9,7 @@ export default function ProtectedLayout() {
   if (!authed) {
     return (
       <Navigate
-        to={ROUTES.login}
+        to={ROUTES.home}
         replace //current protected URL won’t stay in the browser history
         state={{ from: location }} // Stores the current location in state.from. Can be used in the login page to send the user back
       />
