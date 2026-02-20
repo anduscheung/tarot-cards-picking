@@ -82,7 +82,6 @@ export default function LoginModal() {
               <input
                 className={styles.input}
                 type={showPw ? "text" : "password"}
-                placeholder="••••••••"
                 autoComplete="current-password"
                 value={pw}
                 onChange={(e) => setPw(e.target.value)}
