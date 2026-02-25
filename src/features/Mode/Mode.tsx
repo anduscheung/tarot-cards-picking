@@ -5,6 +5,7 @@ import { TAROT_KEY } from "../../hooks/useTarotCards";
 import { ROUTES } from "../../routes";
 import Card from "./Card";
 import styles from "./Mode.module.scss";
+import Universe from "../../components/Visual/Universe";
 
 const fetchCards = () => fetch("/tarot_cards.json", { cache: "force-cache" }).then((r) => r.json());
 
@@ -14,7 +15,7 @@ const Mode: FC = () => {
   const qc = useQueryClient();
 
   const onCardClick = (route: string) => {
-    if (question.trim() === "") {
+    if (!question.trim()) {
       alert("Please enter a question.");
       return;
     }
@@ -25,38 +26,42 @@ const Mode: FC = () => {
     qc.prefetchQuery({ queryKey: TAROT_KEY, queryFn: fetchCards, staleTime: 3600_000 });
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Discover Your Tarot Insights</h1>
-      <h5 className={styles.subTitle}>
-        Ask your question, then discover your cards in the way that feels right to you.
-      </h5>
-      <div className={styles.textAreaContainer}>
+    <>
+      <Universe />
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.title}>Discover Your Tarot Insights</div>
+          <div className={styles.subTitle}>
+            Ask your question, then let fate or intuition guide you.
+          </div>
+        </div>
         <textarea
-          className={styles.questionTextArea}
+          className={styles.textArea}
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="What do you need insight on today?"
+          rows={2}
         />
+        <div className={styles.cards}>
+          <Card
+            title="Draw for Me"
+            substring="The deck choose at random"
+            onClick={() => {
+              prefetch();
+              onCardClick(ROUTES.drawForMe);
+            }}
+          />
+          <Card
+            title="Let Me Pick"
+            substring="You select three cards yourself"
+            onClick={() => {
+              prefetch();
+              onCardClick(ROUTES.pickMyOwn);
+            }}
+          />
+        </div>
       </div>
-      <div className={styles.cardContainer}>
-        <Card
-          title="Draw for Me"
-          substring="The deck choose at random"
-          onClick={() => {
-            prefetch();
-            onCardClick(ROUTES.drawForMe);
-          }}
-        />
-        <Card
-          title="Let Me Pick"
-          substring="You select three cards yourself"
-          onClick={() => {
-            prefetch();
-            onCardClick(ROUTES.pickMyOwn);
-          }}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 
