@@ -3,20 +3,19 @@ import styles from "./Card.module.scss";
 
 interface CardProps {
   title: string;
-  substring: string;
-  onClick?: () => void;
+  onClick: () => void;
+  substring?: string;
 }
 
 const Card: FC<CardProps> = ({ title, substring, onClick }) => {
   return (
-    <div onClick={onClick} className={styles.shimmerCard}>
-      <div className={styles.shimmerCardInner}>
-        <div className={styles.content}>
-          <div className={`${styles.title} ${styles.text}`}>{title}</div>
-          <div className={`${styles.substring} ${styles.text}`}>{substring}</div>
-        </div>
+    <button className={styles.card} onClick={onClick}>
+      <h3 className={styles.title}>{title}</h3>
+      <p className={styles.substring}>{substring}</p>
+      <div className={styles.cornerCue} aria-hidden>
+        ➜
       </div>
-    </div>
+    </button>
   );
 };
 

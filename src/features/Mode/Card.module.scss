@@ -1,118 +1,52 @@
-.title {
-  font-weight: 700;
-  text-transform: uppercase;
-  font-family: "Open Sans";
-  font-size: clamp(16px, 3vw, 28px);
-}
+$gold: #ffb93a;
 
-.substring {
-  font-size: clamp(12px, 2vw, 18px);
-  color: #94a3b8;
-}
-
-.text {
-  text-align: center;
-}
-
-.shimmerCard {
-  --radius: 16px;
-  --border: 2px; /* border thickness */
-  --shimmerBorder: 1px;
-  --bg: rgb(15 23 42); /* card background */
-
-  width: 100%;
+.card {
   position: relative;
-  display: inline-block;
-  border: 0;
-  background: transparent;
-  border-radius: var(--radius);
-  padding: 0;
-  cursor: pointer;
-  isolation: isolate; /* keep pseudo elements clipped */
-  box-sizing: border-box; /* keep box math predictable */
-}
+  min-height: 190px;
+  padding: 20px;
+  border-radius: 18px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba($gold, 0.35);
+  backdrop-filter: blur(8px);
+  transition:
+    transform 140ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 
-/* actual card surface */
-.shimmerCardInner {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: clamp(10px, 2vw, 20px);
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-6px);
+    outline: 2px solid rgba($gold, 0.9);
+    cursor: pointer;
+  }
 
-  aspect-ratio: 1 / 1;
-  background: var(--bg);
-  color: #eaeaea;
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-  /* default border */
-  border: var(--border) solid #1e293b;
-  background-clip: padding-box;
-  transition: border-image 0.3s ease, border-color 0.3s ease;
-}
-
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.shimmerCard:hover .shimmerCardInner,
-.shimmerCard:focus-visible .shimmerCardInner {
-  --hover-bg: rgb(30, 41, 59);
-  border: var(--border) solid transparent; /* make room for gradient */
-  background: linear-gradient(var(--hover-bg), var(--hover-bg)) padding-box,
-    conic-gradient(
-        from var(--angle),
-        #3b82f6 0deg,
-        #ffffff 60deg,
-        #8ec5ff 120deg,
-        #b388ff 180deg,
-        #8ec5ff 240deg,
-        #ffffff 300deg,
-        #3b82f6 360deg
-      )
-      border-box;
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
-
-  animation: spin 2.2s linear infinite;
-}
-
-/* animate the gradient angle */
-@keyframes spin {
-  to {
-    --angle: 360deg;
+  &:active {
+    transform: translateY(-1px) scale(0.995);
   }
 }
 
-/* Content pop wrapper */
-.content {
-  transform-origin: center;
-  transform: scale(1); /* default */
-  transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1), filter 1s ease, color 1s ease,
-    letter-spacing 1s ease;
+.title {
+  margin: 2px 0 0;
+  font-size: clamp(18px, 3.4vw, 22px);
+  font-weight: 900;
 }
 
-/* On hover: pop the content slightly, no layout change */
-.shimmerCard:hover .content,
-.shimmerCard:focus-visible .content {
-  transform: scale(1.06);
-  filter: drop-shadow(0 2px 6px rgba(62, 130, 246, 0.25));
-}
-
-/* Subtle readability boost */
-.title,
 .substring {
-  transition: color 1s ease, text-shadow 1s ease;
+  color: rgba(255, 255, 255, 0.78);
 }
-.shimmerCard:hover .title,
-.shimmerCard:focus-visible .title {
-  color: #eef4ff; /* a hair brighter */
-  text-shadow: 0 0 8px rgba(62, 130, 246, 0.25); /* soft glow */
+
+.cornerCue {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  font-size: 18px;
+  color: $gold;
+  transition:
+    transform 0.18s ease,
+    text-shadow 0.18s ease;
 }
-.shimmerCard:hover .substring,
-.shimmerCard:focus-visible .substring {
-  color: #b6c3da;
+.card:hover .cornerCue {
+  transform: translateX(3px);
+  text-shadow: 0 0 10px rgba($gold, 0.5);
 }
