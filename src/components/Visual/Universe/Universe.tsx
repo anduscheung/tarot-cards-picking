@@ -18,11 +18,11 @@ type Track = {
 
 // A small set of **fixed** tracks that approximate your screenshot
 const TRACKS: Track[] = [
-  { rx: 96, ry: 64, tilt: -8, cx: 0, cy: -6, width: 0.9, speed: 100, phase: 0.1 },
+  { rx: 115, ry: 55, tilt: -15, cx: 0, cy: -6, width: 0.9, speed: 100, phase: 0.1 },
   { rx: 72, ry: 48, tilt: 12, cx: 2, cy: 4, width: 0.8, speed: 80, phase: 0.55 },
   { rx: 54, ry: 36, tilt: 0, cx: -3, cy: 0, width: 0.7, speed: 60, phase: 0.25 },
   { rx: 38, ry: 28, tilt: -18, cx: 1, cy: -2, width: 0.7, speed: 50, phase: 0.75 },
-  { rx: 130, ry: 90, tilt: 6, cx: 0, cy: -10, width: 1.0, speed: 60, phase: 0.4 }, // large sweeping ring
+  { rx: 120, ry: 74, tilt: 18, cx: 2, cy: -5, width: 1.0, speed: 60, phase: 0.4 },
 ];
 
 const Universe = () => {
