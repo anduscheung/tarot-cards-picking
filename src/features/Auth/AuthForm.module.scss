@@ -66,21 +66,21 @@
   caret-color: #fff;
   /* Safari/Chrome text color when autofilled */
   -webkit-text-fill-color: #fff !important;
-}
 
-/* keep highlight consistent when autofilled & focused */
-.input:focus:-webkit-autofill {
-  /* no border here, border lives on .inputBox */
-}
+  /* keep highlight consistent when autofilled & focused */
+  &:focus:-webkit-autofill {
+    /* no border here, border lives on .inputBox */
+  }
 
-/* If you still want a direct fallback on the input (not always needed) */
-.input:-webkit-autofill,
-.input:-webkit-autofill:hover,
-.input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #0e172a inset !important;
-  box-shadow: 0 0 0 1000px #0e172a inset !important;
-  -webkit-text-fill-color: #fff !important;
-  border: 0 !important; /* border is on wrapper */
+  /* If you still want a direct fallback on the input (not always needed) */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #0e172a inset !important;
+    box-shadow: 0 0 0 1000px #0e172a inset !important;
+    -webkit-text-fill-color: #fff !important;
+    border: 0 !important; /* border is on wrapper */
+  }
 }
 
 .showBtn {

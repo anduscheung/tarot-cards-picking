@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router";
 import LoginModal from "../features/Auth/LoginModal";
+import SignupModal from "../features/Auth/SignupModal";
 import { ROUTES } from "./";
 
 export default function RootWithModal() {
@@ -13,7 +14,7 @@ export default function RootWithModal() {
     <>
       <Outlet context={{ modalOpen }} />
       {modalOpen && location.pathname === ROUTES.login && <LoginModal />}
-      {/* {modalOpen && location.pathname === ROUTES.signup && <SignupModal />} */}
+      {modalOpen && location.pathname === ROUTES.signup && <SignupModal />}
     </>
   );
 }

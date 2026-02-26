@@ -2,20 +2,19 @@ import { FormEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import Modal from "../../../components/Modal";
-import { login } from "../../../services";
+import { signup } from "../../../services";
 import { ROUTES } from "../../../routes";
 import styles from "../AuthForm.module.scss";
 
-export default function LoginModal() {
+export default function SignupModal() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // If user was redirected here from a protected page, send the user back there after a successful login
-  const from = (location.state as { from?: Location })?.from?.pathname ?? ROUTES.protectedHome;
-  const open = location.pathname === ROUTES.login;
+  const open = location.pathname === ROUTES.signup;
   const close = () => navigate(ROUTES.home, { replace: true });
 
   const [email, setEmail] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,16 +24,34 @@ export default function LoginModal() {
     e.preventDefault();
     setError(null);
     if (!email || !pw) {
-      setError("Please enter email and password.");
+      setError("Please fill in email and password.");
       return;
     }
 
     try {
       setLoading(true);
-      await login(email, pw); // stores token in localStorage
-      navigate(from, { replace: true });
-    } catch {
-      setError("Login failed. Please check your credentials.");
+      await signup(email, pw, displayName.trim()); // stores token in localStorage
+      navigate(ROUTES.protectedHome, { replace: true });
+    } catch (err: unknown) {
+      const e = err as {
+        status?: number;
+        details?: { errors?: Record<string, string[]> };
+      };
+
+      const status = e?.status;
+      const errors = e?.details?.errors;
+
+      if (errors?.password?.length) {
+        setError("Password length must be at least 6 characters.");
+        return;
+      }
+
+      if (status === 409 || errors?.email?.length) {
+        setError("Sign up failed. Please try a different email.");
+        return;
+      }
+
+      setError("Sign up failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -42,10 +59,10 @@ export default function LoginModal() {
 
   const onOutsideClick = (e: MouseEvent) => {
     const el = e.target as HTMLElement | null;
-    if (el?.closest('[data-modal-trigger="login"]')) return true;
-    if (el?.closest('[data-modal-trigger="signup"]')) {
-      // Swap to signup instead of closing
-      navigate(ROUTES.signup, { state: location.state });
+    if (el?.closest('[data-modal-trigger="signup"]')) return true;
+    if (el?.closest('[data-modal-trigger="login"]')) {
+      // Swap to login instead of closing
+      navigate(ROUTES.login, { state: location.state });
       return true; // tell Modal "handled, don't call onClose"
     }
     // Return false/undefined to fall back to onClose()
@@ -61,13 +78,15 @@ export default function LoginModal() {
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <form className={styles.form} onSubmit={onSubmit}>
+          <div className={styles.subtitle}>Create your account</div>
           <label className={styles.field}>
-            <span className={styles.label}>Email</span>
+            <span className={styles.label}>Email *</span>
             <div className={styles.inputBox}>
               <input
                 className={styles.input}
                 type="email"
                 autoComplete="email"
+                inputMode="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
@@ -76,12 +95,25 @@ export default function LoginModal() {
             </div>
           </label>
           <label className={styles.field}>
-            <span className={styles.label}>Password</span>
+            <span className={styles.label}>Display name</span>
+            <div className={styles.inputBox}>
+              <input
+                className={styles.input}
+                type="text"
+                autoComplete="nickname"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+          </label>
+          <label className={styles.field}>
+            <span className={styles.label}>Password *</span>
             <div className={styles.inputBox}>
               <input
                 className={styles.input}
                 type={showPw ? "text" : "password"}
-                autoComplete="current-password"
+                autoComplete="new-password"
                 value={pw}
                 onChange={(e) => setPw(e.target.value)}
                 disabled={loading}
@@ -101,17 +133,17 @@ export default function LoginModal() {
           {error ? <div className={styles.error}>{error}</div> : null}
 
           <button className={styles.submit} type="submit" disabled={loading}>
-            {loading ? "Signing in…" : "Log in"}
+            {loading ? "Creating account…" : "Create account"}
           </button>
         </form>
 
         <div className={styles.swap}>
-          Don’t have an account?{" "}
+          Already have an account?{" "}
           <button
             className={styles.link}
-            onClick={() => navigate(ROUTES.signup, { state: location.state })}
+            onClick={() => navigate(ROUTES.login, { state: location.state })}
           >
-            Sign up
+            Log in
           </button>
         </div>
       </motion.div>
