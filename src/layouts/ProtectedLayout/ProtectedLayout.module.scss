@@ -1,0 +1,56 @@
+$gold: #ffb93a;
+
+.topBar {
+  position: absolute;
+  top: clamp(12px, 2.5vw, 22px);
+  right: clamp(12px, 2.5vw, 22px);
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba($gold, 0.18);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+}
+
+.topButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: transparent;
+  color: rgba(#fff, 0.75);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+
+  svg {
+    color: rgba($gold, 0.85);
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    color: $gold;
+    transform: translateY(-1px);
+
+    svg {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(#ffd77a, 0.8);
+    outline-offset: 2px;
+    border-radius: 999px;
+  }
+}
