@@ -5,12 +5,12 @@ import PickMyOwn from "../features/PickMyOwn";
 import DrawForMe from "../features/DrawForMe";
 import NotFound from "../features/NotFound";
 import { ROUTES } from ".";
-import HomeWithModal from "./RootWithModal";
-import ProtectedLayout from "./ProtectedLayout";
+import PublicLayout from "../layouts/PublicLayout";
+import ProtectedLayout from "../layouts/ProtectedLayout";
 
 export const router = createBrowserRouter([
   {
-    element: <HomeWithModal />,
+    element: <PublicLayout />,
     children: [
       { path: ROUTES.home, element: <Home /> },
       { path: ROUTES.login, element: <Home /> },
