@@ -3,6 +3,7 @@ import Home from "../features/Home";
 import Mode from "../features/Mode";
 import PickMyOwn from "../features/PickMyOwn";
 import DrawForMe from "../features/DrawForMe";
+import History from "../features/History";
 import NotFound from "../features/NotFound";
 import { ROUTES } from ".";
 import PublicLayout from "../layouts/PublicLayout";
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.protectedHome, Component: Mode },
       { path: ROUTES.pickMyOwn, Component: PickMyOwn },
       { path: ROUTES.drawForMe, Component: DrawForMe },
+      { path: ROUTES.history, Component: History },
     ],
   },
   { path: "*", Component: NotFound }, // catches invalid navigation
