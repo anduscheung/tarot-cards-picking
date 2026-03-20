@@ -1,12 +1,13 @@
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 import { ScrollText, LogOut, Sparkles } from "lucide-react";
-import { getToken, clearToken, isTokenValid } from "../../utils/auth";
+import { getToken, clearToken, isTokenValid, getDisplayName } from "../../utils/auth";
 import { ROUTES } from "../../routes/paths";
 import styles from "./ProtectedLayout.module.scss";
 
 export default function ProtectedLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const displayName = getDisplayName(getToken());
   const isHistoryPage = location.pathname === ROUTES.history;
   const authed = isTokenValid(getToken());
 
@@ -33,23 +34,27 @@ export default function ProtectedLayout() {
     <>
       {!hideTopBar && (
         <div className={styles.topBar}>
-          <button
-            type="button"
-            className={styles.topButton}
-            onClick={() => navigate(isHistoryPage ? ROUTES.protectedHome : ROUTES.history)}
-          >
-            <span>{isHistoryPage ? "Draw Cards" : "Past Readings"}</span>
-            {isHistoryPage ? (
-              <Sparkles size={18} strokeWidth={2} />
-            ) : (
-              <ScrollText size={18} strokeWidth={2} />
-            )}
-          </button>
-
-          <button type="button" className={styles.topButton} onClick={onLogout}>
-            <span>Log Out</span>
-            <LogOut size={18} strokeWidth={2} />
-          </button>
+          <div className={styles.user}>
+            Hi, <span className={styles.name}>{displayName}</span>
+          </div>
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.topButton}
+              onClick={() => navigate(isHistoryPage ? ROUTES.protectedHome : ROUTES.history)}
+            >
+              <span>{isHistoryPage ? "Draw Cards" : "Past Readings"}</span>
+              {isHistoryPage ? (
+                <Sparkles size={18} strokeWidth={2} />
+              ) : (
+                <ScrollText size={18} strokeWidth={2} />
+              )}
+            </button>
+            <button type="button" className={styles.topButton} onClick={onLogout}>
+              <span>Log Out</span>
+              <LogOut size={18} strokeWidth={2} />
+            </button>
+          </div>
         </div>
       )}
       <Outlet /> {/*renders child private routes*/}

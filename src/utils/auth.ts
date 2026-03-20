@@ -3,9 +3,10 @@ import { jwtDecode } from "jwt-decode";
 const TOKEN = "token";
 
 export type JwtPayload = {
-  sub?: string; // id
-  email?: string;
-  exp?: number; // in second
+  sub: string; // id
+  email: string;
+  display_name: string;
+  exp: number; // in second
 };
 
 export function setToken(token: string) {
@@ -34,4 +35,14 @@ export function isTokenValid(token: string | null): boolean {
   if (!payload?.exp) return false; // require exp (means backend always issues tokens with exp, a token without exp is unexpected)
   const now = Math.floor(Date.now() / 1000);
   return payload.exp > now;
+}
+
+export function getDisplayName(token: string | null): string {
+  if (!token) return "";
+  try {
+    const user = jwtDecode<JwtPayload>(token);
+    return user.display_name || user.email.split("@")[0];
+  } catch {
+    return "";
+  }
 }
