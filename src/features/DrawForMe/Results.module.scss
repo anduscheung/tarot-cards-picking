@@ -9,6 +9,10 @@
   overflow-y: scroll;
 }
 
+.cardBlock {
+  display: contents;
+}
+
 .card {
   width: clamp(200px, 20vw, 260px);
   height: clamp(333px, 35vw, 433px);
@@ -56,7 +60,9 @@
   white-space: nowrap;
   display: inline-block;
   border-right: 2px solid #ffffff;
-  animation: typing 2s steps(12, end) forwards, hide-caret 0.5s 2s forwards;
+  animation:
+    typing 2s steps(12, end) forwards,
+    hide-caret 0.5s 2s forwards;
 }
 
 @keyframes typing {
@@ -213,6 +219,12 @@
   @media (max-width: 576px) {
     max-width: clamp(300px, 90%, 800px);
   }
+}
+
+.saveError {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(red, 0.9);
 }
 
 .buttonGroup {

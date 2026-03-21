@@ -1,8 +1,11 @@
 import React, { FC, useMemo, useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { imageUrlByIndex } from "../../utils/cardAssets";
+import { createDraw } from "../../services";
+import { LocationState } from "../../types/locationStates";
 
 /** CSS variables helper type (no `any`) */
 type CSSVars = React.CSSProperties & { [k in `--${string}`]?: string };
@@ -37,6 +40,8 @@ function centeredCutIndex(n: number, spread = 0.2): number {
 
 const PickMyOwn: FC = () => {
   const { data: cards, error } = useTarotCards();
+  const { state } = useLocation() as { state: LocationState | null };
+  const question = state?.question ?? ""; // undefined on refresh/direct hit
 
   /** Phases */
   const [phase, setPhase] = useState<Phase>("idle");
@@ -62,15 +67,36 @@ const PickMyOwn: FC = () => {
   const closeDetail = () => setDetailSlot(null);
 
   const threeSelected = slots.every((s) => s != null);
+  const savedOnceRef = useRef(false);
+  const [createDrawError, setCreateDrawError] = useState<string | null>(null);
 
   // Auto-open drawer once all flipped
   useEffect(() => {
     const allFlipped = threeSelected && slots.every((s) => s != null && flipped.has(s!));
-    if (allFlipped && !autoOpenDoneRef.current) {
-      setDetailSlot(0);
-      autoOpenDoneRef.current = true;
-    }
-  }, [slots, flipped, threeSelected]);
+    if (!allFlipped || autoOpenDoneRef.current || savedOnceRef.current) return;
+    setDetailSlot(0);
+    autoOpenDoneRef.current = true;
+    savedOnceRef.current = true;
+
+    (async () => {
+      try {
+        setCreateDrawError(null);
+        await createDraw({
+          mode: "pick-my-own",
+          question,
+          cards: (slots as [number, number, number]).map((num, idx) => ({
+            name: cards[num].name,
+            reversed: false,
+            position: idx + 1,
+          })),
+        });
+      } catch {
+        // if it failed, allow retry by flipping flag back
+        savedOnceRef.current = false;
+        setCreateDrawError("Failed to save this reading. Please report to admin.");
+      }
+    })();
+  }, [slots, flipped, threeSelected, question, cards]);
 
   // Close drawer on ESC
   useEffect(() => {
@@ -148,8 +174,10 @@ const PickMyOwn: FC = () => {
     setSlots([null, null, null]);
     setFlipped(new Set());
     setDetailSlot(null);
+    setCreateDrawError(null);
     autoOpenDoneRef.current = false;
     autoFlipDoneRef.current = false;
+    savedOnceRef.current = false;
 
     const passes =
       Math.floor(Math.random() * (WEAVE_PASSES_MAX - WEAVE_PASSES_MIN + 1)) + WEAVE_PASSES_MIN;
@@ -452,6 +480,7 @@ const PickMyOwn: FC = () => {
               })}
             </div>
           </div>
+          {createDrawError && <div className={styles.saveError}>{createDrawError}</div>}
 
           {detailSlot !== null &&
             (() => {

@@ -106,7 +106,9 @@
 
   transform-origin: 50% calc(100% + var(--pivot, 260px));
   transform: rotate(0deg);
-  transition: transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 240ms ease,
+  transition:
+    transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 240ms ease,
     filter 240ms ease;
 
   img {
@@ -436,7 +438,10 @@ button {
   background: rgba(255, 255, 255, 0.02);
   display: grid;
   place-items: center;
-  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease,
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease,
     transform 160ms ease;
 
   &.over {
@@ -454,7 +459,9 @@ button {
   /* Only NEXT slot looks active */
   &.next {
     border-color: #34d399; /* emerald */
-    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.28) inset, 0 0 18px rgba(52, 211, 153, 0.22);
+    box-shadow:
+      0 0 0 3px rgba(52, 211, 153, 0.28) inset,
+      0 0 18px rgba(52, 211, 153, 0.22);
     background: rgba(52, 211, 153, 0.06);
     animation: nextGlow 1600ms ease-in-out infinite;
   }
@@ -476,10 +483,14 @@ button {
 @keyframes nextGlow {
   0%,
   100% {
-    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.28) inset, 0 0 14px rgba(52, 211, 153, 0.16);
+    box-shadow:
+      0 0 0 3px rgba(52, 211, 153, 0.28) inset,
+      0 0 14px rgba(52, 211, 153, 0.16);
   }
   50% {
-    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.36) inset, 0 0 24px rgba(52, 211, 153, 0.28);
+    box-shadow:
+      0 0 0 3px rgba(52, 211, 153, 0.36) inset,
+      0 0 24px rgba(52, 211, 153, 0.28);
   }
 }
 
@@ -507,6 +518,12 @@ button {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+}
+
+.saveError {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(red, 0.9);
 }
 
 /* --- Seam-free 3D flip for the tray --- */
@@ -661,7 +678,9 @@ button {
   img {
     width: 100%;
     border-radius: 12px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    box-shadow:
+      0 10px 28px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.06) inset;
     display: block;
   }
 }

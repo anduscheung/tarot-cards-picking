@@ -6,9 +6,9 @@ import styles from "./DrawForMe.module.scss";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { generateUniqueRandomNumbers } from "../../utils/cardDrawing.utils";
 import Results from "./Results";
+import { LocationState } from "../../types/locationStates";
 
 const TOTAL_ANIMATION_DURATION = 12000;
-type LocationState = { question?: string };
 
 const DrawForMe: FC = () => {
   const { data: cards, error } = useTarotCards();

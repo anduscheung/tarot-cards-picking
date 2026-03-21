@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import { FC, useState } from "react";
+import { FC, useEffect, useState, useMemo, useRef } from "react";
 import styles from "./Results.module.scss";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
@@ -8,6 +8,7 @@ import { imageUrlByIndex } from "../../utils/cardAssets";
 import cardBackCopper from "/src/assets/cardBackCopper.png";
 import cardBackSilver from "/src/assets/cardBackSilver.png";
 import cardBackGold from "/src/assets/cardBackGold.png";
+import { createDraw } from "../../services";
 
 interface ResultsProps {
   numbers: number[];
@@ -37,12 +38,46 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
     alert("Prompt copied to clipboard! You can now paste it into ChatGPT.");
   };
 
+  const allFlipped = useMemo(
+    () => Object.values(flippedCards).length > 0 && Object.values(flippedCards).every(Boolean),
+    [flippedCards],
+  );
+
+  const savedOnceRef = useRef(false);
+  const [createDrawError, setCreateDrawError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // only run when: all flipped + not saved yet
+    if (!allFlipped || savedOnceRef.current) return;
+
+    savedOnceRef.current = true;
+
+    (async () => {
+      try {
+        setCreateDrawError(null);
+        await createDraw({
+          mode: "draw-for-me",
+          question,
+          cards: numbers.map((num, idx) => ({
+            name: cards[num].name,
+            reversed: false,
+            position: idx + 1,
+          })),
+        });
+      } catch {
+        // if it failed, allow retry by flipping flag back
+        savedOnceRef.current = false;
+        setCreateDrawError("Failed to save this reading. Please report to admin.");
+      }
+    })();
+  }, [allFlipped, cards, numbers, question]);
+
   return (
     <div className={styles.resultContainer}>
       <h3 className={styles.resultTitle}>Your Result:</h3>
       <div className={styles.cardsContainer}>
         {numbers.map((num, index) => (
-          <>
+          <div key={`${num}-${index}`} className={styles.cardBlock}>
             <div
               key={index}
               className={`${styles.card} ${flippedCards[num] ? styles.flipped : ""}`}
@@ -68,7 +103,7 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
                 <strong>Meaning:</strong> {cards[num].meaning_up}
               </p>
             </div>
-          </>
+          </div>
         ))}
       </div>
 
@@ -83,6 +118,7 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
               </p>
             </div>
           ))}
+          {createDrawError && <div className={styles.saveError}>{createDrawError}</div>}
           <div className={styles.buttonGroup}>
             <div className={styles.chatGptLink}>
               <span onClick={generateChatGptPrompt}>Ask ChatGPT to explain it</span>
