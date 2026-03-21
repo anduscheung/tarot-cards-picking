@@ -184,7 +184,10 @@ const History: FC = () => {
                         />
                       </button>
                     </div>
-                    <div className={styles.question} title={d.question}>
+                    <div
+                      className={`${styles.question} ${!isOpen ? styles.questionHidden : ""}`}
+                      title={d.question}
+                    >
                       {d.question}
                     </div>
                     {!isOpen && (

@@ -274,8 +274,11 @@ $gold: #ffb93a;
   font-weight: 800;
   color: rgba(#fff, 0.92);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+.questionHidden {
+  -webkit-line-clamp: 2;
   overflow: hidden;
 }
 
