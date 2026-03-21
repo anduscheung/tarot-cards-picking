@@ -1,11 +1,13 @@
 import React, { FC, useMemo, useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { imageUrlByIndex } from "../../utils/cardAssets";
 import { createDraw } from "../../services";
 import { LocationState } from "../../types/locationStates";
+import { ROUTES } from "../../routes";
+import { ProtectedLayoutContext } from "../../layouts/ProtectedLayout/ProtectedLayout";
 
 /** CSS variables helper type (no `any`) */
 type CSSVars = React.CSSProperties & { [k in `--${string}`]?: string };
@@ -42,6 +44,8 @@ const PickMyOwn: FC = () => {
   const { data: cards, error } = useTarotCards();
   const { state } = useLocation() as { state: LocationState | null };
   const question = state?.question ?? ""; // undefined on refresh/direct hit
+  const navigate = useNavigate();
+  const { setShowReadingTopBar } = useOutletContext<ProtectedLayoutContext>();
 
   /** Phases */
   const [phase, setPhase] = useState<Phase>("idle");
@@ -67,12 +71,18 @@ const PickMyOwn: FC = () => {
   const closeDetail = () => setDetailSlot(null);
 
   const threeSelected = slots.every((s) => s != null);
+  const allFlipped = threeSelected && slots.every((s) => s != null && flipped.has(s!));
   const savedOnceRef = useRef(false);
   const [createDrawError, setCreateDrawError] = useState<string | null>(null);
 
+  // show top bar once all flipped
+  useEffect(() => {
+    setShowReadingTopBar(allFlipped);
+    return () => setShowReadingTopBar(false);
+  }, [allFlipped, setShowReadingTopBar]);
+
   // Auto-open drawer once all flipped
   useEffect(() => {
-    const allFlipped = threeSelected && slots.every((s) => s != null && flipped.has(s!));
     if (!allFlipped || autoOpenDoneRef.current || savedOnceRef.current) return;
     setDetailSlot(0);
     autoOpenDoneRef.current = true;
@@ -96,7 +106,7 @@ const PickMyOwn: FC = () => {
         setCreateDrawError("Failed to save this reading. Please report to admin.");
       }
     })();
-  }, [slots, flipped, threeSelected, question, cards]);
+  }, [slots, flipped, threeSelected, question, cards, allFlipped]);
 
   // Close drawer on ESC
   useEffect(() => {
@@ -480,6 +490,11 @@ const PickMyOwn: FC = () => {
               })}
             </div>
           </div>
+          {allFlipped && (
+            <button className={styles.nextQuestion} onClick={() => navigate(ROUTES.protectedHome)}>
+              Ask the next question?
+            </button>
+          )}
           {createDrawError && <div className={styles.saveError}>{createDrawError}</div>}
 
           {detailSlot !== null &&

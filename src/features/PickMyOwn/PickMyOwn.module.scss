@@ -520,6 +520,16 @@ button {
   letter-spacing: 0.4px;
 }
 
+.nextQuestion {
+  padding: 0;
+  margin-left: 6px;
+  border: none;
+  background: none;
+  color: #ffb93a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .saveError {
   margin-top: 10px;
   font-size: 12px;

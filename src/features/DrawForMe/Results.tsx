@@ -1,5 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 import { FC, useEffect, useState, useMemo, useRef } from "react";
+import { useNavigate, useOutletContext } from "react-router";
 import styles from "./Results.module.scss";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
@@ -9,6 +10,8 @@ import cardBackCopper from "/src/assets/cardBackCopper.png";
 import cardBackSilver from "/src/assets/cardBackSilver.png";
 import cardBackGold from "/src/assets/cardBackGold.png";
 import { createDraw } from "../../services";
+import { ROUTES } from "../../routes";
+import { ProtectedLayoutContext } from "../../layouts/ProtectedLayout/ProtectedLayout";
 
 interface ResultsProps {
   numbers: number[];
@@ -17,6 +20,8 @@ interface ResultsProps {
 
 const Results: FC<ResultsProps> = ({ numbers, question }) => {
   const { data: cards } = useTarotCards();
+  const navigate = useNavigate();
+  const { setShowReadingTopBar } = useOutletContext<ProtectedLayoutContext>();
 
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>(() =>
     numbers.reduce((acc, num) => ({ ...acc, [num]: false }), {}),
@@ -45,6 +50,12 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
 
   const savedOnceRef = useRef(false);
   const [createDrawError, setCreateDrawError] = useState<string | null>(null);
+
+  // show top bar once all flipped
+  useEffect(() => {
+    setShowReadingTopBar(allFlipped);
+    return () => setShowReadingTopBar(false);
+  }, [allFlipped, setShowReadingTopBar]);
 
   useEffect(() => {
     // only run when: all flipped + not saved yet
@@ -126,6 +137,9 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
                 <GotoIcon />
               </div>
             </div>
+            <button className={styles.nextQuestion} onClick={() => navigate(ROUTES.protectedHome)}>
+              Ask the next question?
+            </button>
           </div>
         </>
       )}

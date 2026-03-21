@@ -16,6 +16,22 @@ $gold: #ffb93a;
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+.topBarHidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.topBarVisible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .user {
