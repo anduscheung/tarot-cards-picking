@@ -25,6 +25,14 @@ type Draw = {
   created_at: string;
 };
 
+type ListDrawsResponse = {
+  rows: Draw[];
+  count: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+};
+
 function modeLabel(mode: string) {
   const m = mode.toLowerCase();
   if (m.includes("pick")) return "Pick my own";
@@ -51,47 +59,73 @@ function formatDate(iso: string) {
 type SortKey = "newest" | "oldest";
 type FilterKey = "all" | "pick" | "draw";
 
+const DRAW_SIZE = 20;
+
 const History: FC = () => {
   const token = getToken();
   const navigate = useNavigate();
 
   const [draws, setDraws] = useState<Draw[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [openId, setOpenId] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>("newest");
   const [filter, setFilter] = useState<FilterKey>("all");
+
   const [notesDraft, setNotesDraft] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    const fetchDraws = async () => {
-      try {
+  const fetchDraws = async (reset = false, sortValue: SortKey = sort) => {
+    try {
+      if (reset) {
         setLoading(true);
-        setError(null);
-        const response = await listDraws();
-        setDraws(response);
-      } catch {
-        setError(
-          "Fail to view the previous readings. Please try to refresh the page or ask admin for assistance.",
-        );
-        setDraws([]);
-      } finally {
-        setLoading(false);
+      } else {
+        setLoadingMore(true);
       }
-    };
+      setError(null);
 
-    fetchDraws();
-  }, [token]);
+      const nextOffset = reset ? 0 : offset;
+      const response: ListDrawsResponse = await listDraws(DRAW_SIZE, nextOffset, sortValue);
+
+      if (reset) {
+        setDraws(response.rows);
+        setOffset(response.rows.length);
+        setOpenId(null);
+      } else {
+        setDraws((prev) => [...prev, ...response.rows]);
+        setOffset((prev) => prev + response.rows.length);
+      }
+
+      setTotalCount(response.count);
+      setHasMore(response.hasMore);
+    } catch {
+      setError(
+        "Fail to view the readings. Please try to refresh the page or ask admin for assistance.",
+      );
+      if (reset) {
+        setDraws([]);
+        setOffset(0);
+        setHasMore(false);
+        setTotalCount(0);
+      }
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDraws(true, sort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, sort]);
 
   const visibleDraws = useMemo(() => {
-    const filtered = filter === "all" ? draws : draws.filter((d) => modeKey(d.mode) === filter);
-
-    return [...filtered].sort((a, b) => {
-      const ta = new Date(a.created_at).getTime();
-      const tb = new Date(b.created_at).getTime();
-      return sort === "newest" ? tb - ta : ta - tb;
-    });
-  }, [draws, filter, sort]);
+    return filter === "all" ? draws : draws.filter((d) => modeKey(d.mode) === filter);
+  }, [draws, filter]);
 
   const isEmpty = !loading && draws.length === 0;
   const showToolbar = !loading && !error && draws.length > 0;
@@ -250,6 +284,23 @@ const History: FC = () => {
                   </div>
                 );
               })}
+              <div className={styles.loadMoreWrap}>
+                {hasMore ? (
+                  <button
+                    type="button"
+                    className={styles.loadMore}
+                    onClick={() => fetchDraws(false)}
+                    disabled={loadingMore}
+                  >
+                    {loadingMore ? "Loading..." : "Load more"}
+                  </button>
+                ) : (
+                  <div className={styles.endText}>
+                    Showing {visibleDraws.length} of {totalCount} reading
+                    {totalCount === 1 ? "" : "s"}.
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
