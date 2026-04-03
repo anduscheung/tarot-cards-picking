@@ -112,9 +112,8 @@ $gold: #ffb93a;
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  width: min(1160px, 100%);
-  margin: 0 auto;
-  padding-bottom: 24px;
+  width: 100%;
+  padding: 0 24px 24px;
 }
 
 .centerState {
@@ -184,6 +183,8 @@ $gold: #ffb93a;
 }
 
 .log {
+  max-width: 1160px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -416,4 +417,63 @@ $gold: #ffb93a;
   .content {
     width: 100%;
   }
+}
+
+.loadMoreWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.loadMore {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e5e7eb;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+
+  transition:
+    all 180ms ease,
+    box-shadow 220ms ease;
+
+  /* subtle glow */
+  box-shadow: 0 0 0 rgba(gold, 0);
+}
+
+.loadMore:hover:not(:disabled) {
+  color: gold;
+  border-color: rgba(gold, 0.6);
+  background: rgba(gold, 0.08);
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 0 12px rgba(gold, 0.18),
+    0 0 24px rgba(gold, 0.12);
+}
+
+.loadMore:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.loadMore:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.endText {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0.7;
+  text-align: center;
+
+  margin-top: 4px;
+
+  letter-spacing: 0.2px;
 }
