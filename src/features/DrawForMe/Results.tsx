@@ -88,9 +88,8 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
       <h3 className={styles.resultTitle}>Your Result:</h3>
       <div className={styles.cardsContainer}>
         {numbers.map((num, index) => (
-          <div key={`${num}-${index}`} className={styles.cardBlock}>
+          <div key={`unflipped-${num}-${index}`} className={styles.cardBlock}>
             <div
-              key={index}
               className={`${styles.card} ${flippedCards[num] ? styles.flipped : ""}`}
               onClick={() => toggleCardFlip(num)}
             >
@@ -105,7 +104,6 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
               className={`${styles.cardDescription} ${styles.smallScreen} ${
                 flippedCards[num] ? styles.active : ""
               }`}
-              key={index}
             >
               <div className={`${styles.mask}`}>Tab the card to unveil the content</div>
               <h5>{cards[num].name}</h5>
@@ -117,11 +115,13 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
           </div>
         ))}
       </div>
-
       {Object.values(flippedCards).every((item) => item === true) && (
         <>
           {numbers.map((num, index) => (
-            <div className={`${styles.cardDescription} ${styles.largeScreen}`} key={index}>
+            <div
+              className={`${styles.cardDescription} ${styles.largeScreen}`}
+              key={`flipped-${num}-${index}`}
+            >
               <h5>{cards[num].name}</h5>
               <p>{cards[num].desc}</p>
               <p>
@@ -137,7 +137,10 @@ const Results: FC<ResultsProps> = ({ numbers, question }) => {
                 <GotoIcon />
               </div>
             </div>
-            <button className={styles.nextQuestion} onClick={() => navigate(ROUTES.protectedHome)}>
+            <button
+              className={styles.nextQuestion}
+              onClick={() => navigate(ROUTES.protectedHome, { replace: true })}
+            >
               Ask the next question?
             </button>
           </div>
