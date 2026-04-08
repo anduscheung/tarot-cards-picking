@@ -491,7 +491,10 @@ const PickMyOwn: FC = () => {
             </div>
           </div>
           {allFlipped && (
-            <button className={styles.nextQuestion} onClick={() => navigate(ROUTES.protectedHome)}>
+            <button
+              className={styles.nextQuestion}
+              onClick={() => navigate(ROUTES.protectedHome, { replace: true })}
+            >
               Ask the next question?
             </button>
           )}

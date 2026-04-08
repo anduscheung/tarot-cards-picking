@@ -55,7 +55,11 @@ export default function ProtectedLayout() {
           <button
             type="button"
             className={styles.topButton}
-            onClick={() => navigate(isHistoryPage ? ROUTES.protectedHome : ROUTES.history)}
+            onClick={() =>
+              navigate(isHistoryPage ? ROUTES.protectedHome : ROUTES.history, {
+                replace: isReadingPage,
+              })
+            }
           >
             <span>{isHistoryPage ? "Draw Cards" : "Past Readings"}</span>
             {isHistoryPage ? (
