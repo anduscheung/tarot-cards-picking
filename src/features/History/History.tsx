@@ -5,61 +5,9 @@ import styles from "./History.module.scss";
 import { getToken } from "../../utils/auth";
 import Stars from "../../components/Visual/Stars";
 import { ROUTES } from "../../routes";
-import { listDraws } from "../../services";
-
-type Card = {
-  name: string;
-  reversed: boolean;
-  position: number;
-};
-
-type Draw = {
-  id: string;
-  user_id: string;
-  mode: string;
-  question: string;
-  cards: Card[];
-  notes: string | null;
-  explanation: string | null;
-  explanation_meta: string | null;
-  created_at: string;
-};
-
-type ListDrawsResponse = {
-  rows: Draw[];
-  count: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-};
-
-function modeLabel(mode: string) {
-  const m = mode.toLowerCase();
-  if (m.includes("pick")) return "Pick my own";
-  if (m.includes("draw")) return "Draw for me";
-  return mode;
-}
-
-function modeKey(mode: string) {
-  const m = mode.toLowerCase();
-  if (m.includes("pick")) return "pick";
-  if (m.includes("draw")) return "draw";
-  return "all";
-}
-
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  });
-}
-
-type SortKey = "newest" | "oldest";
-type FilterKey = "all" | "pick" | "draw";
-
-const DRAW_SIZE = 20;
+import { listDraws, updateDrawNotes, type Draw, type ApiError } from "../../services";
+import { type SortKey, type FilterKey, type NotesState } from "../../types/historyPage";
+import { modeKey, modeLabel, formatDate } from "../../utils/historyPage";
 
 const History: FC = () => {
   const token = getToken();
@@ -77,7 +25,11 @@ const History: FC = () => {
   const [sort, setSort] = useState<SortKey>("newest");
   const [filter, setFilter] = useState<FilterKey>("all");
 
-  const [notesDraft, setNotesDraft] = useState<Record<string, string>>({});
+  const [notesState, setNotesState] = useState<NotesState>({
+    id: null,
+    notes: "",
+    status: "idle",
+  });
 
   const fetchDraws = async (reset = false, sortValue: SortKey = sort) => {
     try {
@@ -88,8 +40,9 @@ const History: FC = () => {
       }
       setError(null);
 
+      const DRAW_SIZE = 20;
       const nextOffset = reset ? 0 : offset;
-      const response: ListDrawsResponse = await listDraws(DRAW_SIZE, nextOffset, sortValue);
+      const response = await listDraws(DRAW_SIZE, nextOffset, sortValue);
 
       if (reset) {
         setDraws(response.rows);
@@ -129,6 +82,66 @@ const History: FC = () => {
 
   const isEmpty = !loading && draws.length === 0;
   const showToolbar = !loading && !error && draws.length > 0;
+
+  const handleToggleDraw = (draw: Draw) => {
+    const nextOpenId = openId === draw.id ? null : draw.id;
+
+    setOpenId(nextOpenId);
+
+    // One open draw: one notes state; reset on switch
+    setNotesState({
+      id: nextOpenId,
+      notes: nextOpenId ? (draw.notes ?? "") : "",
+      status: "idle",
+    });
+  };
+
+  const handleSaveNotes = async (drawId: string) => {
+    const normalizedNotes = notesState.notes.trim() ? notesState.notes.trim() : null;
+
+    try {
+      setNotesState((prev) => ({
+        ...prev,
+        id: drawId,
+        status: "saving",
+      }));
+
+      const updated = await updateDrawNotes(drawId, normalizedNotes);
+
+      setDraws((prev) =>
+        prev.map((draw) =>
+          draw.id === drawId
+            ? {
+                ...draw,
+                notes: updated.notes ?? normalizedNotes,
+              }
+            : draw,
+        ),
+      );
+
+      setNotesState({
+        id: drawId,
+        notes: updated.notes ?? normalizedNotes ?? "",
+        status: "saved",
+      });
+
+      // Saving... → Saved ✓ → (2s later) → disappears (better UX)
+      window.setTimeout(() => {
+        setNotesState((prev) =>
+          prev.id === drawId && prev.status === "saved" ? { ...prev, status: "idle" } : prev,
+        );
+      }, 2000);
+    } catch (err: unknown) {
+      const e = err as ApiError;
+      const errors = e?.details?.errors;
+
+      setNotesState((prev) => ({
+        ...prev,
+        id: drawId,
+        status: errors?.notes ? "exceedError" : "error",
+      }));
+    }
+  };
 
   return (
     <>
@@ -197,7 +210,14 @@ const History: FC = () => {
                 const isOpen = openId === d.id;
                 const cards = Array.isArray(d.cards) ? d.cards : [];
                 const preview = cards.slice(0, 3).map((card) => card.name);
-                const draft = notesDraft[d.id] ?? d.notes ?? "";
+                const originalNotes = d.notes ?? "";
+                const noteDraft = notesState.id === d.id ? notesState.notes : originalNotes;
+                const hasNotesChanged = noteDraft.trim() !== originalNotes.trim();
+                const isNotesSaving = notesState.id === d.id && notesState.status === "saving";
+                const isNotesSaved = notesState.id === d.id && notesState.status === "saved";
+                const isNotesError = notesState.id === d.id && notesState.status === "error";
+                const isNotesExceedError =
+                  notesState.id === d.id && notesState.status === "exceedError";
 
                 return (
                   <div key={d.id} className={`${styles.entry} ${isOpen ? styles.entryOpen : ""}`}>
@@ -209,7 +229,7 @@ const History: FC = () => {
                       <button
                         type="button"
                         className={styles.chev}
-                        onClick={() => setOpenId((prev) => (prev === d.id ? null : d.id))}
+                        onClick={() => handleToggleDraw(d)}
                         aria-label={isOpen ? "Collapse reading" : "Expand reading"}
                       >
                         <ChevronDown
@@ -270,14 +290,37 @@ const History: FC = () => {
                           <div className={styles.blockTitle}>Notes</div>
                           <textarea
                             className={styles.notes}
-                            value={draft}
+                            value={noteDraft}
                             onChange={(e) =>
-                              setNotesDraft((prev) => ({ ...prev, [d.id]: e.target.value }))
+                              setNotesState((prev) => ({
+                                ...prev,
+                                id: d.id,
+                                notes: e.target.value,
+                                status: "idle",
+                              }))
                             }
                             placeholder="Write down what you felt / what happened after this reading…"
                             rows={4}
                           />
-                          <div className={styles.notesHint}>Saving is coming soon.</div>
+                          <div className={styles.notesActions}>
+                            <button
+                              type="button"
+                              className={styles.saveNotesButton}
+                              onClick={() => handleSaveNotes(d.id)}
+                              disabled={isNotesSaving || !hasNotesChanged}
+                            >
+                              {isNotesSaving ? "Saving..." : "Save notes"}
+                            </button>
+                            {isNotesSaved && <span className={styles.notesStatusSaved}>Saved</span>}
+                            {isNotesExceedError && (
+                              <span className={styles.notesStatusError}>
+                                Notes cannot exceed 2000 characters
+                              </span>
+                            )}
+                            {isNotesError && (
+                              <span className={styles.notesStatusError}>Failed to save</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )}
