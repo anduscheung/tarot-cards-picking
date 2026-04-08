@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import Modal from "../../../components/Modal";
-import { signup } from "../../../services";
+import { signup, type ApiError } from "../../../services";
 import { ROUTES } from "../../../routes";
 import styles from "../AuthForm.module.scss";
 
@@ -33,11 +33,7 @@ export default function SignupModal() {
       await signup(email, pw, displayName.trim()); // stores token in localStorage
       navigate(ROUTES.protectedHome, { replace: true });
     } catch (err: unknown) {
-      const e = err as {
-        status?: number;
-        details?: { errors?: Record<string, string[]> };
-      };
-
+      const e = err as ApiError;
       const status = e?.status;
       const errors = e?.details?.errors;
 

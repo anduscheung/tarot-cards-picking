@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 interface IModalProps {
   open: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
   onOutsideClick?: (e: MouseEvent) => boolean | void;
 }
 

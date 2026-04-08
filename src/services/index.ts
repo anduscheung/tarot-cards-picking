@@ -1,7 +1,7 @@
 import axios, { AxiosHeaders } from "axios";
-export { login, signup } from "./auth";
 import { getToken, clearToken } from "../utils/auth";
-export { listDraws, createDraw } from "./draws";
+export * from "./auth";
+export * from "./draws";
 
 export const serviceInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -35,7 +35,7 @@ export type ApiError = {
   status?: number;
   code?: string;
   message: string;
-  details?: unknown;
+  details?: { errors?: Record<string, string[]> };
 };
 
 function toApiError(err: unknown): ApiError {

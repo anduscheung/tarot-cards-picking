@@ -1,44 +1,16 @@
-import React, { FC, useMemo, useState, useEffect, useRef } from "react";
+import React, { FC, useMemo, useState, useEffect, useRef, DragEvent } from "react";
 import { useLocation, useNavigate, useOutletContext } from "react-router";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { imageUrlByIndex } from "../../utils/cardAssets";
+import * as CONSTS from "../../utils/pickMyOwnPage";
+import { centeredCutIndex } from "../../utils/pickMyOwnPage";
 import { createDraw } from "../../services";
 import { LocationState } from "../../types/locationStates";
+import { type CSSVars, type Phase } from "../../types/pickMyOwnPage";
 import { ROUTES } from "../../routes";
 import { ProtectedLayoutContext } from "../../layouts/ProtectedLayout/ProtectedLayout";
-
-/** CSS variables helper type (no `any`) */
-type CSSVars = React.CSSProperties & { [k in `--${string}`]?: string };
-
-type Phase = "idle" | "shuffle" | "weave" | "triple" | "stack" | "spread";
-
-/** Tunables */
-const COUNT = 78;
-const TARGET_ARC_DEG = 140;
-const BASELINE_PAD = 24;
-const STAGGER_MS = 10;
-
-/** Animation timings */
-const CHAOS_MS = 1200; // free shuffle
-const WEAVE_PASSES_MIN = 3;
-const WEAVE_PASSES_MAX = 5;
-const WEAVE_MS = 1800;
-const TRIPLE_MS = 2600;
-const STACK_MS = 520;
-const AUTO_SPREAD_DELAY = 800;
-
-/** Center-biased cut (normal-like distribution) */
-function centeredCutIndex(n: number, spread = 0.2): number {
-  const u = Math.max(1e-6, Math.random());
-  const v = Math.max(1e-6, Math.random());
-  let z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  z = Math.max(-1, Math.min(1, z));
-  const frac = 0.5 + z * spread;
-  const idx = Math.round(frac * n);
-  return Math.min(n - 1, Math.max(1, idx));
-}
 
 const PickMyOwn: FC = () => {
   const { data: cards, error } = useTarotCards();
@@ -127,14 +99,14 @@ const PickMyOwn: FC = () => {
   }, []);
 
   /** Deck (just for count/back image) */
-  const backs = useMemo(() => Array.from({ length: COUNT }, () => backImg), []);
+  const backs = useMemo(() => Array.from({ length: CONSTS.COUNT }, () => backImg), []);
 
   /** Fan geometry (centered, responsive) */
-  let thetaRad = (TARGET_ARC_DEG * Math.PI) / 180;
+  let thetaRad = (CONSTS.TARGET_ARC_DEG * Math.PI) / 180;
   const chord = vw * 0.7;
   let R = chord / (2 * Math.sin(thetaRad / 2));
   const sagitta = R - R * Math.cos(thetaRad / 2);
-  const maxSagitta = Math.max(80, vh - BASELINE_PAD - 180 - 40);
+  const maxSagitta = Math.max(80, vh - CONSTS.BASELINE_PAD - 180 - 40);
   if (sagitta > maxSagitta) {
     const cosHalf = 1 - maxSagitta / R;
     thetaRad = 2 * Math.acos(Math.max(-1, Math.min(1, cosHalf)));
@@ -144,7 +116,7 @@ const PickMyOwn: FC = () => {
 
   /** Card size: scale to fit */
   const maxWByWidth = chord / 20;
-  const maxWByHeight = (vh - BASELINE_PAD - (R - R * Math.cos(thetaRad / 2)) - 80) * (2 / 3);
+  const maxWByHeight = (vh - CONSTS.BASELINE_PAD - (R - R * Math.cos(thetaRad / 2)) - 80) * (2 / 3);
   const cardW = Math.max(76, Math.min(120, Math.min(maxWByWidth, maxWByHeight)));
   const cardH = (cardW / 2) * 3;
 
@@ -156,7 +128,7 @@ const PickMyOwn: FC = () => {
         const dy = (Math.random() * 2 - 1) * Math.min(90, vh * 0.12);
         const rot = (Math.random() * 2 - 1) * 42;
         const delay = Math.floor(Math.random() * 220);
-        const dur = Math.max(520, CHAOS_MS - delay - Math.random() * 200);
+        const dur = Math.max(520, CONSTS.CHAOS_MS - delay - Math.random() * 200);
         return { dx, dy, rot, delay, dur };
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,7 +139,7 @@ const PickMyOwn: FC = () => {
   const sweepDelays = useMemo(
     () =>
       backs.map((_, i) => {
-        const t = COUNT > 1 ? i / (COUNT - 1) : 0.5;
+        const t = CONSTS.COUNT > 1 ? i / (CONSTS.COUNT - 1) : 0.5;
         return Math.round(240 * t);
       }),
     [],
@@ -190,7 +162,8 @@ const PickMyOwn: FC = () => {
     savedOnceRef.current = false;
 
     const passes =
-      Math.floor(Math.random() * (WEAVE_PASSES_MAX - WEAVE_PASSES_MIN + 1)) + WEAVE_PASSES_MIN;
+      Math.floor(Math.random() * (CONSTS.WEAVE_PASSES_MAX - CONSTS.WEAVE_PASSES_MIN + 1)) +
+      CONSTS.WEAVE_PASSES_MIN;
 
     setPhase("shuffle");
 
@@ -200,9 +173,9 @@ const PickMyOwn: FC = () => {
 
       const runNext = () => {
         if (pass >= passes) {
-          const a = centeredCutIndex(COUNT, 0.24);
-          let b = centeredCutIndex(COUNT, 0.24);
-          if (a === b) b = Math.min(COUNT - 1, a + 1);
+          const a = centeredCutIndex(CONSTS.COUNT, 0.24);
+          let b = centeredCutIndex(CONSTS.COUNT, 0.24);
+          if (a === b) b = Math.min(CONSTS.COUNT - 1, a + 1);
           const [c1, c2] = a < b ? [a, b] : [b, a];
           setCutA(c1);
           setCutB(c2);
@@ -210,16 +183,16 @@ const PickMyOwn: FC = () => {
           setPhase("triple");
           window.setTimeout(() => {
             setPhase("stack");
-            window.setTimeout(() => setPhase("spread"), STACK_MS + AUTO_SPREAD_DELAY);
-          }, TRIPLE_MS);
+            window.setTimeout(() => setPhase("spread"), CONSTS.STACK_MS + CONSTS.AUTO_SPREAD_DELAY);
+          }, CONSTS.TRIPLE_MS);
           return;
         }
         pass += 1;
-        window.setTimeout(runNext, WEAVE_MS);
+        window.setTimeout(runNext, CONSTS.WEAVE_MS);
       };
 
-      window.setTimeout(runNext, WEAVE_MS);
-    }, CHAOS_MS);
+      window.setTimeout(runNext, CONSTS.WEAVE_MS);
+    }, CONSTS.CHAOS_MS);
   };
 
   /** Auto-flip sequence after 3 are picked (0.5s delay, staggered) */
@@ -246,14 +219,14 @@ const PickMyOwn: FC = () => {
   const nextLabel = labels[nextSlotIndex] ?? null;
 
   /** Drag helpers */
-  const onDragStartCard = (e: React.DragEvent, idx: number) => {
+  const onDragStartCard = (e: DragEvent, idx: number) => {
     if (phase !== "spread") return;
     if (drawn.includes(idx)) return; // already selected
     e.dataTransfer.setData("text/plain", String(idx));
     e.dataTransfer.effectAllowed = "copy";
   };
 
-  const onDropToSlot = (slotIndex: number, e: React.DragEvent) => {
+  const onDropToSlot = (slotIndex: number, e: DragEvent) => {
     e.preventDefault();
     setOverSlot(null);
     if (phase !== "spread") return;
@@ -278,7 +251,7 @@ const PickMyOwn: FC = () => {
     setDrawn((d) => [...d, idx]);
   };
 
-  const onDragOverSlot = (slotIndex: number, e: React.DragEvent) => {
+  const onDragOverSlot = (slotIndex: number, e: DragEvent) => {
     if (phase !== "spread") return;
     // Only the next slot (and empty) is droppable
     if (slotIndex !== nextSlotIndex || slots[slotIndex] != null) {
@@ -318,13 +291,13 @@ const PickMyOwn: FC = () => {
   const fanVars: CSSVars = {
     "--pivot": `${R}px`,
     "--fan-h": `${cardH + (R - R * Math.cos(thetaRad / 2)) + 80}px`,
-    "--weave-dur": `${WEAVE_MS}ms`,
-    "--triple-dur": `${TRIPLE_MS}ms`,
+    "--weave-dur": `${CONSTS.WEAVE_MS}ms`,
+    "--triple-dur": `${CONSTS.TRIPLE_MS}ms`,
     "--left-angle": `${leftAngleDeg}deg`,
   };
 
   /** Per-index helpers */
-  const mid = Math.floor(COUNT / 2);
+  const mid = Math.floor(CONSTS.COUNT / 2);
   const isPickFull = drawn.length >= 3;
 
   if (error || !cards) return <p style={{ color: "red" }}>Failed to load cards.</p>;
@@ -353,7 +326,7 @@ const PickMyOwn: FC = () => {
           )}
 
           {backs.map((src, i) => {
-            const t = COUNT > 1 ? i / (COUNT - 1) : 0.5;
+            const t = CONSTS.COUNT > 1 ? i / (CONSTS.COUNT - 1) : 0.5;
             const angle = -totalAngleDeg / 2 + totalAngleDeg * t;
 
             // For weave: split by half; cluster (1..3) rhythm
@@ -361,13 +334,13 @@ const PickMyOwn: FC = () => {
             const weaveCluster = (i % 3) + 1;
 
             // For triple: assign left/mid/right based on cutA/cutB
-            const a = cutA ?? mid - Math.floor(COUNT * 0.18);
-            const b = cutB ?? mid + Math.floor(COUNT * 0.18);
+            const a = cutA ?? mid - Math.floor(CONSTS.COUNT * 0.18);
+            const b = cutB ?? mid + Math.floor(CONSTS.COUNT * 0.18);
             const tri = i < a ? 0 : i < b ? 1 : 2; // 0=left,1=mid,2=right
 
             const vars: CSSVars = {
               "--angle": `${angle}deg`,
-              "--delay": `${i * STAGGER_MS}ms`,
+              "--delay": `${i * CONSTS.STAGGER_MS}ms`,
               "--sweep": `${sweepDelays[i]}ms`,
               "--cx": `${chaos[i].dx}px`,
               "--cy": `${chaos[i].dy}px`,
@@ -385,7 +358,7 @@ const PickMyOwn: FC = () => {
             };
 
             const picked = drawn.includes(i);
-            const isTopCardAttention = phase === "idle" && i === COUNT - 1;
+            const isTopCardAttention = phase === "idle" && i === CONSTS.COUNT - 1;
 
             return (
               <div key={i} className={styles.slot}>
