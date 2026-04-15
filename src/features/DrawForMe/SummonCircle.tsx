@@ -15,7 +15,8 @@ const SummonCircle: FC = () => {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setActive(true), 500);
+    const timer = window.setTimeout(() => setActive(true), 500);
+    return () => window.clearTimeout(timer);
   }, []);
 
   if (!active) {

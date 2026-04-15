@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState, useEffect, useRef, DragEvent } from "react";
+import { FC, useMemo, useState, useEffect, useRef, DragEvent } from "react";
 import { useLocation, useNavigate, useOutletContext } from "react-router";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
@@ -55,7 +55,7 @@ const PickMyOwn: FC = () => {
 
   // Auto-open drawer once all flipped
   useEffect(() => {
-    if (!allFlipped || autoOpenDoneRef.current || savedOnceRef.current) return;
+    if (!cards || !allFlipped || autoOpenDoneRef.current || savedOnceRef.current) return;
     setDetailSlot(0);
     autoOpenDoneRef.current = true;
     savedOnceRef.current = true;
