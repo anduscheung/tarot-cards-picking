@@ -100,12 +100,10 @@ const DrawResults: FC<DrawResultsProps> = ({
           })}
           {createDrawError && <div className={styles.saveError}>{createDrawError}</div>}
           <div className={styles.buttonGroup}>
-            <div className={styles.chatGptLink}>
-              <span onClick={onAskChatGPT}>Ask ChatGPT to explain it</span>
-              <div className={styles.gotoIconWrapper}>
-                <GotoIcon />
-              </div>
-            </div>
+            <button className={styles.askChatGpt} onClick={onAskChatGPT}>
+              Ask ChatGPT to explain it
+              <GotoIcon />
+            </button>
             <button className={styles.nextQuestion} onClick={onAskNextQuestion}>
               Ask the next question?
             </button>

@@ -1,26 +1,25 @@
-import { FC, useMemo, useState, useEffect, useRef, DragEvent } from "react";
-import { useLocation, useNavigate, useOutletContext } from "react-router";
+import { FC, useState, useEffect, useRef, DragEvent } from "react";
+import { useLocation, useNavigate, useOutletContext, Navigate } from "react-router";
 import styles from "./PickMyOwn.module.scss";
 import backImg from "/src/assets/cardBack.png";
 import { useTarotCards } from "../../hooks/useTarotCards";
 import { imageUrlByIndex } from "../../utils/cardAssets";
 import * as CONSTS from "../../utils/pickMyOwnPage";
-import { centeredCutIndex } from "../../utils/pickMyOwnPage";
 import { createDraw } from "../../services";
 import { LocationState } from "../../types/locationStates";
-import { type CSSVars, type Phase } from "../../types/pickMyOwnPage";
+import { type CSSVars } from "../../types/pickMyOwnPage";
 import { ROUTES } from "../../routes";
 import { ProtectedLayoutContext } from "../../layouts/ProtectedLayout/ProtectedLayout";
+import { usePickMyOwnGeometry } from "../../hooks/usePickMyOwnGeometry";
+import { usePickMyOwnPhases } from "../../hooks/usePickMyOwnPhases";
 
 const PickMyOwn: FC = () => {
   const { data: cards, error } = useTarotCards();
   const { state } = useLocation() as { state: LocationState | null };
-  const question = state?.question ?? ""; // undefined on refresh/direct hit
+  const question = state?.question ?? "";
   const navigate = useNavigate();
   const { setShowReadingTopBar } = useOutletContext<ProtectedLayoutContext>();
-
-  /** Phases */
-  const [phase, setPhase] = useState<Phase>("idle");
+  const geo = usePickMyOwnGeometry();
 
   /** Selected + flipped */
   const [drawn, setDrawn] = useState<number[]>([]);
@@ -29,17 +28,11 @@ const PickMyOwn: FC = () => {
   /** Drag & drop slots (exactly 3) */
   const [slots, setSlots] = useState<(number | null)[]>([null, null, null]);
   const [overSlot, setOverSlot] = useState<number | null>(null);
-  const [shakeSlot, setShakeSlot] = useState<number | null>(null);
-
-  /** Viewport */
-  const [vw, setVw] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
-  const [vh, setVh] = useState<number>(typeof window !== "undefined" ? window.innerHeight : 800);
 
   /** Drawer state */
   const autoOpenDoneRef = useRef(false);
   const autoFlipDoneRef = useRef(false);
   const [detailSlot, setDetailSlot] = useState<number | null>(null);
-  const openDetail = (slot: number) => setDetailSlot(slot);
   const closeDetail = () => setDetailSlot(null);
 
   const threeSelected = slots.every((s) => s != null);
@@ -78,7 +71,7 @@ const PickMyOwn: FC = () => {
         setCreateDrawError("Failed to save this reading. Please report to admin.");
       }
     })();
-  }, [slots, flipped, threeSelected, question, cards, allFlipped]);
+  }, [slots, question, cards, allFlipped]);
 
   // Close drawer on ESC
   useEffect(() => {
@@ -88,70 +81,7 @@ const PickMyOwn: FC = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [detailSlot]);
 
-  useEffect(() => {
-    const onResize = () => {
-      setVw(window.innerWidth);
-      setVh(window.innerHeight);
-    };
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  /** Deck (just for count/back image) */
-  const backs = useMemo(() => Array.from({ length: CONSTS.COUNT }, () => backImg), []);
-
-  /** Fan geometry (centered, responsive) */
-  let thetaRad = (CONSTS.TARGET_ARC_DEG * Math.PI) / 180;
-  const chord = vw * 0.7;
-  let R = chord / (2 * Math.sin(thetaRad / 2));
-  const sagitta = R - R * Math.cos(thetaRad / 2);
-  const maxSagitta = Math.max(80, vh - CONSTS.BASELINE_PAD - 180 - 40);
-  if (sagitta > maxSagitta) {
-    const cosHalf = 1 - maxSagitta / R;
-    thetaRad = 2 * Math.acos(Math.max(-1, Math.min(1, cosHalf)));
-    R = chord / (2 * Math.sin(thetaRad / 2));
-  }
-  const totalAngleDeg = (thetaRad * 180) / Math.PI;
-
-  /** Card size: scale to fit */
-  const maxWByWidth = chord / 20;
-  const maxWByHeight = (vh - CONSTS.BASELINE_PAD - (R - R * Math.cos(thetaRad / 2)) - 80) * (2 / 3);
-  const cardW = Math.max(76, Math.min(120, Math.min(maxWByWidth, maxWByHeight)));
-  const cardH = (cardW / 2) * 3;
-
-  /** Per-card chaos (for shuffle) */
-  const chaos = useMemo(
-    () =>
-      backs.map(() => {
-        const dx = (Math.random() * 2 - 1) * Math.min(160, vw * 0.18);
-        const dy = (Math.random() * 2 - 1) * Math.min(90, vh * 0.12);
-        const rot = (Math.random() * 2 - 1) * 42;
-        const delay = Math.floor(Math.random() * 220);
-        const dur = Math.max(520, CONSTS.CHAOS_MS - delay - Math.random() * 200);
-        return { dx, dy, rot, delay, dur };
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [vw, vh],
-  );
-
-  /** Sweep delays for nice spread */
-  const sweepDelays = useMemo(
-    () =>
-      backs.map((_, i) => {
-        const t = CONSTS.COUNT > 1 ? i / (CONSTS.COUNT - 1) : 0.5;
-        return Math.round(240 * t);
-      }),
-    [],
-  );
-
-  /** Triple cut indices (computed before triple) */
-  const [cutA, setCutA] = useState<number | null>(null);
-  const [cutB, setCutB] = useState<number | null>(null);
-
-  /** Start: idle → shuffle → weave → triple → stack → spread */
-  const startShuffle = () => {
-    if (phase !== "idle") return;
+  const resetForNewRun = () => {
     setDrawn([]);
     setSlots([null, null, null]);
     setFlipped(new Set());
@@ -160,40 +90,9 @@ const PickMyOwn: FC = () => {
     autoOpenDoneRef.current = false;
     autoFlipDoneRef.current = false;
     savedOnceRef.current = false;
-
-    const passes =
-      Math.floor(Math.random() * (CONSTS.WEAVE_PASSES_MAX - CONSTS.WEAVE_PASSES_MIN + 1)) +
-      CONSTS.WEAVE_PASSES_MIN;
-
-    setPhase("shuffle");
-
-    window.setTimeout(() => {
-      setPhase("weave");
-      let pass = 1;
-
-      const runNext = () => {
-        if (pass >= passes) {
-          const a = centeredCutIndex(CONSTS.COUNT, 0.24);
-          let b = centeredCutIndex(CONSTS.COUNT, 0.24);
-          if (a === b) b = Math.min(CONSTS.COUNT - 1, a + 1);
-          const [c1, c2] = a < b ? [a, b] : [b, a];
-          setCutA(c1);
-          setCutB(c2);
-
-          setPhase("triple");
-          window.setTimeout(() => {
-            setPhase("stack");
-            window.setTimeout(() => setPhase("spread"), CONSTS.STACK_MS + CONSTS.AUTO_SPREAD_DELAY);
-          }, CONSTS.TRIPLE_MS);
-          return;
-        }
-        pass += 1;
-        window.setTimeout(runNext, CONSTS.WEAVE_MS);
-      };
-
-      window.setTimeout(runNext, CONSTS.WEAVE_MS);
-    }, CONSTS.CHAOS_MS);
   };
+
+  const { phase, cutA, cutB, startShuffle } = usePickMyOwnPhases(resetForNewRun);
 
   /** Auto-flip sequence after 3 are picked (0.5s delay, staggered) */
   useEffect(() => {
@@ -226,33 +125,38 @@ const PickMyOwn: FC = () => {
     e.dataTransfer.effectAllowed = "copy";
   };
 
+  const selectCardIntoSlot = (slotIndex: number, cardIndex: number) => {
+    setSlots((prev) => {
+      const next = [...prev];
+      next[slotIndex] = cardIndex;
+      return next;
+    });
+    setDrawn((d) => [...d, cardIndex]);
+  };
+
   const onDropToSlot = (slotIndex: number, e: DragEvent) => {
     e.preventDefault();
     setOverSlot(null);
+
     if (phase !== "spread") return;
 
     if (slotIndex !== nextSlotIndex || slots[slotIndex] != null) {
-      setShakeSlot(slotIndex);
-      window.setTimeout(() => setShakeSlot(null), 260);
       return;
     }
 
     const raw = e.dataTransfer.getData("text/plain");
     const idx = Number(raw);
+
     if (Number.isNaN(idx)) return;
     if (drawn.includes(idx)) return;
     if (drawn.length >= 3) return;
 
-    setSlots((prev) => {
-      const next = [...prev];
-      next[slotIndex] = idx;
-      return next;
-    });
-    setDrawn((d) => [...d, idx]);
+    selectCardIntoSlot(slotIndex, idx);
   };
 
   const onDragOverSlot = (slotIndex: number, e: DragEvent) => {
     if (phase !== "spread") return;
+
     // Only the next slot (and empty) is droppable
     if (slotIndex !== nextSlotIndex || slots[slotIndex] != null) {
       e.dataTransfer.dropEffect = "none";
@@ -267,6 +171,18 @@ const PickMyOwn: FC = () => {
     if (overSlot === slotIndex) setOverSlot(null);
   };
 
+  const onTrayCardClick = (slotIdx: number, cardIdx: number) => {
+    if (!threeSelected) {
+      return;
+    }
+    if (!flipped.has(cardIdx)) {
+      setFlipped((s) => new Set(s).add(cardIdx));
+      return;
+    }
+
+    setDetailSlot(slotIdx);
+  };
+
   /** Fallback: click to pick (fills ONLY the next slot) */
   const onCardClick = (idx: number) => {
     if (phase !== "spread") return;
@@ -274,42 +190,25 @@ const PickMyOwn: FC = () => {
     if (drawn.includes(idx)) return;
 
     if (slots[nextSlotIndex] != null) return;
-    setSlots((prev) => {
-      const next = [...prev];
-      next[nextSlotIndex] = idx;
-      return next;
-    });
-    setDrawn((d) => [...d, idx]);
-  };
 
-  /** Root & stage CSS vars */
-  const leftAngleDeg = -totalAngleDeg / 2;
-  const rootVars: CSSVars = {
-    "--card-w": `${cardW}px`,
-    "--card-h": `${cardH}px`,
-  };
-  const fanVars: CSSVars = {
-    "--pivot": `${R}px`,
-    "--fan-h": `${cardH + (R - R * Math.cos(thetaRad / 2)) + 80}px`,
-    "--weave-dur": `${CONSTS.WEAVE_MS}ms`,
-    "--triple-dur": `${CONSTS.TRIPLE_MS}ms`,
-    "--left-angle": `${leftAngleDeg}deg`,
+    selectCardIntoSlot(nextSlotIndex, idx);
   };
 
   /** Per-index helpers */
   const mid = Math.floor(CONSTS.COUNT / 2);
   const isPickFull = drawn.length >= 3;
 
+  if (!question) return <Navigate to={ROUTES.protectedHome} replace />;
   if (error || !cards) return <p style={{ color: "red" }}>Failed to load cards.</p>;
 
   return (
-    <div className={styles.container} style={rootVars}>
+    <div className={styles.container} style={geo.rootVars}>
       {phase !== "spread" && <h5 className={styles.hint}>Focus on your question</h5>}
 
       {/* Fan stage with phase class */}
       <div
         className={[styles.fan, styles[phase], isPickFull ? styles.isPickFull : ""].join(" ")}
-        style={fanVars}
+        style={geo.fanVars}
         role="list"
       >
         <div className={styles.anchor}>
@@ -325,9 +224,9 @@ const PickMyOwn: FC = () => {
             </button>
           )}
 
-          {backs.map((src, i) => {
+          {geo.backs.map((src, i) => {
             const t = CONSTS.COUNT > 1 ? i / (CONSTS.COUNT - 1) : 0.5;
-            const angle = -totalAngleDeg / 2 + totalAngleDeg * t;
+            const angle = -geo.totalAngleDeg / 2 + geo.totalAngleDeg * t;
 
             // For weave: split by half; cluster (1..3) rhythm
             const pile = i < mid ? 0 : 1;
@@ -341,12 +240,12 @@ const PickMyOwn: FC = () => {
             const vars: CSSVars = {
               "--angle": `${angle}deg`,
               "--delay": `${i * CONSTS.STAGGER_MS}ms`,
-              "--sweep": `${sweepDelays[i]}ms`,
-              "--cx": `${chaos[i].dx}px`,
-              "--cy": `${chaos[i].dy}px`,
-              "--crot": `${chaos[i].rot}deg`,
-              "--cdelay": `${chaos[i].delay}ms`,
-              "--cdur": `${chaos[i].dur}ms`,
+              "--sweep": `${geo.sweepDelays[i]}ms`,
+              "--cx": `${geo.chaos[i].dx}px`,
+              "--cy": `${geo.chaos[i].dy}px`,
+              "--crot": `${geo.chaos[i].rot}deg`,
+              "--cdelay": `${geo.chaos[i].delay}ms`,
+              "--cdur": `${geo.chaos[i].dur}ms`,
               "--pile": String(pile),
               "--weaveCluster": String(weaveCluster),
               "--tri": String(tri),
@@ -411,12 +310,8 @@ const PickMyOwn: FC = () => {
                       filled ? styles.filled : "",
                       overSlot === slotIdx ? styles.over : "",
                       isNext ? styles.next : styles.blocked,
-                      shakeSlot === slotIdx ? styles.reject : "",
                     ].join(" ")}
                     onDragOver={(e) => onDragOverSlot(slotIdx, e)}
-                    onDragEnter={() => {
-                      if (slotIdx === nextSlotIndex && !slots[slotIdx]) setOverSlot(slotIdx);
-                    }}
                     onDragLeave={() => onDragLeaveSlot(slotIdx)}
                     onDrop={(e) => onDropToSlot(slotIdx, e)}
                     role="region"
@@ -427,18 +322,7 @@ const PickMyOwn: FC = () => {
                       <button
                         type="button"
                         className={`${styles.trayCard} ${flipOn ? styles.flipped : ""}`}
-                        onClick={() => {
-                          if (!threeSelected) {
-                            setShakeSlot(slotIdx);
-                            window.setTimeout(() => setShakeSlot(null), 260);
-                            return;
-                          }
-                          if (!flipOn) {
-                            setFlipped((s) => new Set(s).add(cardIdx!));
-                          } else {
-                            openDetail(slotIdx);
-                          }
-                        }}
+                        onClick={() => onTrayCardClick(slotIdx, cardIdx!)}
                         aria-label={`Reveal or open details for slot ${slotIdx + 1}`}
                       >
                         <div className={styles.trayInner}>

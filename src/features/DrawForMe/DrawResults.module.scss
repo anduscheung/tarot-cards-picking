@@ -238,57 +238,45 @@
   }
 
   .nextQuestion {
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 400;
-    height: 40px;
-    border-radius: 20px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 185, 58, 0.08);
+    color: #ffb93a;
+    font-weight: 700;
     cursor: pointer;
-    background-color: #ffffff;
-    color: #121212;
-    border: none;
-    transition: background-color 0.3s;
-    opacity: 0;
-    transform: translateX(-20px);
-    animation: fadeInX 1.2s ease-in-out 0.6s forwards;
+    transition:
+      background 160ms ease,
+      transform 160ms ease;
 
-    &:hover {
-      background-color: #dedede;
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 185, 58, 0.16);
+      transform: translateY(-1px);
+      outline: none;
     }
   }
 
-  .chatGptLink {
-    color: #ffffff;
+  .askChatGpt {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: transparent;
+    color: #ffb93a;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 14px;
-    position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    border: 1px solid rgba(255, 185, 58, 0.35);
 
-    .gotoIconWrapper {
-      width: 12px;
-      height: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    transition:
+      background 160ms ease,
+      transform 160ms ease;
 
-    &:after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -2px;
-      width: 100%;
-      height: 1px;
-      background-color: #ffffff;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    &:hover:after {
-      transform: scaleX(1);
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 185, 58, 0.08);
+      transform: translateY(-1px);
+      outline: none;
     }
   }
 }

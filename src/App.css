@@ -11,6 +11,15 @@
   color:  #ffffff;;
 }
 
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
 * {
   box-sizing: border-box;
 }

@@ -130,12 +130,6 @@
   }
 }
 
-button {
-  border: 0;
-  padding: 0;
-  margin: 0;
-}
-
 .starterOverlay {
   position: absolute;
   bottom: 0;
@@ -471,13 +465,6 @@ button {
     opacity: 0.55;
     filter: saturate(0.7);
   }
-
-  /* Invalid drop feedback */
-  &.reject {
-    animation: shakeShort 220ms ease-in-out;
-    border-color: #fca5a5;
-    box-shadow: 0 0 0 3px rgba(252, 165, 165, 0.35) inset;
-  }
 }
 
 @keyframes nextGlow {
@@ -494,24 +481,6 @@ button {
   }
 }
 
-@keyframes shakeShort {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-4px);
-  }
-  50% {
-    transform: translateX(4px);
-  }
-  75% {
-    transform: translateX(-3px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
 .dropLabel {
   color: #cbd5e1;
   opacity: 0.75;
@@ -521,13 +490,22 @@ button {
 }
 
 .nextQuestion {
-  padding: 0;
-  margin-left: 6px;
-  border: none;
-  background: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 185, 58, 0.08);
   color: #ffb93a;
   font-weight: 700;
   cursor: pointer;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(255, 185, 58, 0.16);
+    transform: translateY(-1px);
+    outline: none;
+  }
 }
 
 .saveError {
@@ -546,7 +524,6 @@ button {
   transform-style: preserve-3d;
   border-radius: 4px;
   overflow: hidden;
-  cursor: pointer;
   /* optional tiny backdrop prevents any subpixel flash */
   background: rgba(0, 0, 0, 0.02);
 }
@@ -561,6 +538,10 @@ button {
   will-change: transform;
   border-radius: inherit;
   /* DO NOT set backface-visibility here */
+}
+
+.flipped {
+  cursor: pointer;
 }
 
 .flipped .trayInner {
@@ -643,13 +624,13 @@ button {
 }
 .detailsClose {
   background: transparent;
-  border: 0;
   color: #e5e7eb;
   font-size: 18px;
   line-height: 1;
   padding: 6px 10px;
   border-radius: 8px;
   cursor: pointer;
+
   &:hover {
     background: rgba(255, 255, 255, 0.06);
   }
@@ -662,17 +643,18 @@ button {
   border-radius: 999px;
   overflow: hidden;
 }
+
 .detailsTab {
   padding: 6px 12px;
   color: #cbd5e1;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  border: 0;
   background: transparent;
   cursor: pointer;
   opacity: 0.8;
 }
+
 .detailsTab.active {
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
