@@ -1,0 +1,156 @@
+$gold: #ffb93a;
+$gold-light: #ffd77a;
+$gold-dark: #ffb93a;
+
+@mixin title {
+  background: linear-gradient(90deg, $gold, #ffd77a, $gold);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba($gold, 0.25));
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@mixin glass-panel($radius: 18px, $border: 0.22, $bgd: 0.02, $blur: 8px) {
+  border-radius: $radius;
+  border: 1px solid rgba($gold, $border);
+  background: rgba(255, 255, 255, $bgd);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+}
+
+@mixin gold-focus {
+  &:focus-visible {
+    outline: 2px solid rgba($gold-light, 0.85);
+    outline-offset: 3px;
+  }
+}
+
+@mixin gold-2-focus($bgd: 0.16, $tranY: -1px) {
+  &:focus-visible {
+    background: rgba($gold-dark, $bgd);
+    transform: translateY($tranY);
+    outline: none;
+  }
+}
+
+@mixin gold-2-hover($bgd: 0.16) {
+  &:hover {
+    background: rgba($gold-dark, $bgd);
+    outline: none;
+  }
+}
+
+@mixin button-base($padding: 8px 12px, $radius: 999px, $weight: 700) {
+  padding: $padding;
+  border-radius: $radius;
+  font-weight: $weight;
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 160ms ease,
+    box-shadow 180ms ease;
+}
+
+@mixin active-press($scale: 1, $y: 0) {
+  &:active {
+    transform: translateY($y) scale($scale);
+  }
+}
+
+@mixin gold-soft-button($bgd: 0.08, $border: 0.35, $weight: 700) {
+  @include button-base($weight: $weight);
+  color: $gold;
+  background: rgba($gold, $bgd);
+  @include gold-focus;
+  @include gold-2-hover;
+}
+
+@mixin gold-outline-button($padding: 8px 12px, $bgd: 0.08, $border: 0.35, $weight: 700) {
+  @include button-base($padding: $padding, $weight: $weight);
+  color: $gold;
+  border: 1px solid rgba($gold, $border);
+  background: transparent;
+  @include gold-focus;
+  @include gold-2-hover;
+  @include active-press($y: 1px);
+}
+
+@mixin gold-solid-button($padding: 12px 18px, $weight: 700) {
+  @include button-base($padding: $padding, $weight: $weight);
+
+  border: 1px solid $gold;
+  background: $gold;
+  color: #121212;
+  box-shadow: 0 0 24px rgba($gold, 0.25);
+
+  @include gold-focus;
+
+  &:hover {
+    background: $gold;
+    filter: brightness(1.05);
+  }
+
+  @include active-press($y: 1px);
+}
+
+@mixin input-surface {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba($gold, 0.35);
+  background: rgba(255, 255, 255, 0.02);
+  color: inherit;
+  outline: none;
+  backdrop-filter: blur(8px);
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+
+  &:focus,
+  &:focus-visible {
+    border-color: $gold;
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 3px rgba($gold, 0.12);
+  }
+
+  &::placeholder {
+    color: rgba(#fff, 0.55);
+  }
+}
+
+@mixin page-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+@mixin fade-in-y($duration: 1s, $delay: 0s) {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInY $duration ease-in-out $delay forwards;
+}
+
+@keyframes fadeInY {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

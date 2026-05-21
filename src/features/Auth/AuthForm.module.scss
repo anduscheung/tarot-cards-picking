@@ -1,15 +1,15 @@
+@use "../../styles/mixins" as *;
+
 .panel {
   width: min(92vw, 440px);
   padding: 28px 24px;
-  border-radius: 16px;
-  background: rgba(14, 23, 42, 0.55);
-  border: 1px solid rgba(255, 185, 58, 0.18);
   box-shadow:
     0 0 0 1px rgba(255, 185, 58, 0.08) inset,
     0 20px 60px rgba(0, 0, 0, 0.5),
     0 0 40px rgba(255, 185, 58, 0.15);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: rgba(14, 23, 42, 0.55) !important;
+  border: 1px solid rgba(255, 185, 58, 0.18) !important;
+  @include glass-panel($radius: 16px);
 }
 
 .form {
@@ -109,19 +109,7 @@
 .submit {
   margin-top: 4px;
   width: 100%;
-  padding: 12px 18px;
-  border-radius: 999px;
-  border: 1px solid #ffb93a;
-  background: #ffb93a;
-  color: #121212;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 0 24px rgba(255, 185, 58, 0.25);
-  transition: transform 0.06s ease;
-}
-
-.submit:active {
-  transform: translateY(1px);
+  @include gold-solid-button;
 }
 
 .swap {
@@ -139,14 +127,4 @@
   color: #ffb93a;
   font-weight: 700;
   cursor: pointer;
-}
-
-/* shimmer for title */
-@keyframes shimmer {
-  0% {
-    background-position: 0% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
 }

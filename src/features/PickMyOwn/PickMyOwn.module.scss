@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 *,
 *::before,
 *::after {
@@ -148,7 +150,6 @@
 .starterHint {
   margin-bottom: 10px;
   padding: 6px 10px;
-  border-radius: 999px;
   font-size: 16px;
   font-weight: bold;
   z-index: 4;
@@ -490,22 +491,7 @@
 }
 
 .nextQuestion {
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(255, 185, 58, 0.08);
-  color: #ffb93a;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    background 160ms ease,
-    transform 160ms ease;
-
-  &:hover,
-  &:focus-visible {
-    background: rgba(255, 185, 58, 0.16);
-    transform: translateY(-1px);
-    outline: none;
-  }
+  @include gold-soft-button;
 }
 
 .saveError {

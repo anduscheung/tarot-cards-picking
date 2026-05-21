@@ -1,3 +1,5 @@
+@use "../../styles/mixins" as *;
+
 $gold: #ffb93a;
 
 .topBar {
@@ -11,16 +13,13 @@ $gold: #ffb93a;
   gap: 16px;
   padding: 8px 12px;
   color: rgba(#fff, 0.85);
-  border-radius: 999px;
-  border: 1px solid rgba($gold, 0.18);
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(10px);
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
   opacity: 1;
   transform: translateY(0);
   transition:
     opacity 260ms ease,
     transform 260ms ease;
+  @include glass-panel($radius: 999px, $border: 0.18, $blur: 10px);
 }
 
 .topBarHidden {
@@ -88,8 +87,7 @@ $gold: #ffb93a;
   }
 
   &:focus-visible {
-    outline: 2px solid rgba(#ffd77a, 0.8);
-    outline-offset: 2px;
     border-radius: 999px;
   }
+  @include gold-focus;
 }

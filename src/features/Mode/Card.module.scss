@@ -1,18 +1,17 @@
+@use "../../styles/mixins" as *;
+
 $gold: #ffb93a;
 
 .card {
   position: relative;
   min-height: 190px;
   padding: 20px;
-  border-radius: 18px;
   color: inherit;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba($gold, 0.35);
-  backdrop-filter: blur(8px);
   transition:
     transform 140ms ease,
     box-shadow 180ms ease,
     border-color 180ms ease;
+  @include glass-panel($border: 0.35);
 
   &:hover,
   &:focus-visible {
