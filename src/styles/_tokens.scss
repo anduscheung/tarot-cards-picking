@@ -1,0 +1,46 @@
+// =========================
+// COLORS
+
+$gold: #ffb93a;
+$gold-light: #ffd77a;
+
+$white: #ffffff;
+
+$text-secondary: rgba($white, 0.85);
+
+$dark: #0e172a;
+$bg-dark-glass: rgba($dark, 0.55);
+$bg-dark-glass-2: rgba($dark, 0.2);
+$bg-white-glass: rgba($white, 0.02);
+$bg-blur: rgba($white, 0.95);
+
+$error: #ff8e8e;
+$error-blur: (255, 0, 0, 0.08);
+$success: #a7f3d0;
+
+$drop-slot: #93c5fd;
+$slot-green: #34d399;
+// =========================
+// BORDERS
+
+$gold-border-light: rgba($gold, 0.18);
+$gold-border: rgba($gold, 0.35);
+$gold-border-strong: rgba($gold, 0.55);
+$white-border-glass: rgba(255, 255, 255, 0.18);
+
+// =========================
+// SHADOWS
+
+$shadow-gold-soft: 0 0 24px rgba($gold, 0.25);
+
+$shadow-panel:
+  0 20px 60px rgba($dark, 0.5),
+  0 0 40px rgba($gold, 0.15);
+
+// =========================
+// RADII
+
+$radius-sm: 10px;
+$radius-md: 14px;
+$radius-lg: 18px;
+$radius-pill: 999px;

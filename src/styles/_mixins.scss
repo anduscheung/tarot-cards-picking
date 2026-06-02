@@ -1,9 +1,7 @@
-$gold: #ffb93a;
-$gold-light: #ffd77a;
-$gold-dark: #ffb93a;
+@use "./tokens" as *;
 
 @mixin title {
-  background: linear-gradient(90deg, $gold, #ffd77a, $gold);
+  background: linear-gradient(90deg, $gold, $gold-light, $gold);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -21,10 +19,10 @@ $gold-dark: #ffb93a;
   }
 }
 
-@mixin glass-panel($radius: 18px, $border: 0.22, $bgd: 0.02, $blur: 8px) {
+@mixin glass-panel($radius: 18px, $border: 0.2, $bgd: 0.02, $blur: 8px) {
   border-radius: $radius;
   border: 1px solid rgba($gold, $border);
-  background: rgba(255, 255, 255, $bgd);
+  background: rgba($dark, $bgd);
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
 }
@@ -38,7 +36,7 @@ $gold-dark: #ffb93a;
 
 @mixin gold-2-focus($bgd: 0.16, $tranY: -1px) {
   &:focus-visible {
-    background: rgba($gold-dark, $bgd);
+    background: rgba($gold, $bgd);
     transform: translateY($tranY);
     outline: none;
   }
@@ -46,7 +44,7 @@ $gold-dark: #ffb93a;
 
 @mixin gold-2-hover($bgd: 0.16) {
   &:hover {
-    background: rgba($gold-dark, $bgd);
+    background: rgba($gold, $bgd);
     outline: none;
   }
 }
@@ -78,10 +76,10 @@ $gold-dark: #ffb93a;
   @include gold-2-hover;
 }
 
-@mixin gold-outline-button($padding: 8px 12px, $bgd: 0.08, $border: 0.35, $weight: 700) {
+@mixin gold-outline-button($padding: 8px 12px, $bgd: 0.08, $weight: 700) {
   @include button-base($padding: $padding, $weight: $weight);
   color: $gold;
-  border: 1px solid rgba($gold, $border);
+  border: 1px solid $gold-border;
   background: transparent;
   @include gold-focus;
   @include gold-2-hover;
@@ -93,7 +91,7 @@ $gold-dark: #ffb93a;
 
   border: 1px solid $gold;
   background: $gold;
-  color: #121212;
+  color: $dark;
   box-shadow: 0 0 24px rgba($gold, 0.25);
 
   @include gold-focus;
@@ -109,8 +107,8 @@ $gold-dark: #ffb93a;
 @mixin input-surface {
   width: 100%;
   border-radius: 12px;
-  border: 1px solid rgba($gold, 0.35);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $gold-border;
+  background: $bg-white-glass;
   color: inherit;
   outline: none;
   backdrop-filter: blur(8px);
@@ -122,12 +120,12 @@ $gold-dark: #ffb93a;
   &:focus,
   &:focus-visible {
     border-color: $gold;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba($white, 0.06);
     box-shadow: 0 0 0 3px rgba($gold, 0.12);
   }
 
   &::placeholder {
-    color: rgba(#fff, 0.55);
+    color: rgba($white, 0.55);
   }
 }
 
@@ -135,7 +133,7 @@ $gold-dark: #ffb93a;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: $white;
 }
 
 @mixin fade-in-y($duration: 1s, $delay: 0s) {

@@ -1,5 +1,6 @@
 import { FC, memo, useRef } from "react";
 import { motion } from "framer-motion";
+import { colors } from "../../../styles/theme";
 import styles from "./Stars.module.scss";
 
 type StarsVariant = "gold" | "white";
@@ -104,7 +105,7 @@ const StarField = memo(function StarField({
           ? Math.random() * 0.8 + 0.6 // twinkle duration 0.6s to 1.4s
           : Math.random() * 2.6 + 2.2,
         dly: Math.random() * 2, // // 0 to 2s delay}
-        fill: isGold ? "#FFB93A" : "rgba(255,255,255,0.95)",
+        fill: isGold ? colors.gold : colors.blur,
       };
     }),
   );

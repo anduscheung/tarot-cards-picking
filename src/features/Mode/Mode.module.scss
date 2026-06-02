@@ -1,6 +1,5 @@
+@use "../../styles/tokens" as *;
 @use "../../styles/mixins" as *;
-
-$gold: #ffb93a;
 
 .container {
   display: flex;
@@ -24,7 +23,6 @@ $gold: #ffb93a;
 }
 
 .subTitle {
-  color: rgba(#ffffff, 0.85);
   font-size: clamp(14px, 2.4vw, 18px);
   font-weight: 800;
   text-align: center;
@@ -45,12 +43,12 @@ $gold: #ffb93a;
 
   &:focus {
     border-color: $gold;
-    background: rgba(255, 255, 255, 0.06);
+    background: $bg-white-glass;
     box-shadow: 0 0 0 3px rgba($gold, 0.12);
   }
 
   &::placeholder {
-    color: rgba(#ffffff, 0.55);
+    color: rgba($white, 0.55);
     font-size: clamp(12px, 2vw, 14px);
   }
 }

@@ -1,3 +1,4 @@
+@use "../../styles/tokens" as *;
 @use "../../styles/mixins" as *;
 
 .panel {
@@ -7,8 +8,8 @@
     0 0 0 1px rgba(255, 185, 58, 0.08) inset,
     0 20px 60px rgba(0, 0, 0, 0.5),
     0 0 40px rgba(255, 185, 58, 0.15);
-  background: rgba(14, 23, 42, 0.55) !important;
-  border: 1px solid rgba(255, 185, 58, 0.18) !important;
+  background: $bg-dark-glass !important;
+  border: 1px solid $gold-border-light !important;
   @include glass-panel($radius: 16px);
 }
 
@@ -25,14 +26,14 @@
 .label {
   font-size: 12px;
   letter-spacing: 0.3px;
-  color: rgba(255, 255, 255, 0.8);
+  color: $text-secondary;
 }
 
 /* The visual box (not the input) */
 .inputBox {
-  border: 1px solid rgba(255, 185, 58, 0.25);
+  border: 1px solid $gold-border-light;
   border-radius: 10px;
-  background: #0e172a;
+  background: $dark;
   position: relative;
   /* make sure inner shadows don’t clip */
   overflow: hidden;
@@ -40,19 +41,19 @@
 
 /* Focus border color (Safari supports :has) */
 .inputBox:has(input:focus) {
-  border-color: #ffb93a !important;
+  border-color: $gold !important;
 }
 
 /* Autofilled look (paint bg via inset shadow so it wins over WebKit) */
 .inputBox:has(input:-webkit-autofill) {
   /* background repaint */
-  box-shadow: 0 0 0 1000px #0e172a inset;
-  border-color: rgba(255, 185, 58, 0.25);
+  box-shadow: 0 0 0 1000px $dark inset;
+  border-color: $gold-border-light;
 }
 
 /* Firefox autofill */
 .inputBox:has(input:-moz-autofill) {
-  box-shadow: 0 0 0 1000px #0e172a inset;
+  box-shadow: 0 0 0 1000px $dark inset;
 }
 
 /* The actual input becomes transparent */
@@ -62,10 +63,10 @@
   border: 0;
   outline: 0;
   background: transparent !important;
-  color: #fff;
-  caret-color: #fff;
+  color: $white;
+  caret-color: $white;
   /* Safari/Chrome text color when autofilled */
-  -webkit-text-fill-color: #fff !important;
+  -webkit-text-fill-color: $white !important;
 
   /* keep highlight consistent when autofilled & focused */
   &:focus:-webkit-autofill {
@@ -76,9 +77,9 @@
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px #0e172a inset !important;
-    box-shadow: 0 0 0 1000px #0e172a inset !important;
-    -webkit-text-fill-color: #fff !important;
+    -webkit-box-shadow: 0 0 0 1000px $dark inset !important;
+    box-shadow: 0 0 0 1000px $dark inset !important;
+    -webkit-text-fill-color: $white !important;
     border: 0 !important; /* border is on wrapper */
   }
 }
@@ -91,17 +92,17 @@
   padding: 4px 8px;
   border-radius: 8px;
   font-size: 12px;
-  color: #121212;
-  background: #ffb93a;
+  color: $dark;
+  background: $gold;
   border: none;
   cursor: pointer;
 }
 
 .error {
-  color: #ff8e8e;
+  color: $error;
   font-size: 13px;
-  background: rgba(255, 0, 0, 0.08);
-  border: 1px solid rgba(255, 0, 0, 0.18);
+  background: $error-blur;
+  border: 1px solid $error-blur;
   padding: 8px 10px;
   border-radius: 10px;
 }
@@ -115,7 +116,7 @@
 .swap {
   margin-top: 14px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.75);
+  color: $text-secondary;
   font-size: 13px;
 }
 
@@ -124,7 +125,7 @@
   margin-left: 6px;
   border: none;
   background: none;
-  color: #ffb93a;
+  color: $gold;
   font-weight: 700;
   cursor: pointer;
 }

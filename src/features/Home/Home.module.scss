@@ -1,3 +1,4 @@
+@use "../../styles/tokens" as *;
 @use "../../styles/mixins" as *;
 
 .content {
@@ -21,7 +22,7 @@
 
 .subtitle {
   font-size: clamp(14px, 2.4vw, 18px);
-  color: rgba(255, 255, 255, 0.85);
+  color: $text-secondary;
   margin-bottom: 24px;
 }
 
@@ -37,5 +38,5 @@
 }
 
 .btnSignup {
-  @include gold-outline-button($padding: 12px 20px, $border: 0.5, $bgd: 0.06);
+  @include gold-outline-button($padding: 12px 20px, $bgd: 0.06);
 }

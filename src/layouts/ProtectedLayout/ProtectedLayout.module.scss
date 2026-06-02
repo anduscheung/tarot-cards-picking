@@ -1,6 +1,5 @@
+@use "../../styles/tokens" as *;
 @use "../../styles/mixins" as *;
-
-$gold: #ffb93a;
 
 .topBar {
   position: fixed;
@@ -12,14 +11,14 @@ $gold: #ffb93a;
   justify-content: space-between;
   gap: 16px;
   padding: 8px 12px;
-  color: rgba(#fff, 0.85);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+  color: $text-secondary;
+  box-shadow: 0 10px 35px rgba($dark, 0.35);
   opacity: 1;
   transform: translateY(0);
   transition:
     opacity 260ms ease,
     transform 260ms ease;
-  @include glass-panel($radius: 999px, $border: 0.18, $blur: 10px);
+  @include glass-panel($radius: 999px, $blur: 10px);
 }
 
 .topBarHidden {

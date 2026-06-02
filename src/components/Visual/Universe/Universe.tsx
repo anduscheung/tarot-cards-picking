@@ -1,4 +1,5 @@
 import styles from "./Universe.module.scss";
+import { colors } from "../../../styles/theme";
 
 // Ellipse as SVG path (centered at 0,0)
 function ellipsePath(rx: number, ry: number) {
@@ -50,17 +51,11 @@ const Universe = () => {
                 transform={`translate(${track.cx ?? 0} ${track.cy ?? 0}) rotate(${track.tilt ?? 0})`}
               >
                 {/* base orbit line */}
-                <path
-                  id={id}
-                  d={d}
-                  fill="none"
-                  stroke={`rgba(255,185,58,0.45)`}
-                  strokeWidth={strokeW}
-                />
+                <path id={id} d={d} fill="none" stroke={colors.goldBlur} strokeWidth={strokeW} />
                 {/* planet */}
                 <circle
                   r={1.4 + (i % 3) * 0.3}
-                  fill="#FFB93A"
+                  fill={colors.gold}
                   visibility="hidden" // <- never paint at center
                 >
                   {/* motion: give it an id so we can reference its begin event */}

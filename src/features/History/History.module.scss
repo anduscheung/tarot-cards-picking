@@ -1,3 +1,4 @@
+@use "../../styles/tokens" as *;
 @use "../../styles/mixins" as *;
 
 .container {
@@ -25,7 +26,7 @@
   margin: 0 0 18px;
   font-size: clamp(28px, 5vw, 44px);
   font-weight: 900;
-  background: linear-gradient(90deg, $gold, #ffd77a, $gold);
+  background: linear-gradient(90deg, $gold, $gold-light, $gold);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -66,7 +67,7 @@
   appearance: none;
   width: 100%;
   padding: 12px 44px 12px 14px;
-  color: rgba(#fff, 0.92);
+  color: $text-secondary;
   cursor: pointer;
   transition:
     border-color 0.18s ease,
@@ -75,17 +76,17 @@
 
   &:focus-visible {
     outline: none;
-    border-color: rgba($gold, 0.65);
+    border-color: $gold-border-strong;
     box-shadow: 0 0 0 3px rgba($gold, 0.14);
   }
 
   &:hover {
-    border-color: rgba($gold, 0.45);
+    border-color: $gold-border;
   }
 
   option {
-    background: #0b0f18;
-    color: rgba(#fff, 0.9);
+    background: $dark;
+    color: $text-secondary;
   }
 }
 
@@ -116,7 +117,7 @@
 .error {
   margin-top: 10px;
   font-size: 12px;
-  color: rgba(#ffd77a, 0.9);
+  color: rgba($gold-light, 0.9);
   opacity: 0.9;
 }
 
@@ -130,7 +131,7 @@
   width: min(560px, 92vw);
   padding: 18px;
   box-shadow:
-    0 25px 90px rgba(0, 0, 0, 0.6),
+    0 25px 90px rgba($dark, 0.6),
     0 0 20px rgba($gold, 0.06);
   @include glass-panel($blur: 10px);
 }
@@ -155,7 +156,7 @@
   @include active-press(0.99);
   &:hover {
     box-shadow:
-      0 18px 60px rgba(0, 0, 0, 0.55),
+      0 18px 60px rgba($dark, 0.55),
       0 0 18px rgba($gold, 0.12);
   }
 }
@@ -184,7 +185,7 @@
 }
 
 .entryOpen {
-  border-color: rgba($gold, 0.55);
+  border-color: $gold-border-strong;
 }
 
 .entryTop {
@@ -209,7 +210,7 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   border-radius: 6px;
-  border: 1px solid rgba($gold, 0.5);
+  border: 1px solid $gold-border-strong;
   background: rgba($gold, 0.08);
   text-transform: uppercase;
   color: $gold;
@@ -221,8 +222,8 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  border: 1px solid rgba($gold, 0.16);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $gold-border-light;
+  background: $bg-white-glass;
   color: rgba($gold, 0.95);
   cursor: pointer;
   flex: 0 0 auto;
@@ -244,7 +245,7 @@
   margin: 10px 0;
   font-size: 14px;
   font-weight: 800;
-  color: rgba(#fff, 0.92);
+  color: rgba($white, 0.92);
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
@@ -265,24 +266,24 @@
 .cardPill {
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba($gold, 0.18);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $gold-border-light;
+  background: $bg-white-glass;
   font-size: 12px;
-  color: rgba(#fff, 0.88);
+  color: rgba($white, 0.88);
 }
 
 .more {
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px dashed rgba($gold, 0.22);
-  background: rgba(0, 0, 0, 0.18);
+  border: 1px dashed $gold-border-light;
+  background: $bg-blur;
   font-size: 12px;
   color: rgba($gold, 0.9);
 }
 
 .expand {
   margin-top: 12px;
-  border-top: 1px solid rgba($gold, 0.14);
+  border-top: 1px solid $gold-border-light;
   padding-top: 12px;
   display: grid;
   gap: 12px;
@@ -290,8 +291,8 @@
 
 .block {
   border-radius: 14px;
-  border: 1px solid rgba($gold, 0.14);
-  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid $gold-border-light;
+  background: $bg-dark-glass-2;
   padding: 12px;
 }
 
@@ -315,8 +316,8 @@
   gap: 10px;
   padding: 8px 20px;
   border-radius: 12px;
-  border: 1px solid rgba($gold, 0.12);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $gold-border-light;
+  background: $bg-dark-glass-2;
 }
 
 .cardPos {
@@ -334,7 +335,7 @@
   margin-left: auto;
   font-size: 12px;
   color: rgba($gold, 0.95);
-  border: 1px solid rgba($gold, 0.2);
+  border: 1px solid $gold-border-light;
   padding: 4px 8px;
   border-radius: 999px;
   background: rgba($gold, 0.06);
@@ -342,18 +343,18 @@
 
 .notes {
   width: 100%;
-  color: rgba(#fff, 0.9);
+  color: rgba($white, 0.9);
   padding: 12px;
   border-radius: 14px;
-  border: 1px solid rgba($gold, 0.18);
-  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid $gold-border-light;
+  background: $bg-dark-glass-2;
   outline: none;
   resize: vertical;
 
   @include gold-focus;
 
   &::placeholder {
-    color: rgba(#fff, 0.55);
+    color: rgba($white, 0.55);
   }
 }
 
@@ -365,7 +366,7 @@
 }
 
 .saveNotesButton {
-  color: rgba(#fff, 0.88);
+  color: rgba($white, 0.88);
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 700;
@@ -373,18 +374,18 @@
   transition:
     all 180ms ease,
     box-shadow 220ms ease;
-  box-shadow: 0 0 0 rgba(gold, 0);
-  box-shadow: 0 0 0 rgba(gold, 0);
-  @include glass-panel($radius: 999px, $border: 0.18, $bgd: 0.04, $blur: 6px);
+  box-shadow: 0 0 0 rgba($gold, 0);
+  box-shadow: 0 0 0 rgba($gold, 0);
+  @include glass-panel($radius: 999px, $bgd: 0.04, $blur: 6px);
 
   &:hover:not(:disabled) {
-    color: gold;
-    border-color: rgba(gold, 0.6);
-    background: rgba(gold, 0.08);
+    color: $gold;
+    border-color: rgba($gold, 0.6);
+    background: rgba($gold, 0.08);
     transform: translateY(-1px);
     box-shadow:
-      0 0 12px rgba(gold, 0.18),
-      0 0 24px rgba(gold, 0.12);
+      0 0 12px rgba($gold, 0.18),
+      0 0 24px rgba($gold, 0.12);
   }
 
   &:active:not(:disabled) {
@@ -400,7 +401,7 @@
 .notesStatusSaved {
   font-size: 13px;
   font-weight: 600;
-  color: #a7f3d0;
+  color: $success;
 
   opacity: 0;
   animation: fadeInOut 2s ease forwards;
@@ -409,7 +410,7 @@
 .notesStatusError {
   font-size: 13px;
   font-weight: 600;
-  color: #fca5a5;
+  color: $error;
 
   opacity: 0;
   animation: fadeIn 200ms ease forwards;
@@ -467,7 +468,7 @@
 }
 
 .loadMore {
-  color: gold;
+  color: $gold;
   padding: 10px 18px;
   font-weight: 700;
   font-size: 14px;
@@ -475,16 +476,16 @@
   transition:
     all 180ms ease,
     box-shadow 220ms ease;
-  box-shadow: 0 0 0 rgba(gold, 0);
-  @include glass-panel($radius: 999px, $border: 0.18, $bgd: 0.04, $blur: 6px);
+  box-shadow: 0 0 0 rgba($gold, 0);
+  @include glass-panel($radius: 999px, $bgd: 0.04, $blur: 6px);
 
   &:hover:not(:disabled) {
-    border-color: rgba(gold, 0.6);
-    background: rgba(gold, 0.08);
+    border-color: $gold-border-strong;
+    background: rgba($gold, 0.08);
     transform: translateY(-1px);
     box-shadow:
-      0 0 12px rgba(gold, 0.18),
-      0 0 24px rgba(gold, 0.12);
+      0 0 12px rgba($gold, 0.18),
+      0 0 24px rgba($gold, 0.12);
   }
 
   &:active:not(:disabled) {
@@ -499,7 +500,7 @@
 
 .endText {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.8);
+  color: $text-secondary;
   opacity: 0.7;
   text-align: center;
 

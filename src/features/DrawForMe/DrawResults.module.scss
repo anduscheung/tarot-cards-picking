@@ -1,3 +1,4 @@
+@use "../../styles/tokens" as *;
 @use "../../styles/mixins" as *;
 
 .resultContainer {
@@ -55,13 +56,11 @@
 
 .resultTitle {
   font-size: 20px;
-  color: #ffffff;
   width: max-content;
   max-width: max-content;
   overflow: hidden;
   white-space: nowrap;
   display: inline-block;
-  border-right: 2px solid #ffffff;
   animation:
     typing 2s steps(12, end) forwards,
     hide-caret 0.5s 2s forwards;
@@ -155,7 +154,7 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: #101010;
+    background-color: $dark;
     opacity: 0.8;
     display: flex;
     justify-content: center;
@@ -170,19 +169,19 @@
 
   h5 {
     font-size: clamp(18px, 4vw, 25px);
-    color: #fff;
+    color: $white;
     margin: 0;
   }
 
   p {
     font-size: clamp(12px, 2.5vw, 16px);
-    color: #ccc;
+    color: $text-secondary;
     line-height: 1.6;
     margin-bottom: 15px;
   }
 
   strong {
-    color: #ddd;
+    color: $text-secondary;
   }
 
   @media (max-width: 768px) {
@@ -226,7 +225,7 @@
 .saveError {
   margin-top: 10px;
   font-size: 12px;
-  color: rgba(red, 0.9);
+  color: $error;
 }
 
 .buttonGroup {
