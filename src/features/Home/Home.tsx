@@ -63,6 +63,15 @@ const Home: FC = () => {
           >
             Sign up
           </div>
+          <div
+            onClick={() => {
+              navigate(ROUTES.demo, { state: { background: location } });
+            }}
+            className={styles.btnSignup}
+            data-modal-trigger="demo"
+          >
+            Demo
+          </div>
         </motion.div>
       </motion.div>
     </>

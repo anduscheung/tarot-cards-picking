@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import { FC, useState, useEffect, useMemo, useRef } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, Navigate, useOutletContext } from "react-router";
 import SummonCircle from "./SummonCircle";
 import styles from "./DrawForMe.module.scss";
@@ -9,19 +9,21 @@ import DrawResults from "./DrawResults";
 import { LocationState } from "../../types/locationStates";
 import { ProtectedLayoutContext } from "../../layouts/ProtectedLayout/ProtectedLayout";
 import { createDraw } from "../../services";
-import { generatePromptForChatgpt } from "../../utils/cardDrawing.utils";
+import { useChatGptPrompt } from "../../hooks/useChatGptPrompt";
 import { ROUTES } from "../../routes";
 
 const TOTAL_ANIMATION_DURATION = 12000;
 
 const DrawForMe: FC = () => {
   const { data: cards, error } = useTarotCards();
+  const location = useLocation();
+  const { state } = location as { state: LocationState | null };
+  const isDemo = location.pathname.startsWith(ROUTES.demo);
   const navigate = useNavigate();
-  const { state } = useLocation() as { state: LocationState | null };
   const question = state?.question ?? ""; // undefined on refresh/direct hit
   const { setShowReadingTopBar } = useOutletContext<ProtectedLayoutContext>();
 
-  const [drawnCardIndexes, setDrawnCardIndexes] = useState<number[] | null>(null);
+  const [drawnCardIndexes, setDrawnCardIndexes] = useState<number[]>([]);
   const [allFlipped, setAllFlipped] = useState(false);
   const [createDrawError, setCreateDrawError] = useState<string | null>(null);
   const savedOnceRef = useRef(false);
@@ -41,8 +43,10 @@ const DrawForMe: FC = () => {
   }, [allFlipped, setShowReadingTopBar]);
 
   useEffect(() => {
+    if (isDemo) return; // NO saving function for demo
+
     // only run when: all flipped + not saved yet
-    if (!cards || !drawnCardIndexes || !allFlipped || savedOnceRef.current) return;
+    if (!cards || drawnCardIndexes.length === 0 || !allFlipped || savedOnceRef.current) return;
 
     savedOnceRef.current = true;
 
@@ -65,36 +69,33 @@ const DrawForMe: FC = () => {
         setCreateDrawError("Failed to save this reading. Please report to admin.");
       }
     })();
-  }, [allFlipped, cards, drawnCardIndexes, question]);
+  }, [isDemo, allFlipped, cards, drawnCardIndexes, question]);
 
-  const chatGptPrompt = useMemo(() => {
-    if (!cards || !drawnCardIndexes) return "";
-    return generatePromptForChatgpt(
-      question,
-      drawnCardIndexes.map((index) => cards[index].name),
-    );
-  }, [cards, drawnCardIndexes, question]);
+  const { copyPrompt } = useChatGptPrompt({
+    question,
+    cards,
+    cardIndexes: drawnCardIndexes,
+  });
 
-  const copyChatGPTPrompt = async () => {
-    if (!chatGptPrompt) return;
-    await navigator.clipboard.writeText(chatGptPrompt);
-    alert("Prompt copied to clipboard! You can now paste it into ChatGPT.");
-  };
-
-  if (!question) return <Navigate to={ROUTES.protectedHome} replace />;
+  if (!question) {
+    return <Navigate to={isDemo ? ROUTES.demo : ROUTES.protectedHome} replace />;
+  }
   if (error || !cards) return <p style={{ color: "red" }}>Failed to load cards.</p>;
 
   return (
     <div className={styles.page}>
-      {!drawnCardIndexes ? (
+      {drawnCardIndexes.length === 0 ? (
         <SummonCircle />
       ) : (
         <DrawResults
           cards={cards}
           drawnCardIndexes={drawnCardIndexes}
           onAllFlippedChange={setAllFlipped}
-          onAskNextQuestion={() => navigate(ROUTES.protectedHome, { replace: true })}
-          onAskChatGPT={copyChatGPTPrompt}
+          onAskNextQuestion={() =>
+            navigate(isDemo ? ROUTES.demo : ROUTES.protectedHome, { replace: true })
+          }
+          onAskChatGPT={copyPrompt}
+          isDemo={isDemo}
           createDrawError={createDrawError}
         />
       )}

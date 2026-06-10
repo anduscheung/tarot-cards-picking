@@ -12,7 +12,12 @@ export default function PublicLayout() {
 
   return (
     <>
-      <Outlet context={{ modalOpen }} />
+      <Outlet
+        context={{
+          modalOpen,
+          setShowReadingTopBar: () => {},
+        }}
+      />
       {modalOpen && location.pathname === ROUTES.login && <LoginModal />}
       {modalOpen && location.pathname === ROUTES.signup && <SignupModal />}
     </>

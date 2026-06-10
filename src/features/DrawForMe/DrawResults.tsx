@@ -14,6 +14,7 @@ interface DrawResultsProps {
   onAllFlippedChange: (value: boolean) => void;
   onAskChatGPT: () => void;
   onAskNextQuestion: () => void;
+  isDemo: boolean;
   createDrawError: string | null;
 }
 
@@ -23,6 +24,7 @@ const DrawResults: FC<DrawResultsProps> = ({
   onAllFlippedChange,
   onAskChatGPT,
   onAskNextQuestion,
+  isDemo,
   createDrawError,
 }) => {
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>(() =>
@@ -98,6 +100,7 @@ const DrawResults: FC<DrawResultsProps> = ({
               </div>
             );
           })}
+          {isDemo && <div className={styles.demoInfo}>Demo mode: this reading won't be saved.</div>}
           {createDrawError && <div className={styles.saveError}>{createDrawError}</div>}
           <div className={styles.buttonGroup}>
             <button className={styles.askChatGpt} onClick={onAskChatGPT}>

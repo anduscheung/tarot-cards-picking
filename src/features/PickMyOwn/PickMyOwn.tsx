@@ -12,17 +12,21 @@ import { ROUTES } from "../../routes";
 import { ProtectedLayoutContext } from "../../layouts/ProtectedLayout/ProtectedLayout";
 import { usePickMyOwnGeometry } from "../../hooks/usePickMyOwnGeometry";
 import { usePickMyOwnPhases } from "../../hooks/usePickMyOwnPhases";
+import GotoIcon from "../../assets/gotoIcon.svg?react";
+import { useChatGptPrompt } from "../../hooks/useChatGptPrompt";
 
 const PickMyOwn: FC = () => {
   const { data: cards, error } = useTarotCards();
-  const { state } = useLocation() as { state: LocationState | null };
+  const location = useLocation();
+  const { state } = location as { state: LocationState | null };
+  const isDemo = location.pathname.startsWith(ROUTES.demo);
   const question = state?.question ?? "";
   const navigate = useNavigate();
   const { setShowReadingTopBar } = useOutletContext<ProtectedLayoutContext>();
   const geo = usePickMyOwnGeometry();
 
   /** Selected + flipped */
-  const [drawn, setDrawn] = useState<number[]>([]);
+  const [drawnCardIndexes, setDrawnCardIndexes] = useState<number[]>([]);
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
 
   /** Drag & drop slots (exactly 3) */
@@ -48,6 +52,8 @@ const PickMyOwn: FC = () => {
 
   // Auto-open drawer once all flipped
   useEffect(() => {
+    if (isDemo) return; // NO saving function for demo
+
     if (!cards || !allFlipped || autoOpenDoneRef.current || savedOnceRef.current) return;
     setDetailSlot(0);
     autoOpenDoneRef.current = true;
@@ -71,7 +77,7 @@ const PickMyOwn: FC = () => {
         setCreateDrawError("Failed to save this reading. Please report to admin.");
       }
     })();
-  }, [slots, question, cards, allFlipped]);
+  }, [isDemo, slots, question, cards, allFlipped]);
 
   // Close drawer on ESC
   useEffect(() => {
@@ -82,7 +88,7 @@ const PickMyOwn: FC = () => {
   }, [detailSlot]);
 
   const resetForNewRun = () => {
-    setDrawn([]);
+    setDrawnCardIndexes([]);
     setSlots([null, null, null]);
     setFlipped(new Set());
     setDetailSlot(null);
@@ -114,13 +120,13 @@ const PickMyOwn: FC = () => {
 
   /** Sequence control */
   const labels = ["past", "now", "future"] as const;
-  const nextSlotIndex = drawn.length; // 0=past, 1=now, 2=future
+  const nextSlotIndex = drawnCardIndexes.length; // 0=past, 1=now, 2=future
   const nextLabel = labels[nextSlotIndex] ?? null;
 
   /** Drag helpers */
   const onDragStartCard = (e: DragEvent, idx: number) => {
     if (phase !== "spread") return;
-    if (drawn.includes(idx)) return; // already selected
+    if (drawnCardIndexes.includes(idx)) return; // already selected
     e.dataTransfer.setData("text/plain", String(idx));
     e.dataTransfer.effectAllowed = "copy";
   };
@@ -131,7 +137,7 @@ const PickMyOwn: FC = () => {
       next[slotIndex] = cardIndex;
       return next;
     });
-    setDrawn((d) => [...d, cardIndex]);
+    setDrawnCardIndexes((d) => [...d, cardIndex]);
   };
 
   const onDropToSlot = (slotIndex: number, e: DragEvent) => {
@@ -148,8 +154,8 @@ const PickMyOwn: FC = () => {
     const idx = Number(raw);
 
     if (Number.isNaN(idx)) return;
-    if (drawn.includes(idx)) return;
-    if (drawn.length >= 3) return;
+    if (drawnCardIndexes.includes(idx)) return;
+    if (drawnCardIndexes.length >= 3) return;
 
     selectCardIntoSlot(slotIndex, idx);
   };
@@ -186,19 +192,27 @@ const PickMyOwn: FC = () => {
   /** Fallback: click to pick (fills ONLY the next slot) */
   const onCardClick = (idx: number) => {
     if (phase !== "spread") return;
-    if (drawn.length >= 3) return;
-    if (drawn.includes(idx)) return;
+    if (drawnCardIndexes.length >= 3) return;
+    if (drawnCardIndexes.includes(idx)) return;
 
     if (slots[nextSlotIndex] != null) return;
 
     selectCardIntoSlot(nextSlotIndex, idx);
   };
 
+  const { copyPrompt } = useChatGptPrompt({
+    question,
+    cards,
+    cardIndexes: drawnCardIndexes,
+  });
+
   /** Per-index helpers */
   const mid = Math.floor(CONSTS.COUNT / 2);
-  const isPickFull = drawn.length >= 3;
+  const isPickFull = drawnCardIndexes.length >= 3;
 
-  if (!question) return <Navigate to={ROUTES.protectedHome} replace />;
+  if (!question) {
+    return <Navigate to={isDemo ? ROUTES.demo : ROUTES.protectedHome} replace />;
+  }
   if (error || !cards) return <p style={{ color: "red" }}>Failed to load cards.</p>;
 
   return (
@@ -256,14 +270,14 @@ const PickMyOwn: FC = () => {
               "--i": String(i),
             };
 
-            const picked = drawn.includes(i);
+            const picked = drawnCardIndexes.includes(i);
             const isTopCardAttention = phase === "idle" && i === CONSTS.COUNT - 1;
 
             return (
               <div key={i} className={styles.slot}>
                 <button
                   type="button"
-                  draggable={phase === "spread" && !picked && drawn.length < 3}
+                  draggable={phase === "spread" && !picked && drawnCardIndexes.length < 3}
                   onDragStart={(e) => onDragStartCard(e, i)}
                   className={[
                     styles.card,
@@ -273,7 +287,7 @@ const PickMyOwn: FC = () => {
                   style={vars}
                   onClick={() => (phase === "spread" ? onCardClick(i) : undefined)}
                   aria-disabled={
-                    phase === "spread" && !picked && drawn.length < 3 ? "false" : "true"
+                    phase === "spread" && !picked && drawnCardIndexes.length < 3 ? "false" : "true"
                   }
                   aria-grabbed={phase === "spread" && !picked ? "true" : undefined}
                 >
@@ -348,15 +362,27 @@ const PickMyOwn: FC = () => {
             </div>
           </div>
           {allFlipped && (
-            <button
-              className={styles.nextQuestion}
-              onClick={() => navigate(ROUTES.protectedHome, { replace: true })}
-            >
-              Ask the next question?
-            </button>
+            <>
+              {isDemo && (
+                <div className={styles.demoInfo}>Demo mode: this reading won't be saved.</div>
+              )}
+              {createDrawError && <div className={styles.saveError}>{createDrawError}</div>}
+              <div className={styles.buttonGroup}>
+                <button className={styles.askChatGpt} onClick={copyPrompt}>
+                  Ask ChatGPT to explain it
+                  <GotoIcon />
+                </button>
+                <button
+                  className={styles.nextQuestion}
+                  onClick={() =>
+                    navigate(isDemo ? ROUTES.demo : ROUTES.protectedHome, { replace: true })
+                  }
+                >
+                  Ask the next question?
+                </button>
+              </div>
+            </>
           )}
-          {createDrawError && <div className={styles.saveError}>{createDrawError}</div>}
-
           {detailSlot !== null &&
             (() => {
               const cardIdx = slots[detailSlot]!;

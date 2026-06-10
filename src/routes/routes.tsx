@@ -11,6 +11,15 @@ import ProtectedLayout from "../layouts/ProtectedLayout";
 
 export const router = createBrowserRouter([
   {
+    path: "/demo",
+    element: <PublicLayout />,
+    children: [
+      { index: true, Component: Mode },
+      { path: ROUTES.demoPickMyOwn, Component: PickMyOwn },
+      { path: ROUTES.demoDrawForMe, Component: DrawForMe },
+    ],
+  },
+  {
     element: <PublicLayout />,
     children: [
       { path: ROUTES.home, element: <Home /> },

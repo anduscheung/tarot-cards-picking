@@ -9,20 +9,6 @@ export const generateUniqueRandomNumbers = (min: number, max: number, count: num
   return range.slice(0, count);
 };
 
-export const generatePromptForChatgpt = (question: string, cards: string[]): string => {
-  if (cards.length !== 3) {
-    throw new Error("You must provide exactly three cards.");
-  }
-
-  return `Tarot Card Analysis
-I asked the question: "${question}" and drew the following cards:
-- ${cards[0]}
-- ${cards[1]}
-- ${cards[2]}
-
-Can you help me interpret what this means for my question?`;
-};
-
 //* ***************************** Pick My Own ***************************** */
 
 type Deck = number[];

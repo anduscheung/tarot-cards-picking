@@ -10,9 +10,11 @@ import Universe from "../../components/Visual/Universe";
 const fetchCards = () => fetch("/tarot_cards.json", { cache: "force-cache" }).then((r) => r.json());
 
 const Mode: FC = () => {
-  const [question, setQuestion] = useState("");
+  const isDemo = location.pathname.startsWith(ROUTES.demo);
   const navigate = useNavigate();
   const qc = useQueryClient();
+
+  const [question, setQuestion] = useState("");
 
   const onCardClick = (route: string) => {
     if (!question.trim()) {
@@ -48,7 +50,7 @@ const Mode: FC = () => {
             substring="The deck choose at random"
             onClick={() => {
               prefetch();
-              onCardClick(ROUTES.drawForMe);
+              onCardClick(isDemo ? ROUTES.demoDrawForMe : ROUTES.drawForMe);
             }}
           />
           <Card
@@ -56,7 +58,7 @@ const Mode: FC = () => {
             substring="You select three cards yourself"
             onClick={() => {
               prefetch();
-              onCardClick(ROUTES.pickMyOwn);
+              onCardClick(isDemo ? ROUTES.demoPickMyOwn : ROUTES.pickMyOwn);
             }}
           />
         </div>
