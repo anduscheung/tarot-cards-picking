@@ -8,11 +8,12 @@ import NotFound from "../features/NotFound";
 import { ROUTES } from ".";
 import PublicLayout from "../layouts/PublicLayout";
 import ProtectedLayout from "../layouts/ProtectedLayout";
+import DemoLayout from "../layouts/DemoLayout";
 
 export const router = createBrowserRouter([
   {
     path: "/demo",
-    element: <PublicLayout />,
+    element: <DemoLayout />,
     children: [
       { index: true, Component: Mode },
       { path: ROUTES.demoPickMyOwn, Component: PickMyOwn },
