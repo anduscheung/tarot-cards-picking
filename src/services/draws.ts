@@ -6,12 +6,15 @@ type Card = {
   position: number;
 };
 
+export type Reaction = "like" | "dislike" | null;
+
 export type Draw = {
   id: string;
   user_id: string;
   mode: string;
   question: string;
   cards: Card[];
+  reaction: Reaction;
   notes: string | null;
   explanation: string | null;
   explanation_meta: string | null;
@@ -48,6 +51,13 @@ export async function createDraw(payload: CreateDrawPayload) {
 export async function updateDrawNotes(drawId: string, notes: string | null) {
   const { data } = await serviceInstance.patch(`/api/draws/${drawId}/notes`, {
     notes,
+  });
+  return data;
+}
+
+export async function updateDrawReaction(drawId: string, reaction: Reaction) {
+  const { data } = await serviceInstance.patch(`/api/draws/${drawId}/reaction`, {
+    reaction,
   });
   return data;
 }

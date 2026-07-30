@@ -1,11 +1,18 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ThumbsUp, ThumbsDown } from "lucide-react";
 import styles from "./History.module.scss";
 import { getToken } from "../../utils/auth";
 import Stars from "../../components/Visual/Stars";
 import { ROUTES } from "../../routes";
-import { listDraws, updateDrawNotes, type Draw, type ApiError } from "../../services";
+import {
+  listDraws,
+  updateDrawNotes,
+  updateDrawReaction,
+  type Draw,
+  type Reaction,
+  type ApiError,
+} from "../../services";
 import { type SortKey, type FilterKey, type NotesState } from "../../types/historyPage";
 import { modeKey, modeLabel, formatDate } from "../../utils/historyPage";
 
@@ -143,6 +150,20 @@ const History: FC = () => {
     }
   };
 
+  const handleSaveReaction = async (drawId: string, reaction: Reaction) => {
+    try {
+      const updated = await updateDrawReaction(drawId, reaction);
+
+      setDraws((prev) =>
+        prev.map((draw) =>
+          draw.id === drawId ? { ...draw, reaction: updated.reaction ?? reaction } : draw,
+        ),
+      );
+    } catch {
+      console.error("Failed to save reaction");
+    }
+  };
+
   return (
     <>
       <Stars variant="white" />
@@ -225,6 +246,32 @@ const History: FC = () => {
                       <div className={styles.left}>
                         <div>{formatDate(d.created_at)}</div>
                         <div className={styles.mode}>{modeLabel(d.mode)}</div>
+                        <button
+                          type="button"
+                          className={`${styles.reactionButton} ${styles.likeButton} ${
+                            d.reaction === "like" ? styles.activeReaction : ""
+                          }`}
+                          onClick={() =>
+                            handleSaveReaction(d.id, d.reaction === "like" ? null : "like")
+                          }
+                          aria-label="Like this reading"
+                          aria-pressed={d.reaction === "like"}
+                        >
+                          <ThumbsUp className={styles.reactionIcon} size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.reactionButton} ${styles.dislikeButton} ${
+                            d.reaction === "dislike" ? styles.activeReaction : ""
+                          }`}
+                          onClick={() =>
+                            handleSaveReaction(d.id, d.reaction === "dislike" ? null : "dislike")
+                          }
+                          aria-label="Dislike this reading"
+                          aria-pressed={d.reaction === "dislike"}
+                        >
+                          <ThumbsDown className={styles.reactionIcon} size={16} />
+                        </button>
                       </div>
                       <button
                         type="button"

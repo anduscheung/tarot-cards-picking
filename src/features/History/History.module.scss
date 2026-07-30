@@ -216,6 +216,74 @@
   color: $gold;
 }
 
+.reactionButton {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba($gold, 0.8);
+  background: transparent;
+  border: 1px solid rgba($gold, 0.25);
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+
+  .reactionIcon {
+    fill: transparent;
+    stroke: currentColor;
+
+    transition:
+      fill 180ms ease,
+      transform 180ms ease;
+  }
+
+  // Hover: circle receives a 50%-opacity fill,
+  // but the icon remains unfilled.
+  &:hover {
+    background: rgba($gold, 0.2);
+    border-color: rgba($gold, 0.65);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba($gold-light, 0.85);
+    outline-offset: 2px;
+  }
+}
+
+// Only the selected reaction fills its icon
+.activeReaction {
+  border-color: $gold;
+  .reactionIcon {
+    fill: $gold;
+    stroke: transparent;
+  }
+}
+
+.likeButton {
+  &:active {
+    .reactionIcon {
+      transform: translateY(-3px);
+    }
+  }
+}
+
+.dislikeButton {
+  &:active {
+    .reactionIcon {
+      transform: translateY(3px);
+    }
+  }
+}
+
 .chev {
   width: 40px;
   height: 40px;
