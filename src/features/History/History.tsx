@@ -15,10 +15,13 @@ import {
 } from "../../services";
 import { type SortKey, type FilterKey, type NotesState } from "../../types/historyPage";
 import { modeKey, modeLabel, formatDate } from "../../utils/historyPage";
+import { imageUrlByIndex } from "../../utils/cardAssets";
+import { useTarotCards } from "../../hooks/useTarotCards";
 
 const History: FC = () => {
   const token = getToken();
   const navigate = useNavigate();
+  const { data: tarotCards } = useTarotCards();
 
   const [draws, setDraws] = useState<Draw[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -311,25 +314,34 @@ const History: FC = () => {
                             {cards
                               .slice()
                               .sort((a, b) => a.position - b.position)
-                              .map((c) => (
-                                <div key={`${d.id}-${c.position}`} className={styles.cardRow}>
-                                  <div>
+                              .map((c) => {
+                                const cardIndex = tarotCards?.findIndex(
+                                  (card) => card.name === c.name,
+                                );
+
+                                return (
+                                  <div key={`${d.id}-${c.position}`} className={styles.cardColumn}>
+                                    {cardIndex !== undefined && cardIndex >= 0 && (
+                                      <img
+                                        className={styles.cardImage}
+                                        src={imageUrlByIndex(cardIndex)}
+                                        alt={c.name}
+                                      />
+                                    )}
                                     <span className={styles.cardName}>{c.name}</span>
                                     {c.reversed && <span className={styles.rev}>Reversed</span>}
-                                  </div>
-                                  {cards.length === 3 ? (
                                     <span className={styles.cardPos}>
-                                      {c.position === 1
-                                        ? "Past"
-                                        : c.position === 2
-                                          ? "Current"
-                                          : "Future"}
+                                      {cards.length === 3
+                                        ? c.position === 1
+                                          ? "Past"
+                                          : c.position === 2
+                                            ? "Current"
+                                            : "Future"
+                                        : `#${c.position}`}
                                     </span>
-                                  ) : (
-                                    <span className={styles.cardPos}>#{c.position}</span>
-                                  )}
-                                </div>
-                              ))}
+                                  </div>
+                                );
+                              })}
                           </div>
                         </div>
 
