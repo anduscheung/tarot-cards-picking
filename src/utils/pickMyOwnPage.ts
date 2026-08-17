@@ -6,8 +6,6 @@ export const STAGGER_MS = 10;
 
 /** Animation timings */
 export const CHAOS_MS = 1200; // free shuffle
-export const WEAVE_PASSES_MIN = 3;
-export const WEAVE_PASSES_MAX = 5;
 export const WEAVE_MS = 1800;
 export const TRIPLE_MS = 2600;
 export const STACK_MS = 520;

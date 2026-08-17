@@ -30,44 +30,32 @@ export function usePickMyOwnPhases(onBeforeStart: () => void) {
     onBeforeStart();
     clearAllTimers();
 
-    const passes =
-      Math.floor(Math.random() * (CONSTS.WEAVE_PASSES_MAX - CONSTS.WEAVE_PASSES_MIN + 1)) +
-      CONSTS.WEAVE_PASSES_MIN;
-
     setCutA(null);
     setCutB(null);
     setPhase("shuffle");
 
     queueTimeout(() => {
       setPhase("weave");
-      let pass = 1;
 
       const runNext = () => {
-        if (pass >= passes) {
-          const a = centeredCutIndex(CONSTS.COUNT, 0.24);
-          let b = centeredCutIndex(CONSTS.COUNT, 0.24);
+        const a = centeredCutIndex(CONSTS.COUNT, 0.24);
+        let b = centeredCutIndex(CONSTS.COUNT, 0.24);
 
-          if (a === b) b = Math.min(CONSTS.COUNT - 1, a + 1);
+        if (a === b) b = Math.min(CONSTS.COUNT - 1, a + 1);
 
-          const [c1, c2] = a < b ? [a, b] : [b, a];
-          setCutA(c1);
-          setCutB(c2);
+        const [c1, c2] = a < b ? [a, b] : [b, a];
+        setCutA(c1);
+        setCutB(c2);
 
-          setPhase("triple");
+        setPhase("triple");
+
+        queueTimeout(() => {
+          setPhase("stack");
 
           queueTimeout(() => {
-            setPhase("stack");
-
-            queueTimeout(() => {
-              setPhase("spread");
-            }, CONSTS.STACK_MS + CONSTS.AUTO_SPREAD_DELAY);
-          }, CONSTS.TRIPLE_MS);
-
-          return;
-        }
-
-        pass += 1;
-        queueTimeout(runNext, CONSTS.WEAVE_MS);
+            setPhase("spread");
+          }, CONSTS.STACK_MS + CONSTS.AUTO_SPREAD_DELAY);
+        }, CONSTS.TRIPLE_MS);
       };
 
       queueTimeout(runNext, CONSTS.WEAVE_MS);
